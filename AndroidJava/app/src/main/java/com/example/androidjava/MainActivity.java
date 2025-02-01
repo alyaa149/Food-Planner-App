@@ -86,6 +86,8 @@ protected void onCreate(Bundle savedInstanceState) {
 	getAllCategories();
 	getMealInfo();
 	searchByIngredient("chicken");
+	searchByCategory("Seafood");
+	searchByArea("Canadian");
 	
 	
 	
@@ -100,6 +102,47 @@ private void searchByIngredient(String ingredient){
 				 meals = response.body().getMeals();
 				for (Meal meal : response.body().getMeals()) {
 					Log.i("SEARCH", "Meal Name: " + meal.getMealName());
+				}
+			}
+		}
+		
+		@Override
+		public void onFailure(Call<MealResponse> call, Throwable t) {
+			Log.i("SEARCH", "Error: " + t.getMessage());
+		}
+	});
+}
+private void searchByCategory(String category){
+	
+	Call<MealResponse> call = apiService.filterByCategory(category);
+	call.enqueue(new Callback<MealResponse>() {
+		@Override
+		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
+			if (response.isSuccessful() && response.body() != null) {
+				meals = response.body().getMeals();
+				for (Meal meal : response.body().getMeals()) {
+					Log.i("SEARCH", "Search by category: " + meal.getMealName());
+				}
+			}
+		}
+		
+		@Override
+		public void onFailure(Call<MealResponse> call, Throwable t) {
+			Log.i("SEARCH", "Error: " + t.getMessage());
+		}
+	});
+}
+
+private void searchByArea(String area){
+	
+	Call<MealResponse> call = apiService.filterByArea(area);
+	call.enqueue(new Callback<MealResponse>() {
+		@Override
+		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
+			if (response.isSuccessful() && response.body() != null) {
+				meals = response.body().getMeals();
+				for (Meal meal : response.body().getMeals()) {
+					Log.i("SEARCH", "Search by area: " + meal.getMealName());
 				}
 			}
 		}

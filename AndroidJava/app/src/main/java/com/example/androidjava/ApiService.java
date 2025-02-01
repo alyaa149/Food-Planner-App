@@ -26,6 +26,10 @@ Call<CountryResponse> getAllAreas();
 Call<CategoryResponse> getAllCategories();
 @GET("filter.php")
 Call<MealResponse> filterByIngredient(@Query("i") String ingredient);
+@GET("filter.php")
+Call<MealResponse> filterByCategory(@Query("c") String Category);
 
+@GET("filter.php")
+Call<MealResponse> filterByArea(@Query("a") String Area);
 
 }
