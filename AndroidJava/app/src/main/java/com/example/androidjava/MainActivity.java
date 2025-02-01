@@ -54,6 +54,7 @@ private static final String TAG = "FOOD";
 private static final String url = "https://www.themealdb.com/api/json/v1/1/";
 private List<Country> countryList = new ArrayList<>();
 private List<Category> categoryList = new ArrayList<>();
+List<Meal> meals = new ArrayList<>();
 
 @Override
 protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +84,34 @@ protected void onCreate(Bundle savedInstanceState) {
 	 apiService = retrofit.create(ApiService.class);
 	getAllCountries();
 	getAllCategories();
+	getMealInfo();
+	searchByIngredient("chicken");
 	
 	
 	
+}
+private void searchByIngredient(String ingredient){
+	
+	Call<MealResponse> call = apiService.filterByIngredient(ingredient);
+	call.enqueue(new Callback<MealResponse>() {
+		@Override
+		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
+			if (response.isSuccessful() && response.body() != null) {
+				 meals = response.body().getMeals();
+				for (Meal meal : response.body().getMeals()) {
+					Log.i("SEARCH", "Meal Name: " + meal.getMealName());
+				}
+			}
+		}
+		
+		@Override
+		public void onFailure(Call<MealResponse> call, Throwable t) {
+			Log.i("SEARCH", "Error: " + t.getMessage());
+		}
+	});
+}
+private  void getMealInfo(){
+
 }
 private void getAllCategories() {
 	Call<CategoryResponse> myCall =apiService.getAllCategories();
@@ -94,13 +120,13 @@ private void getAllCategories() {
 		public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
 				categoryList = response.body().getCategories();
-				for (Category cat : response.body().getCategories()) {
-					Log.i(TAG, "Category: " + cat.getStrCategory());
-				}
+				
 				
 				
 				//adapter = new MyAdapter(MainActivity.this, countryList);
 				//	recyclerView.setAdapter(adapter);
+			}for (Category cat : response.body().getCategories()) {
+				Log.i(TAG, "Category: " + cat.getStrCategory());
 			}
 		}
 		

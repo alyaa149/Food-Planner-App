@@ -11,18 +11,21 @@ Call<MealResponse> searchMealByName(@Query("s") String mealName);
 //@GET("lookup.php")
 //Call<MealResponse> getMealById(@Query("i") String mealId);
 
-//@GET("random.php")
-//Call<MealResponse> getRandomMeal();
+@GET("random.php")
+Call<MealResponse> getRandomMeal();
 
-//@GET("categories.php")
-//Call<CategoryResponse> getAllCategories();
 
+
+@GET("lookup.php")
+Call<MealResponse> getMealById(@Query("i") int mealId);
 @GET("list.php?a=list")
 Call<CountryResponse> getAllAreas();
 
 
 @GET("list.php?c=list")
 Call<CategoryResponse> getAllCategories();
+@GET("filter.php")
+Call<MealResponse> filterByIngredient(@Query("i") String ingredient);
 
 
 }
