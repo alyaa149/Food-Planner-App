@@ -53,6 +53,7 @@ ApiService apiService;
 private static final String TAG = "FOOD";
 private static final String url = "https://www.themealdb.com/api/json/v1/1/";
 private List<Country> countryList = new ArrayList<>();
+private List<Category> categoryList = new ArrayList<>();
 
 @Override
 protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +82,39 @@ protected void onCreate(Bundle savedInstanceState) {
 			                    .build();
 	 apiService = retrofit.create(ApiService.class);
 	getAllCountries();
+	getAllCategories();
 	
 	
 	
+}
+private void getAllCategories() {
+	Call<CategoryResponse> myCall =apiService.getAllCategories();
+	myCall.enqueue(new Callback<CategoryResponse>() {
+		@Override
+		public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
+			if (response.isSuccessful() && response.body() != null) {
+				categoryList = response.body().getCategories();
+				for (Category cat : response.body().getCategories()) {
+					Log.i(TAG, "Category: " + cat.getStrCategory());
+				}
+				
+				
+				//adapter = new MyAdapter(MainActivity.this, countryList);
+				//	recyclerView.setAdapter(adapter);
+			}
+		}
+		
+		@Override
+		public void onFailure(Call<CategoryResponse> call, Throwable t) {
+			Log.i(TAG, "Error: " + t.getMessage());
+		}
+		
+		
+	
+		
+		
+	});
+
 }
 private void getAllCountries(){
 	

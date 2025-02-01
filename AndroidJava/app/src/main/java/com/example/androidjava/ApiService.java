@@ -16,8 +16,13 @@ Call<MealResponse> searchMealByName(@Query("s") String mealName);
 
 //@GET("categories.php")
 //Call<CategoryResponse> getAllCategories();
+
 @GET("list.php?a=list")
 Call<CountryResponse> getAllAreas();
+
+
+@GET("list.php?c=list")
+Call<CategoryResponse> getAllCategories();
 
 
 }
