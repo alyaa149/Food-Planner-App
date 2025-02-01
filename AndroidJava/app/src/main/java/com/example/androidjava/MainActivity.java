@@ -29,7 +29,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class MainActivity extends AppCompatActivity{
 Button loginBtn;
 Button signUpBtn;
 Button logOutBtn;
@@ -39,6 +48,11 @@ Button loginWithGoogleBtn;
 FirebaseAuth auth;
 FirebaseUser curUser;
 GoogleSignInClient googleSignInUser;
+Retrofit retrofit;
+ApiService apiService;
+private static final String TAG = "FOOD";
+private static final String url = "https://www.themealdb.com/api/json/v1/1/";
+private List<Country> countryList = new ArrayList<>();
 
 @Override
 protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +74,45 @@ protected void onCreate(Bundle savedInstanceState) {
 	GoogleSignInOptions gso =new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 			                         .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 	googleSignInUser= GoogleSignIn.getClient(this,gso);
+	//=======================================================================
+	 retrofit = new Retrofit.Builder()
+			                    .baseUrl(url)
+			                    .addConverterFactory(GsonConverterFactory.create())
+			                    .build();
+	 apiService = retrofit.create(ApiService.class);
+	getAllCountries();
+	
 	
 	
 }
+private void getAllCountries(){
+	
+	Call<CountryResponse> myCall =apiService.getAllAreas();
+	myCall.enqueue(new Callback<CountryResponse>() {
+		@Override
+		public void onResponse(Call<CountryResponse> call, Response<CountryResponse> response) {
+			if (response.isSuccessful() && response.body() != null) {
+				countryList = response.body().getCountries();
+				for (Country area : response.body().getCountries()) {
+					Log.i(TAG, "Country/Area: " + area.getStrArea());
+				}
+				
+				
+				//adapter = new MyAdapter(MainActivity.this, countryList);
+			//	recyclerView.setAdapter(adapter);
+			}
+		}
+		
+		@Override
+		public void onFailure(Call<CountryResponse> call, Throwable t) {
+			Log.i(TAG, "Error: " + t.getMessage());
+		}
+		
+		
+	});
+	
+}
+
 @Override
 protected void onResume() {
 	super.onResume();
