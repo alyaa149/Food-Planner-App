@@ -1,10 +1,8 @@
 package com.example.androidjava;
 
-import android.app.ComponentCaller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -13,6 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androidjava.Models.Category;
+import com.example.androidjava.Models.CategoryResponse;
+import com.example.androidjava.Models.Meal;
+import com.example.androidjava.Models.MealResponse;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,7 +28,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity{
 Button loginBtn;
 Button signUpBtn;
 Button logOutBtn;
+Meal meal ;
 Button loginWithGoogleBtn;
 //Button logOutWithGoogleBtn;
 
@@ -52,7 +54,7 @@ Retrofit retrofit;
 ApiService apiService;
 private static final String TAG = "FOOD";
 private static final String url = "https://www.themealdb.com/api/json/v1/1/";
-private List<Country> countryList = new ArrayList<>();
+
 private List<Category> categoryList = new ArrayList<>();
 List<Meal> meals = new ArrayList<>();
 
@@ -88,9 +90,29 @@ protected void onCreate(Bundle savedInstanceState) {
 	searchByIngredient("chicken");
 	searchByCategory("Seafood");
 	searchByArea("Canadian");
+	getRandomMeal();
+	getMealById(52772);
 	
-	
-	
+}
+private  void getRandomMeal(){
+	Call<MealResponse> call = apiService.getRandomMeal();
+	call.enqueue(new Callback<MealResponse>() {
+		@Override
+		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
+			if (response.isSuccessful() && response.body() != null) {
+				meals = response.body().getMeals();
+				for (Meal meal : response.body().getMeals()) {
+					Log.i("SEARCH", "Random Meal Name: " + meal.getMealName());
+				}
+			}
+		}
+		
+		@Override
+		public void onFailure(Call<MealResponse> call, Throwable t) {
+			Log.i("SEARCH", "Error: " + t.getMessage());
+		}
+	});
+
 }
 private void searchByIngredient(String ingredient){
 	
@@ -169,7 +191,7 @@ private void getAllCategories() {
 				//adapter = new MyAdapter(MainActivity.this, countryList);
 				//	recyclerView.setAdapter(adapter);
 			}for (Category cat : response.body().getCategories()) {
-				Log.i(TAG, "Category: " + cat.getStrCategory());
+				Log.i("LIST", "Category: " + cat.getStrCategory());
 			}
 		}
 		
@@ -186,15 +208,14 @@ private void getAllCategories() {
 
 }
 private void getAllCountries(){
-	
-	Call<CountryResponse> myCall =apiService.getAllAreas();
-	myCall.enqueue(new Callback<CountryResponse>() {
+	Call<MealResponse> myCall =apiService.getAllAreas();
+	myCall.enqueue(new Callback<MealResponse>() {
 		@Override
-		public void onResponse(Call<CountryResponse> call, Response<CountryResponse> response) {
+		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
-				countryList = response.body().getCountries();
-				for (Country area : response.body().getCountries()) {
-					Log.i(TAG, "Country/Area: " + area.getStrArea());
+				meals = response.body().getMeals();
+				for (Meal area : response.body().getMeals()) {
+						Log.i(" COUNTRY", "Country/Area: " + area.getStrArea());
 				}
 				
 				
@@ -204,15 +225,40 @@ private void getAllCountries(){
 		}
 		
 		@Override
-		public void onFailure(Call<CountryResponse> call, Throwable t) {
+		public void onFailure(Call<MealResponse> call, Throwable t) {
 			Log.i(TAG, "Error: " + t.getMessage());
+			
 		}
 		
 		
 	});
 	
 }
-
+private void getMealById(int id){
+	Call<MealResponse> myCall =apiService.getMealById(id);
+	myCall.enqueue(new Callback<MealResponse>() {
+		@Override
+		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
+			if (response.isSuccessful() && response.body() != null) {
+				meal = response.body().getMeals().get(0);
+					Log.i("SEARCH", "get the meal by id: " + meal.getMealName());
+			}
+		}
+		
+		@Override
+		public void onFailure(Call<MealResponse> call, Throwable t) {
+			Log.i("bf", "Error: " + t.getMessage());
+		}
+		
+	});
+	
+}
+private void  showPhoto(String img){
+//	Glide.with(context)
+//			.load(place)
+//			.into(photo);
+//
+}
 @Override
 protected void onResume() {
 	super.onResume();

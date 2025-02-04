@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">AndroidJava</string>
     <string name="default_web_client_id">344452612993-0jogj0qfhll8m8t682je7eh587p5392k.apps.googleusercontent.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

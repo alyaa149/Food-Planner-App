@@ -1,14 +1,14 @@
-package com.example.androidjava;
+package com.example.androidjava.Models;
 
 import java.util.List;
 
 public class CategoryResponse {
 
 
-	private List<Category> meals;
+	private List<Category>categories ;
 	
 	public List<Category> getCategories() {
-		return meals;
+		return categories;
 	}
 
 	
