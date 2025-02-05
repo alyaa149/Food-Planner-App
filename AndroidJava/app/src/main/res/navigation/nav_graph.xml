@@ -3,26 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home2">
+    app:startDestination="@id/introduction">
 
     <fragment
         android:id="@+id/home2"
         android:name="com.example.androidjava.fragments.Home"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home2_to_mealDetails"
+            app:destination="@id/mealDetails" />
+    </fragment>
     <fragment
         android:id="@+id/login"
         android:name="com.example.androidjava.fragments.Login"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_login_to_home2"
+            app:destination="@id/home2" />
+    </fragment>
     <fragment
         android:id="@+id/signUp"
         android:name="com.example.androidjava.fragments.SignUp"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUp_to_home2"
+            app:destination="@id/home2" />
+    </fragment>
     <fragment
         android:id="@+id/splashScreen"
         android:name="com.example.androidjava.fragments.SplashScreen"
         android:label="fragment_splash_screen"
-        tools:layout="@layout/fragment_splash_screen" />
+        tools:layout="@layout/fragment_splash_screen" >
+        <action
+            android:id="@+id/action_splashScreen_to_introduction"
+            app:destination="@id/introduction" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealDetails"
+        android:name="com.example.androidjava.fragments.MealDetails"
+        android:label="fragment_meal_details"
+        tools:layout="@layout/fragment_meal_details" />
+    <fragment
+        android:id="@+id/introduction"
+        android:name="com.example.androidjava.Introduction"
+        android:label="fragment_introduction"
+        tools:layout="@layout/fragment_introduction" >
+        <action
+            android:id="@+id/action_introduction_to_signUp"
+            app:destination="@id/signUp" />
+        <action
+            android:id="@+id/action_introduction_to_login"
+            app:destination="@id/login" />
+    </fragment>
 </navigation>

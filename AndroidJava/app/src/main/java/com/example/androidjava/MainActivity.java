@@ -63,21 +63,21 @@ protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	EdgeToEdge.enable(this);
 	setContentView(R.layout.activity_main);
-	auth=FirebaseAuth.getInstance();
-	loginBtn =findViewById(R.id.loginBtn);
-	signUpBtn=findViewById(R.id.signUpBtn);
-	logOutBtn=findViewById(R.id.logOutBtn);
-	loginWithGoogleBtn=findViewById(R.id.loginWithGoogleBtn);
-	//logOutWithGoogleBtn=findViewById(R.id.logOutWithGoogleBtn);
-	signUpBtn.setOnClickListener(view -> setSignUpBtn());
-	loginBtn.setOnClickListener(view -> setLoginBtn());
-	logOutBtn.setOnClickListener(view -> setLogOutBtn());
-	loginWithGoogleBtn.setOnClickListener(view -> setLoginWithGoogleBtn());
-	//logOutWithGoogleBtn.setOnClickListener(view -> setLogOutBtn());
-	
-	GoogleSignInOptions gso =new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-			                         .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-	googleSignInUser= GoogleSignIn.getClient(this,gso);
+//	auth=FirebaseAuth.getInstance();
+//	loginBtn =findViewById(R.id.loginBtn);
+//	signUpBtn=findViewById(R.id.signUpBtn);
+//	logOutBtn=findViewById(R.id.logOutBtn);
+//	loginWithGoogleBtn=findViewById(R.id.loginWithGoogleBtn);
+//	//logOutWithGoogleBtn=findViewById(R.id.logOutWithGoogleBtn);
+//	signUpBtn.setOnClickListener(view -> setSignUpBtn());
+//	loginBtn.setOnClickListener(view -> setLoginBtn());
+//	logOutBtn.setOnClickListener(view -> setLogOutBtn());
+//	loginWithGoogleBtn.setOnClickListener(view -> setLoginWithGoogleBtn());
+//	//logOutWithGoogleBtn.setOnClickListener(view -> setLogOutBtn());
+//
+//	GoogleSignInOptions gso =new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//			                         .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+//	googleSignInUser= GoogleSignIn.getClient(this,gso);
 	//=======================================================================
 	 retrofit = new Retrofit.Builder()
 			                    .baseUrl(url)
@@ -259,30 +259,30 @@ private void  showPhoto(String img){
 //			.into(photo);
 //
 }
-@Override
-protected void onResume() {
-	super.onResume();
-	
-	checkCurUser();
-}
+//@Override
+//protected void onResume() {
+//	super.onResume();
+//
+//	checkCurUser();
+//}
 private void setLoginWithGoogleBtn(){
 	Intent signInGoogleIntent = googleSignInUser.getSignInIntent();
 	startActivityForResult(signInGoogleIntent,5);
 }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 5) {
-			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-			try {
-				GoogleSignInAccount acc = task.getResult(ApiException.class);
-				signInWithGoogle(acc.getIdToken());
-			} catch (ApiException e) {
-				Toast.makeText(MainActivity.this, "Google sign-in failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-			}
-		}
-	}
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//		super.onActivityResult(requestCode, resultCode, data);
+//		if (requestCode == 5) {
+//			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+//			try {
+//				GoogleSignInAccount acc = task.getResult(ApiException.class);
+//				signInWithGoogle(acc.getIdToken());
+//			} catch (ApiException e) {
+//				Toast.makeText(MainActivity.this, "Google sign-in failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+//			}
+//		}
+//	}
 
 	
 
