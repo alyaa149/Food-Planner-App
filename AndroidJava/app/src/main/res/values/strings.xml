@@ -3,4 +3,13 @@
     <string name="default_web_client_id">344452612993-0jogj0qfhll8m8t682je7eh587p5392k.apps.googleusercontent.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="SignUp">Sign Up</string>
+    <string name="email">Enter your email or username</string>
+    <string name="pass">Enter your password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="already_has_account">Already has account ?</string>
+    <string name="login">Login</string>
+    <string name="or_sign_up_with">Or Sign Up With</string>
+    <string name="Login">Login</string>
+    <string name="or_login_with">Or Login with</string>
 </resources>

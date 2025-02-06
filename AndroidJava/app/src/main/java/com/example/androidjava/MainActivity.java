@@ -10,25 +10,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidjava.Models.Category;
 import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +29,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity{
-Button loginBtn;
-Button signUpBtn;
-Button logOutBtn;
-Meal meal ;
-Button loginWithGoogleBtn;
-//Button logOutWithGoogleBtn;
 
-FirebaseAuth auth;
-FirebaseUser curUser;
-GoogleSignInClient googleSignInUser;
+Meal meal ;
+
+
+
 Retrofit retrofit;
 ApiService apiService;
 private static final String TAG = "FOOD";
@@ -63,21 +47,13 @@ protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	EdgeToEdge.enable(this);
 	setContentView(R.layout.activity_main);
-//	auth=FirebaseAuth.getInstance();
-//	loginBtn =findViewById(R.id.loginBtn);
-//	signUpBtn=findViewById(R.id.signUpBtn);
-//	logOutBtn=findViewById(R.id.logOutBtn);
-//	loginWithGoogleBtn=findViewById(R.id.loginWithGoogleBtn);
-//	//logOutWithGoogleBtn=findViewById(R.id.logOutWithGoogleBtn);
-//	signUpBtn.setOnClickListener(view -> setSignUpBtn());
-//	loginBtn.setOnClickListener(view -> setLoginBtn());
-//	logOutBtn.setOnClickListener(view -> setLogOutBtn());
-//	loginWithGoogleBtn.setOnClickListener(view -> setLoginWithGoogleBtn());
-//	//logOutWithGoogleBtn.setOnClickListener(view -> setLogOutBtn());
-//
-//	GoogleSignInOptions gso =new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//			                         .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-//	googleSignInUser= GoogleSignIn.getClient(this,gso);
+	ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+		Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+		v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+		return insets;
+	});
+	
+
 	//=======================================================================
 	 retrofit = new Retrofit.Builder()
 			                    .baseUrl(url)
@@ -92,6 +68,7 @@ protected void onCreate(Bundle savedInstanceState) {
 	searchByArea("Canadian");
 	getRandomMeal();
 	getMealById(52772);
+	searchByName("Arrabiata");
 	
 }
 private  void getRandomMeal(){
@@ -102,7 +79,7 @@ private  void getRandomMeal(){
 			if (response.isSuccessful() && response.body() != null) {
 				meals = response.body().getMeals();
 				for (Meal meal : response.body().getMeals()) {
-					Log.i("SEARCH", "Random Meal Name: " + meal.getMealName());
+					Log.i("SEARCH", "Random Meal Name: " + meal.getStrMeal());
 				}
 			}
 		}
@@ -123,7 +100,7 @@ private void searchByIngredient(String ingredient){
 			if (response.isSuccessful() && response.body() != null) {
 				 meals = response.body().getMeals();
 				for (Meal meal : response.body().getMeals()) {
-					Log.i("SEARCH", "Meal Name: " + meal.getMealName());
+					Log.i("SEARCH", "Meal Name: " + meal.getStrMeal());
 				}
 			}
 		}
@@ -143,7 +120,7 @@ private void searchByCategory(String category){
 			if (response.isSuccessful() && response.body() != null) {
 				meals = response.body().getMeals();
 				for (Meal meal : response.body().getMeals()) {
-					Log.i("SEARCH", "Search by category: " + meal.getMealName());
+					Log.i("SEARCH", "Search by category: " + meal.getStrMeal());
 				}
 			}
 		}
@@ -164,7 +141,7 @@ private void searchByArea(String area){
 			if (response.isSuccessful() && response.body() != null) {
 				meals = response.body().getMeals();
 				for (Meal meal : response.body().getMeals()) {
-					Log.i("SEARCH", "Search by area: " + meal.getMealName());
+					Log.i("SEARCH", "Search by area: " + meal.getStrMeal());
 				}
 			}
 		}
@@ -215,7 +192,7 @@ private void getAllCountries(){
 			if (response.isSuccessful() && response.body() != null) {
 				meals = response.body().getMeals();
 				for (Meal area : response.body().getMeals()) {
-						Log.i(" COUNTRY", "Country/Area: " + area.getStrArea());
+						Log.i("COUNTRY", "Country/Area: " + area.getStrArea());
 				}
 				
 				
@@ -241,7 +218,7 @@ private void getMealById(int id){
 		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
 				meal = response.body().getMeals().get(0);
-					Log.i("SEARCH", "get the meal by id: " + meal.getMealName());
+					Log.i("SEARCH", "get the meal by id: " + meal.getStrMeal());
 			}
 		}
 		
@@ -252,6 +229,29 @@ private void getMealById(int id){
 		
 	});
 	
+}
+
+private void searchByName(String name){
+	Call<MealResponse> myCall=apiService.searchByName(name);
+	myCall.enqueue(new Callback<MealResponse>() {
+		@Override
+		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
+		if(response.isSuccessful() && response.body()!=null){
+		meals=response.body().getMeals();
+			for (Meal meal1 : response.body().getMeals()) {
+				Log.i("SEARCH", "Search result: " + meal1.getStrArea());
+			}
+			
+		}
+		}
+		
+		@Override
+		public void onFailure(Call<MealResponse> call, Throwable t) {
+			Log.i("SEARCH", "Error: " + t.getMessage());
+		
+		}
+	});
+
 }
 private void  showPhoto(String img){
 //	Glide.with(context)
@@ -265,100 +265,6 @@ private void  showPhoto(String img){
 //
 //	checkCurUser();
 //}
-private void setLoginWithGoogleBtn(){
-	Intent signInGoogleIntent = googleSignInUser.getSignInIntent();
-	startActivityForResult(signInGoogleIntent,5);
-}
 
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//		super.onActivityResult(requestCode, resultCode, data);
-//		if (requestCode == 5) {
-//			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-//			try {
-//				GoogleSignInAccount acc = task.getResult(ApiException.class);
-//				signInWithGoogle(acc.getIdToken());
-//			} catch (ApiException e) {
-//				Toast.makeText(MainActivity.this, "Google sign-in failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-//			}
-//		}
-//	}
-
-	
-
-
-private void signInWithGoogle(String token){
-	AuthCredential credential= GoogleAuthProvider.getCredential(token,null);
-	auth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-		@Override
-		public void onSuccess(AuthResult authResult) {
-			Toast.makeText(MainActivity.this,"Success",Toast.LENGTH_LONG).show();
-			
-		}
-	}).addOnFailureListener(new OnFailureListener() {
-		@Override
-		public void onFailure(@NonNull Exception e) {
-			Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
-		}
-	});
-}
-private void setLogOutBtn(){
-googleSignInUser.signOut();
-auth.signOut();
-
-}
-private  void checkCurUser(){
-	curUser = auth.getCurrentUser();
-	if(curUser == null){
-		Log.i("USERNOTEXIST","USER NOT EXIST");
-		Toast.makeText(MainActivity.this,"user not exist",Toast.LENGTH_LONG).show();
-		
-	}else{
-		Log.i("USEREXIST","USER EXIST");
-		Toast.makeText(MainActivity.this,"user  exist",Toast.LENGTH_LONG).show();
-		
-	}
-}
-private void setSignUpBtn(){
-auth.createUserWithEmailAndPassword("aliaa@gmail.com","123456").addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-	@Override
-	public void onSuccess(AuthResult authResult) {
-		Toast.makeText(MainActivity.this,"Success",Toast.LENGTH_LONG).show();
-		
-	}
-}).addOnFailureListener(new OnFailureListener() {
-	@Override
-	public void onFailure(@NonNull Exception e) {
-		Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
-	}
-});
-
-
-}
-//private  void setLogOutBtn(){
-//	auth.signOut(); //remove cache from user mobile
-//
-//
-//
-//}
-private void setLoginBtn(){
-	auth.signInWithEmailAndPassword("alia@gmail.com","123456").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-		@Override
-		public void onComplete(@NonNull Task<AuthResult> task) {
-			if (task.isSuccessful()) {
-				runOnUiThread(() ->
-						              Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_LONG).show()
-				);
-			} else {
-				runOnUiThread(() ->
-						              Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show()
-				);
-			}
-		}
-		});
-
-
-	
-}
 
 }

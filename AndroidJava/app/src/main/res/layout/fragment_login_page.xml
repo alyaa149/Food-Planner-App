@@ -9,7 +9,7 @@
     android:background="@color/Green"
 
 
-    tools:context=".SignUp">
+    tools:context=".LoginPage">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -42,10 +42,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
 
 
-                android:text="@string/SignUp"
+android:layout_marginBottom="30dp"
+                android:text="@string/Login"
                 android:textColor="@color/DarkGreen"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -96,33 +96,10 @@
                 android:layout_height="wrap_content"
 
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="5dp"
                 android:backgroundTint="@color/SoftPink"
-                android:text="@string/sign_up"
-                android:textColor="@android:color/white" />
-
-            <LinearLayout
-                android:id="@+id/loginTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:text="@string/already_has_account" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/login"
-                    android:textColor="@color/red"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+                android:text="@string/login"
+                android:textColor="@color/white" />
 
             <View
                 android:id="@+id/divider"
@@ -143,9 +120,8 @@
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-
-                    android:text="@string/or_sign_up_with" />
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/or_login_with" />
 
                 <ImageView
                     android:id="@+id/googleSignUp"

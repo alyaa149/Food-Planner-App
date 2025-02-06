@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/introduction">
+    app:startDestination="@id/signUp2">
 
     <fragment
         android:id="@+id/home2"
@@ -14,24 +14,7 @@
             android:id="@+id/action_home2_to_mealDetails"
             app:destination="@id/mealDetails" />
     </fragment>
-    <fragment
-        android:id="@+id/login"
-        android:name="com.example.androidjava.fragments.Login"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_login_to_home2"
-            app:destination="@id/home2" />
-    </fragment>
-    <fragment
-        android:id="@+id/signUp"
-        android:name="com.example.androidjava.fragments.SignUp"
-        android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" >
-        <action
-            android:id="@+id/action_signUp_to_home2"
-            app:destination="@id/home2" />
-    </fragment>
+
     <fragment
         android:id="@+id/splashScreen"
         android:name="com.example.androidjava.fragments.SplashScreen"
@@ -55,7 +38,30 @@
             android:id="@+id/action_introduction_to_signUp"
             app:destination="@id/signUp" />
         <action
-            android:id="@+id/action_introduction_to_login"
-            app:destination="@id/login" />
+            android:id="@+id/action_introduction_to_signUp2"
+            app:destination="@id/signUp2" />
+
     </fragment>
+    <fragment
+        android:id="@+id/signUp2"
+        android:name="com.example.androidjava.SignUp"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUp2_to_home2"
+            app:destination="@id/home2" />
+        <action
+            android:id="@+id/action_signUp2_to_loginPage"
+            app:destination="@id/loginPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginPage"
+        android:name="com.example.androidjava.LoginPage"
+        android:label="fragment_login_page"
+        tools:layout="@layout/fragment_login_page" >
+        <action
+            android:id="@+id/action_loginPage_to_home2"
+            app:destination="@id/home2" />
+    </fragment>
+
 </navigation>

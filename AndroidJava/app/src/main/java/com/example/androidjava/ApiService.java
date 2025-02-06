@@ -24,5 +24,7 @@ Call<MealResponse> filterByCategory(@Query("c") String Category);
 
 @GET("filter.php")
 Call<MealResponse> filterByArea(@Query("a") String Area);
+@GET("search.php")
+Call<MealResponse> searchByName(@Query("s") String name);
 
 }

@@ -1,14 +1,26 @@
-package com.example.androidjava.fragments;
+package com.example.androidjava;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.example.androidjava.R;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +28,13 @@ import com.example.androidjava.R;
  * create an instance of this fragment.
  */
 public class SignUp extends Fragment {
+TextInputEditText passET;
+TextInputEditText emailTE;
+Button signUpBtn;
+LinearLayout logInTV;
+FirebaseAuth auth;
+FirebaseUser curUser;
+GoogleSignInClient googleSignInUser;
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -63,4 +82,69 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	// Inflate the layout for this fragment
 	return inflater.inflate(R.layout.fragment_sign_up, container, false);
 }
+
+@Override
+public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+	passET = view.findViewById(R.id.passET);
+	logInTV=view.findViewById(R.id.loginTV);
+	
+	emailTE = view.findViewById(R.id.emailTE);
+    signUpBtn = view.findViewById(R.id.loginBtn);
+	signUpBtn.setOnClickListener(v -> setSignUpBtn(view));
+
+	logInTV.setOnClickListener(view2 -> Navigation.findNavController(view2).navigate(R.id.action_signUp2_to_loginPage));
+	
+	
+	auth=FirebaseAuth.getInstance();
+//	loginBtn =findViewById(R.id.loginBtn);
+
+//	logOutBtn=findViewById(R.id.logOutBtn);
+//	loginWithGoogleBtn=findViewById(R.id.loginWithGoogleBtn);
+//	//logOutWithGoogleBtn=findViewById(R.id.logOutWithGoogleBtn);
+
+//	loginBtn.setOnClickListener(view -> setLoginBtn());
+//	logOutBtn.setOnClickListener(view -> setLogOutBtn());
+//	loginWithGoogleBtn.setOnClickListener(view -> setLoginWithGoogleBtn());
+//	//logOutWithGoogleBtn.setOnClickListener(view -> setLogOutBtn());
+//
+//	GoogleSignInOptions gso =new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//			                         .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+//	googleSignInUser= GoogleSignIn.getClient(this,gso);
+	super.onViewCreated(view, savedInstanceState);
+}
+private void setSignUpBtn(View view){
+	String password = passET.getText().toString();
+	String email = emailTE.getText().toString();
+	if (email.isEmpty() || password.isEmpty()) {
+		Toast.makeText(getContext(), "Please enter email and password", Toast.LENGTH_LONG).show();
+		return;
+	}
+	auth.createUserWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+		@Override
+		public void onSuccess(AuthResult authResult) {
+			Navigation.findNavController(view).navigate(R.id.action_signUp2_to_home2);
+			
+			//	Toast.makeText(MainActivity.this,"Success",Toast.LENGTH_LONG).show();
+
+		}
+	}).addOnFailureListener(new OnFailureListener() {
+		@Override
+		public void onFailure(@NonNull Exception e) {
+			Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+		}
+	});
+
+
+}
+//private  void setLogOutBtn(){
+//	auth.signOut(); //remove cache from user mobile
+//
+//
+//
+//}
+//private void setLogOutBtn(){
+//	//googleSignInUser.signOut();
+//	auth.signOut();
+//
+//}
 }
