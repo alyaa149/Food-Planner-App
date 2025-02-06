@@ -1,7 +1,11 @@
 package com.example.androidjava;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,13 +18,20 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +43,7 @@ TextInputEditText passET;
 TextInputEditText emailTE;
 Button signUpBtn;
 LinearLayout logInTV;
+LinearLayout registerWithGoogleET;
 FirebaseAuth auth;
 FirebaseUser curUser;
 GoogleSignInClient googleSignInUser;
@@ -83,20 +95,34 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	return inflater.inflate(R.layout.fragment_sign_up, container, false);
 }
 
+
 @Override
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+	super.onViewCreated(view, savedInstanceState);
+	
 	passET = view.findViewById(R.id.passET);
-	logInTV=view.findViewById(R.id.loginTV);
-	
+	logInTV = view.findViewById(R.id.loginTV);
 	emailTE = view.findViewById(R.id.emailTE);
-    signUpBtn = view.findViewById(R.id.loginBtn);
+	signUpBtn = view.findViewById(R.id.loginBtn);
+	registerWithGoogleET = view.findViewById(R.id.registerWithGoogleET);
+	
+	auth = FirebaseAuth.getInstance();
+	
+	// Initialize Google Sign-In
+	GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+			                          .requestIdToken(getString(R.string.default_web_client_id))  // Use the correct Web Client ID
+			                          .requestEmail()
+			                          .build();
+	
+	googleSignInUser = GoogleSignIn.getClient(requireContext(), gso); // Use requireContext() inside Fragment
+	
 	signUpBtn.setOnClickListener(v -> setSignUpBtn(view));
-
-	logInTV.setOnClickListener(view2 -> Navigation.findNavController(view2).navigate(R.id.action_signUp2_to_loginPage));
+	registerWithGoogleET.setOnClickListener(v -> setLoginWithGoogleBtn());
 	
-	
-	auth=FirebaseAuth.getInstance();
-//	loginBtn =findViewById(R.id.loginBtn);
+	logInTV.setOnClickListener(view2 ->
+			                           Navigation.findNavController(view2).navigate(R.id.action_signUp2_to_loginPage)
+	);
+	//	loginBtn =findViewById(R.id.loginBtn);
 
 //	logOutBtn=findViewById(R.id.logOutBtn);
 //	loginWithGoogleBtn=findViewById(R.id.loginWithGoogleBtn);
@@ -110,8 +136,9 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 //	GoogleSignInOptions gso =new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 //			                         .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 //	googleSignInUser= GoogleSignIn.getClient(this,gso);
-	super.onViewCreated(view, savedInstanceState);
 }
+
+
 private void setSignUpBtn(View view){
 	String password = passET.getText().toString();
 	String email = emailTE.getText().toString();
@@ -147,4 +174,45 @@ private void setSignUpBtn(View view){
 //	auth.signOut();
 //
 //}
+
+private void setLoginWithGoogleBtn() {
+	Intent signInGoogleIntent = googleSignInUser.getSignInIntent();
+	googleSignInLauncher.launch(signInGoogleIntent);  // Use the new launcher
+}
+
+private final ActivityResultLauncher<Intent> googleSignInLauncher =
+		registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+			if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+				Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+				try {
+					GoogleSignInAccount acc = task.getResult(ApiException.class);
+					signInWithGoogle(acc.getIdToken());  // Handle Google Sign-In
+				} catch (ApiException e) {
+					// Handle failure
+				}
+			}
+		});
+
+
+
+
+private void signInWithGoogle(String token) {
+	AuthCredential credential = GoogleAuthProvider.getCredential(token, null);
+	auth.signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+		@Override
+		public void onSuccess(AuthResult authResult) {
+			//Toast.makeText(MainActivity.this,"Success",Toast.LENGTH_LONG).show();
+			
+		}
+	}).addOnFailureListener(new OnFailureListener() {
+		@Override
+		public void onFailure(@NonNull Exception e) {
+			//Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
+		}
+	});
+}
+
+
+
+
 }
