@@ -31,7 +31,7 @@
         tools:layout="@layout/fragment_meal_details" />
     <fragment
         android:id="@+id/introduction"
-        android:name="com.example.androidjava.Introduction"
+        android:name="com.example.androidjava.fragments.Introduction"
         android:label="fragment_introduction"
         tools:layout="@layout/fragment_introduction" >
         <action
@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUp2"
-        android:name="com.example.androidjava.SignUp"
+        android:name="com.example.androidjava.fragments.SignUp"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -56,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginPage"
-        android:name="com.example.androidjava.LoginPage"
+        android:name="com.example.androidjava.fragments.LoginPage"
         android:label="fragment_login_page"
         tools:layout="@layout/fragment_login_page" >
         <action

@@ -1,4 +1,4 @@
-package com.example.androidjava;
+package com.example.androidjava.network;
 
 import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.MealResponse;

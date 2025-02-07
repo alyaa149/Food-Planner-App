@@ -8,7 +8,7 @@
     android:background="@color/DarkGreen"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".Introduction">
+    tools:context=".fragments.Introduction">
 
 
     <ImageView

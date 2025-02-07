@@ -9,7 +9,7 @@
     android:background="@color/Green"
 
 
-    tools:context=".LoginPage">
+    tools:context=".fragments.LoginPage">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -97,7 +97,7 @@ android:layout_marginBottom="30dp"
 
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:backgroundTint="@color/SoftPink"
+                android:backgroundTint="@color/red"
                 android:text="@string/login"
                 android:textColor="@color/white" />
 
@@ -111,7 +111,7 @@ android:layout_marginBottom="30dp"
 
             <LinearLayout
 
-                android:id="@+id/registerWithGoogleET"
+                android:id="@+id/loginWithGoogleET"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">

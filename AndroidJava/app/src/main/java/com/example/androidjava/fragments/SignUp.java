@@ -1,4 +1,4 @@
-package com.example.androidjava;
+package com.example.androidjava.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.androidjava.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -104,11 +105,11 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	logInTV = view.findViewById(R.id.loginTV);
 	emailTE = view.findViewById(R.id.emailTE);
 	signUpBtn = view.findViewById(R.id.loginBtn);
-	registerWithGoogleET = view.findViewById(R.id.registerWithGoogleET);
+	registerWithGoogleET = view.findViewById(R.id.loginWithGoogleET);
 	
 	auth = FirebaseAuth.getInstance();
 	
-	// Initialize Google Sign-In
+
 	GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 			                          .requestIdToken(getString(R.string.default_web_client_id))  // Use the correct Web Client ID
 			                          .requestEmail()

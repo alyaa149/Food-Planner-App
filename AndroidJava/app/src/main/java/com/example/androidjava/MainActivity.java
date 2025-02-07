@@ -1,14 +1,9 @@
 package com.example.androidjava;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,6 +13,7 @@ import com.example.androidjava.Models.Category;
 import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
+import com.example.androidjava.network.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;
