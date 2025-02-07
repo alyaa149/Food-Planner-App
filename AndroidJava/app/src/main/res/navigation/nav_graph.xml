@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_home2_to_mealDetails"
             app:destination="@id/mealDetails" />
+        <action
+            android:id="@+id/action_home2_to_mealsList"
+            app:destination="@id/mealsList" />
     </fragment>
 
     <fragment
@@ -62,6 +65,20 @@
         <action
             android:id="@+id/action_loginPage_to_home2"
             app:destination="@id/home2" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealsList"
+        android:name="com.example.androidjava.fragments.MealsList"
+        android:label="fragment_meals_list"
+        tools:layout="@layout/fragment_meals_list" >
+        <argument
+            android:name="country"
+            app:argType="string"
+            android:defaultValue="unKnown"/>
+        <argument
+            android:name="category"
+            app:argType="string"
+            android:defaultValue="unKnownCategory" />
     </fragment>
 
 </navigation>

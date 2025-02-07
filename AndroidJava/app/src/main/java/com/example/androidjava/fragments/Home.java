@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +25,9 @@ import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.R;
 import com.example.androidjava.adapters.CategoryAdapter;
-import com.example.androidjava.adapters.MealAdapter;
+import com.example.androidjava.adapters.AreaAdapter;
+import com.example.androidjava.listeners.OnCategoryListener;
+import com.example.androidjava.listeners.OnCountryClickListener;
 import com.example.androidjava.network.ApiClient;
 import com.google.android.material.chip.Chip;
 
@@ -36,15 +38,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Home extends Fragment {
+public class Home extends Fragment  implements OnCategoryListener, OnCountryClickListener {
 
 
 private static final String ARG_PARAM1 = "param1";
 private static final String ARG_PARAM2 = "param2";
 private List<Category> categoryList = new ArrayList<>();
 private List<Meal> areasList = new ArrayList<>();
+View view;
 RecyclerView recyclerView;
-MealAdapter mealAdapter;
+AreaAdapter areaAdapter;
 CardView randomMealCard;
 Chip categotyChip;
 Chip countryChip;
@@ -78,8 +81,10 @@ public void onCreate(Bundle savedInstanceState) {
 @Override
 public View onCreateView(LayoutInflater inflater, ViewGroup container,
                          Bundle savedInstanceState) {
-
-	return inflater.inflate(R.layout.fragment_home, container, false);
+	view = inflater.inflate(R.layout.fragment_home, container, false);
+	
+	return view;
+	//return inflater.inflate(R.layout.fragment_home, container, false);
 }
 
 @Override
@@ -87,8 +92,10 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	categotyChip =view.findViewById(R.id.categoryChip);
 	countryChip =view.findViewById(R.id.countryChip);
 	recyclerView =view.findViewById(R.id.recyclerView);
-	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 	randomMealCard = view.findViewById(R.id.includedMealCell);
+	
+	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+	showCategories();
 	countryChip.setOnClickListener(v ->showCountries());
 	categotyChip.setOnClickListener(v ->showCategories());
 	getDailyInspration();
@@ -100,10 +107,10 @@ public void showCountries(){
 		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
 			if(response.isSuccessful() && response.body() != null){
 				areasList =response.body().getMeals();
-				Toast.makeText(getContext(), "Country Name: " +areasList.get(0).getStrArea(), Toast.LENGTH_SHORT).show();
-				MealAdapter mealAdapter = new MealAdapter(getContext(), areasList);
-				recyclerView.setAdapter(mealAdapter);
-				mealAdapter.notifyDataSetChanged();
+			//	Toast.makeText(getContext(), "Country Name: " +areasList.get(0).getStrArea(), Toast.LENGTH_SHORT).show();
+				AreaAdapter areaAdapter = new AreaAdapter(getContext(), areasList,Home.this);
+				recyclerView.setAdapter(areaAdapter);
+				areaAdapter.notifyDataSetChanged();
 			}
 		}
 		
@@ -122,7 +129,7 @@ public void showCategories()
 		public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
 				categoryList = response.body().getCategories();
-				CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), categoryList);
+				CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), categoryList,Home.this);
 					recyclerView.setAdapter(categoryAdapter);
 				categoryAdapter.notifyDataSetChanged();
 			}
@@ -159,6 +166,23 @@ public void  getDailyInspration(){
 			Log.e("API_ERROR", "Failed to fetch meal: " + t.getMessage());
 		}
 	});
+}
+
+@Override
+public void onCategoryListener(Category category) {
+	Bundle bundle = new Bundle();
+	bundle.putString("category", category.getStrCategory());
+	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList,bundle);
+	
+}
+
+@Override
+public void onCountryClick(String country) {
+	        Bundle bundle = new Bundle();
+	        bundle.putString("country", country);
+			Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList,bundle);
+		
+
 }
 
 }

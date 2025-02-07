@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.Home">
 
+    <!-- Search View (Fixed at Top) -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="200dp"
@@ -18,141 +19,111 @@
         android:iconifiedByDefault="false"
         android:queryHint="Search meals..."
         app:backgroundTint="@color/SoftPink"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/daily_inspiration"
-        android:textColor="@color/DarkGreen"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="60dp"
+    app:layout_constraintTop_toBottomOf="@id/searchView"
 
+        >
+<!--        app:layout_constraintBottom_toTopOf="@id/navBar"-->
     <LinearLayout
-        android:id="@+id/randomMealContainer"
-        android:layout_width="0dp"
-        android:layout_height="220dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toStartOf="@id/guideline3"
-        app:layout_constraintStart_toStartOf="@id/guideline2"
-        app:layout_constraintTop_toBottomOf="@id/textView5">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <include
-            android:id="@+id/includedMealCell"
-            layout="@layout/meal_cell" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/daily_inspiration"
+            android:textColor="@color/DarkGreen"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/randomMealContainer"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/includedMealCell"
+                layout="@layout/meal_cell" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/SoftPink" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/dishes"
+            android:textColor="@color/DarkGreen"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:elevation="5dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/categoryChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/DarkGreen"
+                android:elevation="4dp"
+                android:text="@string/categories"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:chipStrokeColor="@color/DarkGreen" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/countryChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/DarkGreen"
+                android:elevation="4dp"
+                android:text="@string/countries"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:chipStrokeColor="@color/DarkGreen" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            tools:listitem="@layout/meal_cell" />
 
     </LinearLayout>
+</ScrollView>
 
+<!--    &lt;!&ndash; Navigation Bar (Fixed at Bottom) &ndash;&gt;-->
+<!--<com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--android:id="@+id/navBar"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="60dp"-->
+<!--android:layout_alignParentBottom="true"-->
+<!--app:menu="@menu/bottom_nav_menu"-->
+<!--app:layout_constraintBottom_toBottomOf="parent" />-->
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-
-        android:layout_marginTop="20dp"
-        android:text="@string/dishes"
-        android:textColor="@color/DarkGreen"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/divider2" />
-
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:elevation="5dp"
-        app:layout_constraintEnd_toStartOf="@id/guideline3"
-        app:layout_constraintStart_toStartOf="@id/guideline2"
-        app:layout_constraintTop_toBottomOf="@id/textView4">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/categoryChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkGreen"
-            android:elevation="4dp"
-            android:text="@string/categories"
-            android:textColor="@color/white"
-            app:rippleColor="@color/SoftPink"
-            android:textStyle="bold"
-            app:chipStrokeColor="@color/DarkGreen" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/countryChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkGreen"
-            android:elevation="4dp"
-            app:rippleColor="@color/SoftPink"
-            android:text="@string/countries"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:chipStrokeColor="@color/DarkGreen" />
-
-    </com.google.android.material.chip.ChipGroup>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toStartOf="@id/guideline3"
-        app:layout_constraintStart_toStartOf="@id/guideline2"
-        app:layout_constraintTop_toBottomOf="@id/chipGroup"
-        tools:listitem="@layout/meal_cell" />
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.05" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/SoftPink"
-        android:backgroundTint="@color/SoftPink"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/randomMealContainer" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/navBegin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="671dp" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

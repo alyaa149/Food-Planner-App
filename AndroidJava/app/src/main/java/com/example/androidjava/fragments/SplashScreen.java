@@ -74,6 +74,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 //			Navigation.findNavController(view).navigate(R.id.action_splashScreen_to_introduction2);
 //		}
 //},3000);
+	
 	super.onViewCreated(view, savedInstanceState);
 }
 }
