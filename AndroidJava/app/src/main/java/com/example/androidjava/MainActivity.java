@@ -51,42 +51,23 @@ protected void onCreate(Bundle savedInstanceState) {
 	
 
 	//=======================================================================
-	 retrofit = new Retrofit.Builder()
-			                    .baseUrl(url)
-			                    .addConverterFactory(GsonConverterFactory.create())
-			                    .build();
-	 apiService = retrofit.create(ApiService.class);
-	getAllCountries();
-	getAllCategories();
-	getMealInfo();
-	searchByIngredient("chicken");
-	searchByCategory("Seafood");
-	searchByArea("Canadian");
-	getRandomMeal();
-	getMealById(52772);
-	searchByName("Arrabiata");
+//	 retrofit = new Retrofit.Builder()
+//			                    .baseUrl(url)
+//			                    .addConverterFactory(GsonConverterFactory.create())
+//			                    .build();
+//	 apiService = retrofit.create(ApiService.class);
+//	getAllCountries();
+//	getAllCategories();
+//	getMealInfo();
+//	searchByIngredient("chicken");
+//	searchByCategory("Seafood");
+//	searchByArea("Canadian");
+//	getRandomMeal();
+//	getMealById(52772);
+//	searchByName("Arrabiata");
 	
 }
-private  void getRandomMeal(){
-	Call<MealResponse> call = apiService.getRandomMeal();
-	call.enqueue(new Callback<MealResponse>() {
-		@Override
-		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-			if (response.isSuccessful() && response.body() != null) {
-				meals = response.body().getMeals();
-				for (Meal meal : response.body().getMeals()) {
-					Log.i("SEARCH", "Random Meal Name: " + meal.getStrMeal());
-				}
-			}
-		}
-		
-		@Override
-		public void onFailure(Call<MealResponse> call, Throwable t) {
-			Log.i("SEARCH", "Error: " + t.getMessage());
-		}
-	});
 
-}
 private void searchByIngredient(String ingredient){
 	
 	Call<MealResponse> call = apiService.filterByIngredient(ingredient);

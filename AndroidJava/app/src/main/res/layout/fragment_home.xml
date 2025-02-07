@@ -13,7 +13,7 @@
         android:id="@+id/searchView"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:background="@color/SoftPink"
         android:elevation="4dp"
         android:iconifiedByDefault="false"
@@ -27,7 +27,7 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="@string/daily_inspiration"
         android:textColor="@color/DarkGreen"
         android:textSize="24sp"
@@ -38,24 +38,26 @@
     <LinearLayout
         android:id="@+id/randomMealContainer"
         android:layout_width="0dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toStartOf="@id/guideline3"
         app:layout_constraintStart_toStartOf="@id/guideline2"
         app:layout_constraintTop_toBottomOf="@id/textView5">
 
-        <include layout="@layout/meal_cell"  android:id="@+id/includedMealCell" />
+        <include
+            android:id="@+id/includedMealCell"
+            layout="@layout/meal_cell" />
 
     </LinearLayout>
 
-    <!-- Dishes Text -->
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="@string/dishes"
         android:textColor="@color/DarkGreen"
         android:textSize="24sp"
@@ -63,7 +65,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/randomMealContainer" />
 
-    <!-- Chip Group for Filtering -->
+
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
         android:layout_width="0dp"
@@ -103,9 +105,9 @@
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@id/guideline2"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toStartOf="@id/guideline3"
+        app:layout_constraintStart_toStartOf="@id/guideline2"
         app:layout_constraintTop_toBottomOf="@id/chipGroup"
         tools:listitem="@layout/meal_cell" />
 
@@ -123,5 +125,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        tools:layout_editor_absoluteX="14dp"
+        tools:layout_editor_absoluteY="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
