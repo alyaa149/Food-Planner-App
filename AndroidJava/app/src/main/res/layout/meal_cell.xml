@@ -2,8 +2,8 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card"
-    android:layout_width="200dp"
-    android:layout_height="200dp"
+    android:layout_width="220dp"
+    android:layout_height="220dp"
     android:layout_margin="8dp"
     app:cardBackgroundColor="@color/Green"
     app:cardCornerRadius="16dp"
@@ -15,19 +15,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:background="@color/Green"
         android:backgroundTint="@color/Green">
 
 
         <ImageView
-            android:id="@+id/foodImg"
+            android:id="@+id/itemImg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/colorSurfaceVariant"
             android:scaleType="centerCrop"
             android:src="@drawable/food" />
-
-
 
 
         <LinearLayout
@@ -40,17 +39,20 @@
             android:padding="16dp">
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/Title"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginRight="5dp"
+                    app:layout_constraintStart_toEndOf="@id/heartImg"
                     android:fontFamily="monospace"
-                    android:text="Chinese"
                     android:textAppearance="?attr/textAppearanceHeadline5"
                     android:textColor="@color/white"
                     android:textSize="16sp"
@@ -60,9 +62,13 @@
                     android:id="@+id/heartImg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
                     app:srcCompat="@drawable/notfav" />
-            </LinearLayout>
+
+            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/desc"
@@ -72,7 +78,6 @@
                 android:layout_marginTop="4dp"
                 android:alpha="0.8"
                 android:fontFamily="monospace"
-                android:text=".Italian"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 

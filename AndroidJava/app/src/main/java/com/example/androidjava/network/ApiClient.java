@@ -3,6 +3,7 @@ package com.example.androidjava.network;
 import android.util.Log;
 
 import com.example.androidjava.Models.Category;
+import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 
@@ -43,6 +44,20 @@ public static void getRandomMeal(Callback<MealResponse> callback) {
 		getInstance();
 	}
 	Call<MealResponse> call = apiService.getRandomMeal();
+	call.enqueue(callback);
+}
+public static void getAllCountries(Callback<MealResponse> callback) {
+	if(apiService ==null){
+		getInstance();
+	}
+	Call<MealResponse> call = apiService.getAllAreas();
+	call.enqueue(callback);
+}
+public static void getAllCategories(Callback<CategoryResponse> callback) {
+	if (apiService == null) {
+		getInstance();
+	}
+	Call<CategoryResponse> call = apiService.getAllCategories();
 	call.enqueue(callback);
 }
 }

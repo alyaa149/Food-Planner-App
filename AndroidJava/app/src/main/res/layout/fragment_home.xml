@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.Home">
 
-
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="200dp"
@@ -30,7 +29,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/daily_inspiration"
         android:textColor="@color/DarkGreen"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
@@ -38,7 +37,7 @@
     <LinearLayout
         android:id="@+id/randomMealContainer"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="220dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:orientation="horizontal"
@@ -57,13 +56,15 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+
+
+        android:layout_marginTop="20dp"
         android:text="@string/dishes"
         android:textColor="@color/DarkGreen"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/randomMealContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
 
     <com.google.android.material.chip.ChipGroup
@@ -84,15 +85,17 @@
             android:elevation="4dp"
             android:text="@string/categories"
             android:textColor="@color/white"
+            app:rippleColor="@color/SoftPink"
             android:textStyle="bold"
             app:chipStrokeColor="@color/DarkGreen" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/CountryChip"
+            android:id="@+id/countryChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/DarkGreen"
             android:elevation="4dp"
+            app:rippleColor="@color/SoftPink"
             android:text="@string/countries"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -130,7 +133,26 @@
         android:id="@+id/imageView"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        tools:layout_editor_absoluteX="14dp"
-        tools:layout_editor_absoluteY="16dp" />
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/SoftPink"
+        android:backgroundTint="@color/SoftPink"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/randomMealContainer" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/navBegin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="671dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
