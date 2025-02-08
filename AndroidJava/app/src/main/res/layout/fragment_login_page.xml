@@ -40,11 +40,12 @@
 
 
             <TextView
+                style="@style/bigTxt"
+
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-
-android:layout_marginBottom="30dp"
+                android:layout_marginBottom="30dp"
                 android:text="@string/Login"
                 android:textColor="@color/DarkGreen"
                 android:textSize="20sp"
@@ -99,7 +100,8 @@ android:layout_marginBottom="30dp"
                 android:layout_marginBottom="5dp"
                 android:backgroundTint="@color/red"
                 android:text="@string/login"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                app:rippleColor="@color/DarkGreen" />
 
             <View
                 android:id="@+id/divider"

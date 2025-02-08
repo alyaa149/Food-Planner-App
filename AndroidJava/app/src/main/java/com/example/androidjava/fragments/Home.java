@@ -38,7 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Home extends Fragment  implements OnCategoryListener, OnCountryClickListener {
+public class Home extends Fragment implements OnCategoryListener, OnCountryClickListener {
 
 
 private static final String ARG_PARAM1 = "param1";
@@ -84,31 +84,32 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	view = inflater.inflate(R.layout.fragment_home, container, false);
 	
 	return view;
-	//return inflater.inflate(R.layout.fragment_home, container, false);
 }
 
 @Override
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-	categotyChip =view.findViewById(R.id.categoryChip);
-	countryChip =view.findViewById(R.id.countryChip);
-	recyclerView =view.findViewById(R.id.recyclerView);
+	recyclerView = view.findViewById(R.id.recyclerView);
+	categotyChip = view.findViewById(R.id.categoryChip);
+	countryChip = view.findViewById(R.id.countryChip);
+	recyclerView = view.findViewById(R.id.recyclerView);
 	randomMealCard = view.findViewById(R.id.includedMealCell);
 	
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 	showCategories();
-	countryChip.setOnClickListener(v ->showCountries());
-	categotyChip.setOnClickListener(v ->showCategories());
+	countryChip.setOnClickListener(v -> showCountries());
+	categotyChip.setOnClickListener(v -> showCategories());
 	getDailyInspration();
 	super.onViewCreated(view, savedInstanceState);
 }
-public void showCountries(){
+
+public void showCountries() {
 	ApiClient.getAllCountries(new Callback<MealResponse>() {
 		@Override
 		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-			if(response.isSuccessful() && response.body() != null){
-				areasList =response.body().getMeals();
-			//	Toast.makeText(getContext(), "Country Name: " +areasList.get(0).getStrArea(), Toast.LENGTH_SHORT).show();
-				AreaAdapter areaAdapter = new AreaAdapter(getContext(), areasList,Home.this);
+			if (response.isSuccessful() && response.body() != null) {
+				areasList = response.body().getMeals();
+				//	Toast.makeText(getContext(), "Country Name: " +areasList.get(0).getStrArea(), Toast.LENGTH_SHORT).show();
+				AreaAdapter areaAdapter = new AreaAdapter(getContext(), areasList, Home.this);
 				recyclerView.setAdapter(areaAdapter);
 				areaAdapter.notifyDataSetChanged();
 			}
@@ -122,30 +123,30 @@ public void showCountries(){
 	});
 }
 
-public void showCategories()
-{
+public void showCategories() {
 	ApiClient.getAllCategories(new Callback<CategoryResponse>() {
 		@Override
 		public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
 				categoryList = response.body().getCategories();
-				CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), categoryList,Home.this);
-					recyclerView.setAdapter(categoryAdapter);
+				CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), categoryList, Home.this);
+				recyclerView.setAdapter(categoryAdapter);
 				categoryAdapter.notifyDataSetChanged();
 			}
-			Toast.makeText(getContext(), "Categoty Name: " +categoryList.get(0).getStrCategoryThumb(), Toast.LENGTH_SHORT).show();
+			//Toast.makeText(getContext(), "Categoty Name: " +categoryList.get(0).getStrCategoryThumb(), Toast.LENGTH_SHORT).show();
 		}
 		
 		@Override
 		public void onFailure(Call<CategoryResponse> call, Throwable t) {
-		Toast.makeText(getContext(), "Failed to fetch categories: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getContext(), "Failed to fetch categories: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 	});
 }
-public void  getDailyInspration(){
+
+public void getDailyInspration() {
 	ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
 	TextView mealName = randomMealCard.findViewById(R.id.Title);
-	TextView  mealDesc = randomMealCard.findViewById(R.id.desc);
+	TextView mealDesc = randomMealCard.findViewById(R.id.desc);
 	ApiClient.getRandomMeal(new Callback<MealResponse>() {
 		@Override
 		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
@@ -157,7 +158,7 @@ public void  getDailyInspration(){
 						.load(randomMeal.getStrMealThumb())
 						.into(mealImage);
 				mealName.setText(randomMeal.getStrMeal());
-				mealDesc.setText("."+randomMeal.getStrArea());
+				mealDesc.setText("." + randomMeal.getStrArea());
 			}
 		}
 		
@@ -172,17 +173,16 @@ public void  getDailyInspration(){
 public void onCategoryListener(Category category) {
 	Bundle bundle = new Bundle();
 	bundle.putString("category", category.getStrCategory());
-	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList,bundle);
+	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList, bundle);
 	
 }
 
 @Override
 public void onCountryClick(String country) {
-	        Bundle bundle = new Bundle();
-	        bundle.putString("country", country);
-			Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList,bundle);
-		
-
+	Bundle bundle = new Bundle();
+	bundle.putString("country", country);
+	//Toast.makeText(getContext(), "Selected Country in home: " + country, Toast.LENGTH_SHORT).show();
+	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList, bundle);
 }
 
 }

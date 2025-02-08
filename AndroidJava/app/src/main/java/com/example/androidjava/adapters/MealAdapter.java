@@ -11,15 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.R;
+import com.example.androidjava.listeners.OnMealClickListener;
+
 import java.util.List;
 
 public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
 
 private Context context;
 private List<Meal> meals;
-//private OnFavProductListener listener;
-public MealAdapter(Context context, List<Meal> meals){
+private OnMealClickListener listener;
+public MealAdapter(Context context, List<Meal> meals,OnMealClickListener listener){
 	this.context=context;
+	this.listener=listener;
 	this.meals=meals;
 }
 @NonNull
@@ -33,7 +36,8 @@ public MealAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int 
 public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int position) {
 	Meal meal = meals.get(position);
 	holder.title.setText(meal.getStrMeal());
-	holder.description.setText("."+meal.getStrArea());
+	holder.description.setText("."+meal.getIdMeal());
+	holder.itemView.setOnClickListener(v-> listener.onMealClick(meal));
 	Glide.with(context)
 			.load(meal.getStrMealThumb())
 			.into(holder.thumbnail);

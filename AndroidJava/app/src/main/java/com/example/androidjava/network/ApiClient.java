@@ -46,13 +46,15 @@ public static void getRandomMeal(Callback<MealResponse> callback) {
 	Call<MealResponse> call = apiService.getRandomMeal();
 	call.enqueue(callback);
 }
+
 public static void getAllCountries(Callback<MealResponse> callback) {
-	if(apiService ==null){
+	if (apiService == null) {
 		getInstance();
 	}
 	Call<MealResponse> call = apiService.getAllAreas();
 	call.enqueue(callback);
 }
+
 public static void getAllCategories(Callback<CategoryResponse> callback) {
 	if (apiService == null) {
 		getInstance();
@@ -60,4 +62,50 @@ public static void getAllCategories(Callback<CategoryResponse> callback) {
 	Call<CategoryResponse> call = apiService.getAllCategories();
 	call.enqueue(callback);
 }
+
+public static void getMealById(int id, Callback<MealResponse> callback) {
+	if (apiService == null) {
+		getInstance();
+	}
+	Call<MealResponse> call = apiService.getMealById(id);
+	call.enqueue(callback);
+}
+
+public static void searchByName(String name, Callback<MealResponse> callback) {
+	if (apiService == null) {
+		getInstance();
+	}
+	Call<MealResponse> call = apiService.searchByName(name);
+	call.enqueue(callback);
+	
+}
+
+public static void searchByIngredient(String ingredient, Callback<MealResponse> callback) {
+	if (apiService == null) {
+		getInstance();
+	}
+	Call<MealResponse> call = apiService.filterByIngredient(ingredient);
+	call.enqueue(callback);
+	
+}
+
+public static void searchByCategory(String category, Callback<MealResponse> callback) {
+	if (apiService == null) {
+		getInstance();
+	}
+	Call<MealResponse> call = apiService.filterByCategory(category);
+	call.enqueue(callback);
+}
+
+public static void searchByArea(String area, Callback<MealResponse> callback) {
+	if (apiService == null) {
+		getInstance();
+	}
+	Call<MealResponse> call =apiService.filterByArea(area);
+	call.enqueue(callback);
+
+}
+
+
+
 }
