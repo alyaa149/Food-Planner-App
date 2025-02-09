@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,16 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.R;
-import com.example.androidjava.adapters.AreaAdapter;
 import com.example.androidjava.adapters.MealAdapter;
 import com.example.androidjava.listeners.OnMealClickListener;
-import com.example.androidjava.network.ApiClient;
+import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +89,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 		
 		recyclerView = view.findViewById(R.id.recyclerView);
 		mealAdapter = new MealAdapter(getContext(), mealList, MealsList.this);
-		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
 		recyclerView.setAdapter(mealAdapter);
 		
 		
@@ -106,7 +104,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	}
 }
 private void getMealsByCountry(String country) {
-	ApiClient.searchByArea(country, new Callback<MealResponse>() {
+	MealsRemoteDataSourceImpl.searchByArea(country, new Callback<MealResponse>() {
 		@Override
 		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
@@ -131,7 +129,7 @@ private void getMealsByCountry(String country) {
 
 
 private void getMealsByCategory(String category) {
-	ApiClient.searchByCategory(category, new Callback<MealResponse>() {
+	MealsRemoteDataSourceImpl.searchByCategory(category, new Callback<MealResponse>() {
 		@Override
 		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
@@ -164,7 +162,7 @@ public void onMealClick(Meal meal) {
 		return;
 	}
 	
-	bundle.putSerializable("mealObject", (Serializable) meal);
+	bundle.putString("name", meal.getIdMeal());
 	Navigation.findNavController(view).navigate(R.id.action_mealsList_to_mealDetails, bundle);
 	
 	

@@ -1,22 +1,18 @@
-package com.example.androidjava.adapters;
+package com.example.androidjava.home.views;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Category;
-import com.example.androidjava.Models.Meal;
 import com.example.androidjava.R;
-import com.example.androidjava.listeners.OnCategoryListener;
 
 import java.util.List;
 

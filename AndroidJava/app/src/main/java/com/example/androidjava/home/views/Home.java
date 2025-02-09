@@ -1,4 +1,4 @@
-package com.example.androidjava.fragments;
+package com.example.androidjava.home.views;
 
 import android.os.Bundle;
 
@@ -24,11 +24,7 @@ import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.R;
-import com.example.androidjava.adapters.CategoryAdapter;
-import com.example.androidjava.adapters.AreaAdapter;
-import com.example.androidjava.listeners.OnCategoryListener;
-import com.example.androidjava.listeners.OnCountryClickListener;
-import com.example.androidjava.network.ApiClient;
+import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
@@ -103,7 +99,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 }
 
 public void showCountries() {
-	ApiClient.getAllCountries(new Callback<MealResponse>() {
+	MealsRemoteDataSourceImpl.getAllCountries(new Callback<MealResponse>() {
 		@Override
 		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
@@ -124,7 +120,7 @@ public void showCountries() {
 }
 
 public void showCategories() {
-	ApiClient.getAllCategories(new Callback<CategoryResponse>() {
+	MealsRemoteDataSourceImpl.getAllCategories(new Callback<CategoryResponse>() {
 		@Override
 		public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
@@ -147,7 +143,7 @@ public void getDailyInspration() {
 	ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
 	TextView mealName = randomMealCard.findViewById(R.id.Title);
 	TextView mealDesc = randomMealCard.findViewById(R.id.desc);
-	ApiClient.getRandomMeal(new Callback<MealResponse>() {
+	MealsRemoteDataSourceImpl.getRandomMeal(new Callback<MealResponse>() {
 		@Override
 		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {

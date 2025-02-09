@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-02-04T22:38:08.129373700Z">
+        <DropdownSelection timestamp="2025-02-09T22:16:52.974052400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Toshiba\.android\avd\myPhone.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=9309cc06" />
             </handle>
           </Target>
         </DropdownSelection>

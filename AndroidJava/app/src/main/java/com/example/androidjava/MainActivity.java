@@ -2,18 +2,23 @@ package com.example.androidjava;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.androidjava.Models.Category;
 import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.network.ApiService;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,30 +52,23 @@ protected void onCreate(Bundle savedInstanceState) {
 		v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 		return insets;
 	});
-	
+//	BottomAppBar bottomAppBar = findViewById(R.id.bottomAppBar);
+//	BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+//
+//	NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+//
+//	navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+//
+//		if ( destination.getId() == R.id.loginPage || destination.getId() == R.id.splashScreen || destination.getId() == R.id.introduction || destination.getId() == R.id.signUp2) {
+//			bottomAppBar.setVisibility(View.GONE);
+//		} else {
+//			bottomAppBar.setVisibility(View.VISIBLE);
+//		}
+//	});
 	
 }
 
 
-private void getMealById(int id) {
-	Call<MealResponse> myCall = apiService.getMealById(id);
-	myCall.enqueue(new Callback<MealResponse>() {
-		@Override
-		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-			if (response.isSuccessful() && response.body() != null) {
-				meal = response.body().getMeals().get(0);
-				Log.i("SEARCH", "get the meal by id: " + meal.getStrMeal());
-			}
-		}
-		
-		@Override
-		public void onFailure(Call<MealResponse> call, Throwable t) {
-			Log.i("bf", "Error: " + t.getMessage());
-		}
-		
-	});
-	
-}
 
 private void searchByName(String name) {
 	Call<MealResponse> myCall = apiService.searchByName(name);

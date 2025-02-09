@@ -5,25 +5,39 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.R;
 import com.example.androidjava.adapters.IngrediantAdapter;
-import com.example.androidjava.listeners.OnIngredientClickListener;
-import com.example.androidjava.network.ApiClient;
+//import com.example.androidjava.adapters.StepAdapter;
+import com.example.androidjava.network.MealsRemoteDataSourceImpl;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MealDetails extends Fragment implements OnIngredientClickListener {
+public class MealDetails extends Fragment  {
 
 
 private static final String ARG_PARAM1 = "param1";
@@ -32,9 +46,20 @@ private static final String ARG_PARAM2 = "param2";
 
 private String mParam1;
 private String mParam2;
+WebView webView;
 RecyclerView recyclerView;
+
 IngrediantAdapter ingrediantAdapter;
-Meal meal;
+
+
+Meal meal ;
+String mealId;
+
+TextView mealArea,mealName,steps;
+ImageView mealImg;
+View view;
+List<Meal>meals = new ArrayList<>();
+Map<String, String> ingredientsDetails = new HashMap<>();
 
 public MealDetails() {
 
@@ -62,43 +87,121 @@ public void onCreate(Bundle savedInstanceState) {
 @Override
 public View onCreateView(LayoutInflater inflater, ViewGroup container,
                          Bundle savedInstanceState) {
-	
-	return inflater.inflate(R.layout.fragment_meal_details, container, false);
+	view = inflater.inflate(R.layout.fragment_meal_details, container, false);
+	return view;
 }
 
 @Override
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 	super.onViewCreated(view, savedInstanceState);
-	Meal meal = getTheMealFromArguments();
-	Toast.makeText(getContext(), "Meal ingredient0 : " + meal.getStrIngredient1(), Toast.LENGTH_SHORT).show();
+	 getTheMealFromArguments();
+//	Toast.makeText(getContext(), "Meal ingredient0 : " + meal.getStrIngredient1(), Toast.LENGTH_SHORT).show();
 	getMealDetails();
-	
+	init();
+
+	Toast.makeText(getContext(), "Meal id : " + Integer.parseInt(mealId), Toast.LENGTH_SHORT).show();
+
+
+}
+
+public void init(){
 	recyclerView = view.findViewById(R.id.recyclerView);
-	//ingrediantAdapter = new IngrediantAdapter(getContext(), ,MealDetails.this);
-//	recyclerView.setAdapter(ingrediantAdapter);
-	
+	//stepRecyclerView=view.findViewById(R.id.stepsRecyclerView);
+	mealName = view.findViewById(R.id.mealName);
+	mealArea =view.findViewById(R.id.country);
+	mealImg =view.findViewById(R.id.mealImage);
+	steps =view.findViewById(R.id.steps);
+	webView=view.findViewById(R.id.mealVideo);
 }
 private void getMealDetails(){
+	MealsRemoteDataSourceImpl.getMealById(Integer.parseInt(mealId),new Callback<MealResponse>(){
+		
+		
+		@Override
+		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
+			if (response.isSuccessful() && response.body() != null) {
+				meal = response.body().getMeals().get(0);
+				updateUI();
+				showIngredients();
+				//showSteps();
+				ingrediantAdapter.notifyDataSetChanged();
+				
+		
+				Toast.makeText(getContext(), "Meal name : " + meal.getStrMeal(), Toast.LENGTH_SHORT).show();
+				
+			}
+		}
+		
+		@Override
+		public void onFailure(Call<MealResponse> call, Throwable t) {
+			Log.i("bf", "Error: " + t.getMessage());
+		}
+	});
 
 
 
 }
+private void showIngredients() {
+	Map<String, String> ingredientsDetails = new HashMap<>();
+	
+	try {
+		for (int i = 1; i <= 20; i++) {
+		
+			Field ingredientField = Meal.class.getDeclaredField("strIngredient" + i);
+			ingredientField.setAccessible(true);
+			String ingredient = (String) ingredientField.get(meal);
+			
+			
+			
+			String thumbnailUrl = "https://www.themealdb.com/images/ingredients/" + ingredient + ".png";
+			
+			
+			
+			if (ingredient != null && !ingredient.isEmpty() && thumbnailUrl != null && !thumbnailUrl.isEmpty()) {
+				ingredientsDetails.put(ingredient, thumbnailUrl);
+			}
+		}
+		
+		
+		
+		if (!ingredientsDetails.isEmpty()) {
+			ingrediantAdapter = new IngrediantAdapter(getContext(), ingredientsDetails);
+			recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+			recyclerView.setAdapter(ingrediantAdapter);
+			ingrediantAdapter.notifyDataSetChanged();
+		}
+	} catch (Exception e) {
+		e.printStackTrace(); // Handle reflection errors
+	}
+}
 
-private Meal getTheMealFromArguments() {
+
+private void updateUI() {
+	if (meal != null) {
+		
+		mealName.setText(meal.getStrMeal());
+		mealArea.setText("."+meal.getStrArea());
+		steps.setText(meal.getStrInstructions());
+		Glide.with(getContext()).load(meal.getStrMealThumb()).into(mealImg);
+		WebSettings webSettings = webView.getSettings();
+		webSettings.setJavaScriptEnabled(true);
+		webView.setWebViewClient(new WebViewClient());
+		webView.loadUrl(meal.getStrYoutube());
+		
+		
+	
+		
+		
+	}
+}
+private void getTheMealFromArguments() {
 	Bundle bundle = getArguments();
 	if (bundle != null) {
-		meal = (Meal) bundle.getSerializable("mealObject");
-		
+		mealId = (String) bundle.getString("name");
 	}else {
 		Toast.makeText(getContext(), "Bundle is null", Toast.LENGTH_SHORT).show();
 	}
-	Toast.makeText(getContext(), "Meal Name form bundle : " + meal.getStrMeal(), Toast.LENGTH_SHORT).show();
-	return meal;
 }
 
-@Override
-public void onIngredientClick(String Ingredient) {
-
-}
 
 }

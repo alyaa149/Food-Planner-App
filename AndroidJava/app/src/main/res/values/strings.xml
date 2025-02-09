@@ -19,4 +19,15 @@
     <string name="ingredients">Ingredients:</string>
     <string name="steps">Steps:</string>
     <string name="description">Description</string>
+    <string name="area">Area :</string>
+    <string name="areaa">Area:</string>
+    <string name="content_description_search">content_description_search</string>
+    <string name="search">Search</string>
+    <string name="home">home</string>
+    <string name="plan">plan</string>
+    <string name="favorites">favorites</string>
+    <string name="search_icon">Search</string>
+    <string name="Plan">Plan</string>
+    <string name="Home">Home</string>
+    <string name="settings">settings</string>
 </resources>

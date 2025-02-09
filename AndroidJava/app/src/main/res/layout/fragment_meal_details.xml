@@ -7,14 +7,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="200dp"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:paddingTop="10dp">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="280dp"
-            android:layout_height="250dp"
+            android:layout_width="250dp"
+            android:layout_height="220dp"
             android:layout_gravity="center_horizontal"
 
             android:layout_marginTop="20dp"
@@ -25,18 +27,19 @@
 
             <ImageView
                 android:id="@+id/mealImage"
-                android:layout_width="wrap_content"
-                android:layout_height="250dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/food" />
         </androidx.cardview.widget.CardView>
 
-        <!-- Ingredients -->
+
         <TextView
             android:id="@+id/mealName"
             style="@style/bigTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:paddingTop="10dp"
             android:text="Title" />
 
@@ -46,68 +49,70 @@
             android:layout_height="wrap_content"
 
             android:paddingTop="10dp"
-            android:text="@string/description"
-            android:textSize="20sp"
+            android:text="@string/areaa"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
+            android:layout_marginLeft="10dp"
+            android:fontFamily="monospace"
+            android:paddingTop="10dp"
+            android:text=".area2"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
 
         <TextView
             style="@style/bigTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:paddingTop="10dp"
             android:text="@string/ingredients"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:layout_gravity="center_horizontal"
             tools:listitem="@layout/ingredient_item" />
 
 
-
-        <!-- Steps -->
         <TextView
             style="@style/bigTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:paddingTop="10dp"
             android:text="@string/steps"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            app:cardBackgroundColor="@color/SoftPink"
-            app:cardCornerRadius="10dp">
 
-            <TextView
-                android:id="@+id/mealSteps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-
-                android:text="1. Step 1\n2. Step 2\n3. Step 3"
-                android:textSize="16sp" />
-        </androidx.cardview.widget.CardView>
-        <!-- Video Button -->
-        <Button
-            android:id="@+id/playVideoButton"
+        <TextView
+            android:id="@+id/steps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
 
+            android:layout_marginLeft="10dp"
+            android:fontFamily="monospace"
             android:paddingTop="10dp"
-            android:text="Watch Video" />
+            android:text="............."
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <WebView
+            android:id="@+id/mealVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            tools:layout_editor_absolutX="9dp"
+            tools:layout_editor_absolutY="9dp" />
 
     </LinearLayout>
 
