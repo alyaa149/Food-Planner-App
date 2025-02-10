@@ -1,4 +1,4 @@
-package com.example.androidjava.fragments;
+package com.example.androidjava.mealDetails.views;
 
 import android.os.Bundle;
 
@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.R;
-import com.example.androidjava.adapters.IngrediantAdapter;
 //import com.example.androidjava.adapters.StepAdapter;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 

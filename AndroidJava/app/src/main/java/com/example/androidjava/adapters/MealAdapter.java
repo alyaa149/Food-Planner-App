@@ -36,11 +36,15 @@ public MealAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int 
 public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int position) {
 	Meal meal = meals.get(position);
 	holder.title.setText(meal.getStrMeal());
-	holder.description.setText("."+meal.getIdMeal());
+	holder.description.setText("");
 	holder.itemView.setOnClickListener(v-> listener.onMealClick(meal));
 	Glide.with(context)
 			.load(meal.getStrMealThumb())
 			.into(holder.thumbnail);
+//	ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+//	params.width = (int) (params.width * 0.8);  // Decrease width by 10%
+//	params.height = (int) (params.height * 0.8); // Decrease height by 10%
+//	holder.itemView.setLayoutParams(params);
 }
 
 @Override
@@ -55,6 +59,7 @@ public static class ViewHolder extends RecyclerView.ViewHolder{
 		thumbnail = itemView.findViewById(R.id.itemImg);
 		title = itemView.findViewById(R.id.Title);
 		description = itemView.findViewById(R.id.desc);
+		
 		
 		
 	}

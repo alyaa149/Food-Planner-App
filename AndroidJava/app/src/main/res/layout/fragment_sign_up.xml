@@ -9,7 +9,7 @@
     android:background="@color/Green"
 
 
-    tools:context=".fragments.SignUp">
+    tools:context=".firebaseLoginAndSignUp.signUp.views.SignUp">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

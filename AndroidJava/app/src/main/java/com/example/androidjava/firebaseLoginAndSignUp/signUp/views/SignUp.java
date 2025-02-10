@@ -1,4 +1,4 @@
-package com.example.androidjava.fragments;
+package com.example.androidjava.firebaseLoginAndSignUp.signUp.views;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -36,31 +34,45 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class LoginPage extends Fragment {
-
-
-private static final String ARG_PARAM1 = "param1";
-private static final String ARG_PARAM2 = "param2";
-FirebaseAuth auth;
-FirebaseUser curUser;
-Button loginBtn;
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link SignUp#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class SignUp extends Fragment {
 TextInputEditText passET;
 TextInputEditText emailTE;
-LinearLayout loginWithGoogleET;
+Button signUpBtn;
+LinearLayout logInTV;
+LinearLayout registerWithGoogleET;
+FirebaseAuth auth;
+FirebaseUser curUser;
 GoogleSignInClient googleSignInUser;
+
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private static final String ARG_PARAM1 = "param1";
+private static final String ARG_PARAM2 = "param2";
 
 // TODO: Rename and change types of parameters
 private String mParam1;
 private String mParam2;
 
-public LoginPage() {
+public SignUp() {
 	// Required empty public constructor
 }
 
-
+/**
+ * Use this factory method to create a new instance of
+ * this fragment using the provided parameters.
+ *
+ * @param param1 Parameter 1.
+ * @param param2 Parameter 2.
+ * @return A new instance of fragment SignUp.
+ */
 // TODO: Rename and change types and number of parameters
-public static LoginPage newInstance(String param1, String param2) {
-	LoginPage fragment = new LoginPage();
+public static SignUp newInstance(String param1, String param2) {
+	SignUp fragment = new SignUp();
 	Bundle args = new Bundle();
 	args.putString(ARG_PARAM1, param1);
 	args.putString(ARG_PARAM2, param2);
@@ -81,32 +93,88 @@ public void onCreate(Bundle savedInstanceState) {
 public View onCreateView(LayoutInflater inflater, ViewGroup container,
                          Bundle savedInstanceState) {
 	// Inflate the layout for this fragment
-	return inflater.inflate(R.layout.fragment_login_page, container, false);
+	return inflater.inflate(R.layout.fragment_sign_up, container, false);
 }
+
 
 @Override
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-	auth = FirebaseAuth.getInstance();
-	passET = view.findViewById(R.id.passET);
+	super.onViewCreated(view, savedInstanceState);
 	
-	loginWithGoogleET =view.findViewById(R.id.loginWithGoogleET);
-	loginWithGoogleET.setOnClickListener(v-> setLoginWithGoogleBtn());
+	passET = view.findViewById(R.id.passET);
+	logInTV = view.findViewById(R.id.loginTV);
 	emailTE = view.findViewById(R.id.emailTE);
-	loginBtn =view.findViewById(R.id.loginBtn);
-
-//	logOutBtn=findViewById(R.id.logOutBtn);
-	//loginWithGoogleBtn=view.findViewById(R.id.loginWithGoogleBtn);
-//	//logOutWithGoogleBtn=findViewById(R.id.logOutWithGoogleBtn);
-
-	loginBtn.setOnClickListener(this::setLoginBtn);
-//	logOutBtn.setOnClickListener(view -> setLogOutBtn());
-//	//logOutWithGoogleBtn.setOnClickListener(view -> setLogOutBtn());
+	signUpBtn = view.findViewById(R.id.loginBtn);
+	registerWithGoogleET = view.findViewById(R.id.loginWithGoogleET);
+	
+	auth = FirebaseAuth.getInstance();
+	
 
 	GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-			                          .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-	googleSignInUser = GoogleSignIn.getClient(getContext(), gso);
-	super.onViewCreated(view, savedInstanceState);
+			                          .requestIdToken(getString(R.string.default_web_client_id))  // Use the correct Web Client ID
+			                          .requestEmail()
+			                          .build();
+	
+	googleSignInUser = GoogleSignIn.getClient(requireContext(), gso); // Use requireContext() inside Fragment
+	
+	signUpBtn.setOnClickListener(v -> setSignUpBtn(view));
+	registerWithGoogleET.setOnClickListener(v -> setLoginWithGoogleBtn());
+	
+	logInTV.setOnClickListener(view2 ->
+			                           Navigation.findNavController(view2).navigate(R.id.action_signUp2_to_loginPage)
+	);
+	//	loginBtn =findViewById(R.id.loginBtn);
+
+//	logOutBtn=findViewById(R.id.logOutBtn);
+//	loginWithGoogleBtn=findViewById(R.id.loginWithGoogleBtn);
+//	//logOutWithGoogleBtn=findViewById(R.id.logOutWithGoogleBtn);
+
+//	loginBtn.setOnClickListener(view -> setLoginBtn());
+//	logOutBtn.setOnClickListener(view -> setLogOutBtn());
+//	loginWithGoogleBtn.setOnClickListener(view -> setLoginWithGoogleBtn());
+//	//logOutWithGoogleBtn.setOnClickListener(view -> setLogOutBtn());
+//
+//	GoogleSignInOptions gso =new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//			                         .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+//	googleSignInUser= GoogleSignIn.getClient(this,gso);
 }
+
+
+private void setSignUpBtn(View view){
+	String password = passET.getText().toString();
+	String email = emailTE.getText().toString();
+	if (email.isEmpty() || password.isEmpty()) {
+		Toast.makeText(getContext(), "Please enter email and password", Toast.LENGTH_LONG).show();
+		return;
+	}
+	auth.createUserWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+		@Override
+		public void onSuccess(AuthResult authResult) {
+			Navigation.findNavController(view).navigate(R.id.action_signUp2_to_home2);
+			
+			//	Toast.makeText(MainActivity.this,"Success",Toast.LENGTH_LONG).show();
+
+		}
+	}).addOnFailureListener(new OnFailureListener() {
+		@Override
+		public void onFailure(@NonNull Exception e) {
+			Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+		}
+	});
+
+
+}
+//private  void setLogOutBtn(){
+//	auth.signOut(); //remove cache from user mobile
+//
+//
+//
+//}
+//private void setLogOutBtn(){
+//	//googleSignInUser.signOut();
+//	auth.signOut();
+//
+//}
 
 private void setLoginWithGoogleBtn() {
 	Intent signInGoogleIntent = googleSignInUser.getSignInIntent();
@@ -144,35 +212,8 @@ private void signInWithGoogle(String token) {
 		}
 	});
 }
-private void checkCurUser() {
-	curUser = auth.getCurrentUser();
-	if (curUser == null) {
-		Log.i("USERNOTEXIST", "USER NOT EXIST");
-		Toast.makeText(getContext(),"user not exist",Toast.LENGTH_LONG).show();
-		
-	} else {
-		Log.i("USEREXIST", "USER EXIST");
-		Toast.makeText(getContext(),"user  exist", Toast.LENGTH_LONG).show();
-		
-	}
-}
 
-private void setLoginBtn(View v) {
-	String password = passET.getText().toString();
-	String email = emailTE.getText().toString();
-	auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-		@Override
-		public void onComplete(@NonNull Task<AuthResult> task) {
-			if (task.isSuccessful()) {
-				Navigation.findNavController(v).navigate(R.id.action_loginPage_to_home2);
-			} else {
-			Toast.makeText(getContext(),task.getException().getMessage(),Toast.LENGTH_LONG).show();
-			}
-		}
-	});
-	
-	
-}
+
 
 
 }

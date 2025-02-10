@@ -38,8 +38,8 @@ public CategoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, 
 public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 	Category category = categories.get(position);
 	holder.title.setText(category.getStrCategory());
-	holder.description.setText(category.getStrCategoryDescription());
-
+	holder.description.setText("");
+     holder.heartImg.setVisibility(View.GONE);
 	Glide.with(context)
 			.load(category.getStrCategoryThumb())
 			.into(holder.thumbnail);
@@ -53,7 +53,7 @@ public int getItemCount() {
 	return (categories != null) ? categories.size() : 0;
 }
 public static class ViewHolder extends RecyclerView.ViewHolder{
-	public ImageView thumbnail;
+	public ImageView thumbnail, heartImg;
 	public TextView title, description;
 	
 	public ViewHolder(@NonNull View itemView) {
@@ -61,6 +61,7 @@ public static class ViewHolder extends RecyclerView.ViewHolder{
 		thumbnail = itemView.findViewById(R.id.itemImg);
 		title = itemView.findViewById(R.id.Title);
 		description = itemView.findViewById(R.id.desc);
+		heartImg=itemView.findViewById(R.id.heartImg);
 
 		
 	}

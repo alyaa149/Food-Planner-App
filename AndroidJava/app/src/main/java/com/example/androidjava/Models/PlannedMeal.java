@@ -1,20 +1,21 @@
 package com.example.androidjava.Models;
 
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.io.Serializable;
+import java.util.Date;
 
+@Entity(tableName = "planned_meals")
 
-public class Meal implements Serializable {
-
-public String idMeal;
-public String strMeal;
-public String strDrinkAlternate;
-public String strCategory;
-public String strArea;
-public String strInstructions;
+public class PlannedMeal {
+@PrimaryKey(autoGenerate = false)
+private String idMeal;
+private String strMeal;
+Date date;
+private String strDrinkAlternate;
+private String strCategory;
+private String strArea;
+private String strInstructions;
 public String strMealThumb;
 public String strTags;
 public String strYoutube;
@@ -488,7 +489,3 @@ public String getDateModified() {
 public String strCreativeCommonsConfirmed;
 public String dateModified;
 }
-
-
-
-

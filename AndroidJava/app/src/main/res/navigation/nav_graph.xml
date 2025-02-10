@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/mealDetails"
-        android:name="com.example.androidjava.fragments.MealDetails"
+        android:name="com.example.androidjava.mealDetails.views.MealDetails"
         android:label="fragment_meal_details"
         tools:layout="@layout/fragment_meal_details" >
         <argument
@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUp2"
-        android:name="com.example.androidjava.fragments.SignUp"
+        android:name="com.example.androidjava.firebaseLoginAndSignUp.signUp.views.SignUp"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -63,7 +63,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginPage"
-        android:name="com.example.androidjava.fragments.LoginPage"
+        android:name="com.example.androidjava.firebaseLoginAndSignUp.login.views.LoginPage"
         android:label="fragment_login_page"
         tools:layout="@layout/fragment_login_page" >
         <action
@@ -72,7 +72,7 @@
     </fragment>
     <fragment
         android:id="@+id/mealsList"
-        android:name="com.example.androidjava.fragments.MealsList"
+        android:name="com.example.androidjava.mealsList.views.MealsList"
         android:label="fragment_meals_list"
         tools:layout="@layout/fragment_meals_list" >
         <argument

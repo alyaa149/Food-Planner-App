@@ -38,6 +38,7 @@ public AreaAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int 
 public void onBindViewHolder(@NonNull AreaAdapter.ViewHolder holder, int position) {
 	Meal meal = meals.get(position);
 	holder.title.setText(meal.getStrArea());
+	holder.heartImg.setVisibility(View.GONE);
 	///holder.description.setText(meal.ge);
 	holder.itemView.setOnClickListener(v -> {
 		if (listener != null) {
@@ -55,13 +56,14 @@ public int getItemCount() {
 	return (meals != null) ? meals.size() : 0;
 }
 public static class ViewHolder extends RecyclerView.ViewHolder{
-	public ImageView thumbnail;
+	public ImageView thumbnail,heartImg;
 	public TextView title, description;
 	public ViewHolder(@NonNull View itemView) {
 		super(itemView);
 		thumbnail = itemView.findViewById(R.id.itemImg);
 		title = itemView.findViewById(R.id.Title);
 		description = itemView.findViewById(R.id.desc);
+		heartImg=itemView.findViewById(R.id.heartImg);
 	
 		
 	}

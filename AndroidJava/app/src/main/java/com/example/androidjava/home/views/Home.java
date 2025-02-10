@@ -24,6 +24,7 @@ import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.R;
+import com.example.androidjava.listeners.OnMealClickListener;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 import com.google.android.material.chip.Chip;
 
@@ -47,9 +48,11 @@ AreaAdapter areaAdapter;
 CardView randomMealCard;
 Chip categotyChip;
 Chip countryChip;
+OnMealClickListener mealClickListener;
 
 private String mParam1;
 private String mParam2;
+Meal randomMeal = new Meal();
 
 public Home() {
 
@@ -140,6 +143,7 @@ public void showCategories() {
 }
 
 public void getDailyInspration() {
+
 	ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
 	TextView mealName = randomMealCard.findViewById(R.id.Title);
 	TextView mealDesc = randomMealCard.findViewById(R.id.desc);
@@ -147,7 +151,7 @@ public void getDailyInspration() {
 		@Override
 		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
 			if (response.isSuccessful() && response.body() != null) {
-				Meal randomMeal = response.body().getMeals().get(0);
+				 randomMeal = response.body().getMeals().get(0);
 				
 				//Toast.makeText(getContext(), "Meal Img: " + randomMeal.getStrMealThumb(), Toast.LENGTH_SHORT).show();
 				Glide.with(getContext())
@@ -163,6 +167,26 @@ public void getDailyInspration() {
 			Log.e("API_ERROR", "Failed to fetch meal: " + t.getMessage());
 		}
 	});
+	mealClickListener = new OnMealClickListener() {
+		@Override
+		public void onMealClick(Meal meal) {
+			Bundle bundle = new Bundle();
+			if (randomMeal == null || randomMeal.getIdMeal() == null) {
+				Toast.makeText(getContext(), "Meal data is missing", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
+			bundle.putString("name", randomMeal.getIdMeal());
+			Navigation.findNavController(view).navigate(R.id.action_home2_to_mealDetails, bundle);
+			Toast.makeText(getContext(), "Clicked: " + randomMeal.getStrMeal(), Toast.LENGTH_SHORT).show();
+		}
+	};
+	randomMealCard.setOnClickListener(v -> {
+		if (mealClickListener != null) {
+			mealClickListener.onMealClick(randomMeal);
+		}
+	});
+	
 }
 
 @Override

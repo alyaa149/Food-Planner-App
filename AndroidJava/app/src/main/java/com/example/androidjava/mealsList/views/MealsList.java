@@ -1,4 +1,4 @@
-package com.example.androidjava.fragments;
+package com.example.androidjava.mealsList.views;
 
 import android.os.Bundle;
 

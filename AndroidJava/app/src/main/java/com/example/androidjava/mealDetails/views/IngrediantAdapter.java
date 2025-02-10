@@ -1,4 +1,4 @@
-package com.example.androidjava.adapters;
+package com.example.androidjava.mealDetails.views;
 
 import android.content.Context;
 import android.util.Log;
