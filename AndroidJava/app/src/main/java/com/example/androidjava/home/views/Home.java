@@ -21,9 +21,15 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Category;
 import com.example.androidjava.Models.CategoryResponse;
+import com.example.androidjava.Models.FavMeal;
 import com.example.androidjava.Models.Meal;
+import com.example.androidjava.Models.MealRepository;
+import com.example.androidjava.Models.MealRepositoryImpl;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.R;
+import com.example.androidjava.db.localdata.MealsLocalDataSource;
+import com.example.androidjava.home.presenters.HomePresenter;
+import com.example.androidjava.home.presenters.HomePresenterImpl;
 import com.example.androidjava.listeners.OnMealClickListener;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 import com.google.android.material.chip.Chip;
@@ -35,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Home extends Fragment implements OnCategoryListener, OnCountryClickListener {
+public class Home extends Fragment implements OnClickListener,HomeView {
 
 
 private static final String ARG_PARAM1 = "param1";
@@ -49,10 +55,11 @@ CardView randomMealCard;
 Chip categotyChip;
 Chip countryChip;
 OnMealClickListener mealClickListener;
-
+MealRepository repository;
 private String mParam1;
 private String mParam2;
 Meal randomMeal = new Meal();
+private HomePresenter homePresenter;
 
 public Home() {
 
@@ -71,17 +78,17 @@ public static Home newInstance(String param1, String param2) {
 @Override
 public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	if (getArguments() != null) {
-		mParam1 = getArguments().getString(ARG_PARAM1);
-		mParam2 = getArguments().getString(ARG_PARAM2);
-	}
+	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
+	
+	//MealsLocalDataSource localDataSource = MealsLocalDataSource.getInstance(this);
+	//repository = new MealRepositoryImpl(remoteDataSource, localDataSource);
+	repository = new MealRepositoryImpl(remoteDataSource);
+	homePresenter = new HomePresenterImpl(this, repository);
 }
 
 @Override
-public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                         Bundle savedInstanceState) {
+public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	view = inflater.inflate(R.layout.fragment_home, container, false);
-	
 	return view;
 }
 
@@ -90,103 +97,54 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	recyclerView = view.findViewById(R.id.recyclerView);
 	categotyChip = view.findViewById(R.id.categoryChip);
 	countryChip = view.findViewById(R.id.countryChip);
-	recyclerView = view.findViewById(R.id.recyclerView);
 	randomMealCard = view.findViewById(R.id.includedMealCell);
 	
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-	showCategories();
-	countryChip.setOnClickListener(v -> showCountries());
-	categotyChip.setOnClickListener(v -> showCategories());
-	getDailyInspration();
+	homePresenter.getDailyInspration();
+	homePresenter.showCategories();
+	
+	categotyChip.setOnClickListener(v -> homePresenter.showCategories());
+	countryChip.setOnClickListener(v -> homePresenter.showCountries());
+	
+	
 	super.onViewCreated(view, savedInstanceState);
 }
 
-public void showCountries() {
-	MealsRemoteDataSourceImpl.getAllCountries(new Callback<MealResponse>() {
-		@Override
-		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-			if (response.isSuccessful() && response.body() != null) {
-				areasList = response.body().getMeals();
-				//	Toast.makeText(getContext(), "Country Name: " +areasList.get(0).getStrArea(), Toast.LENGTH_SHORT).show();
-				AreaAdapter areaAdapter = new AreaAdapter(getContext(), areasList, Home.this);
-				recyclerView.setAdapter(areaAdapter);
-				areaAdapter.notifyDataSetChanged();
-			}
-		}
-		
-		@Override
-		public void onFailure(Call<MealResponse> call, Throwable t) {
-			Toast.makeText(getContext(), "Failed to fetch areas: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-			
-		}
-	});
+@Override
+public void showCategories(List<Category> categories) {
+	recyclerView.setAdapter(new CategoryAdapter(getContext(), categories, this));
 }
 
-public void showCategories() {
-	MealsRemoteDataSourceImpl.getAllCategories(new Callback<CategoryResponse>() {
-		@Override
-		public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
-			if (response.isSuccessful() && response.body() != null) {
-				categoryList = response.body().getCategories();
-				CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), categoryList, Home.this);
-				recyclerView.setAdapter(categoryAdapter);
-				categoryAdapter.notifyDataSetChanged();
-			}
-			//Toast.makeText(getContext(), "Categoty Name: " +categoryList.get(0).getStrCategoryThumb(), Toast.LENGTH_SHORT).show();
-		}
-		
-		@Override
-		public void onFailure(Call<CategoryResponse> call, Throwable t) {
-			Toast.makeText(getContext(), "Failed to fetch categories: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-		}
-	});
+@Override
+public void showCountries(List<Meal> countries) {
+	recyclerView.setAdapter(new AreaAdapter(getContext(), countries, this));
 }
 
-public void getDailyInspration() {
-
+@Override
+public void showRandomMeal(Meal meal) {
 	ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
 	TextView mealName = randomMealCard.findViewById(R.id.Title);
 	TextView mealDesc = randomMealCard.findViewById(R.id.desc);
-	MealsRemoteDataSourceImpl.getRandomMeal(new Callback<MealResponse>() {
-		@Override
-		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-			if (response.isSuccessful() && response.body() != null) {
-				 randomMeal = response.body().getMeals().get(0);
-				
-				//Toast.makeText(getContext(), "Meal Img: " + randomMeal.getStrMealThumb(), Toast.LENGTH_SHORT).show();
-				Glide.with(getContext())
-						.load(randomMeal.getStrMealThumb())
-						.into(mealImage);
-				mealName.setText(randomMeal.getStrMeal());
-				mealDesc.setText("." + randomMeal.getStrArea());
-			}
+	
+	Glide.with(getContext()).load(meal.getStrMealThumb()).into(mealImage);
+	mealName.setText(meal.getStrMeal());
+	mealDesc.setText(meal.getStrArea());
+	randomMealCard.setOnClickListener(v-> {
+		Bundle bundle = new Bundle();
+		if (meal == null || meal.getIdMeal() == null) {
+			Toast.makeText(getContext(), "Meal data is missing", Toast.LENGTH_SHORT).show();
+			return;
 		}
 		
-		@Override
-		public void onFailure(Call<MealResponse> call, Throwable t) {
-			Log.e("API_ERROR", "Failed to fetch meal: " + t.getMessage());
-		}
+		bundle.putString("name", meal.getIdMeal());
+		Navigation.findNavController(view).navigate(R.id.action_home2_to_mealDetails, bundle);
+		
 	});
-	mealClickListener = new OnMealClickListener() {
-		@Override
-		public void onMealClick(Meal meal) {
-			Bundle bundle = new Bundle();
-			if (randomMeal == null || randomMeal.getIdMeal() == null) {
-				Toast.makeText(getContext(), "Meal data is missing", Toast.LENGTH_SHORT).show();
-				return;
-			}
-			
-			bundle.putString("name", randomMeal.getIdMeal());
-			Navigation.findNavController(view).navigate(R.id.action_home2_to_mealDetails, bundle);
-			Toast.makeText(getContext(), "Clicked: " + randomMeal.getStrMeal(), Toast.LENGTH_SHORT).show();
-		}
-	};
-	randomMealCard.setOnClickListener(v -> {
-		if (mealClickListener != null) {
-			mealClickListener.onMealClick(randomMeal);
-		}
-	});
-	
+}
+
+@Override
+public void showError(String message) {
+	Toast.makeText(getContext(), "Error: " + message, Toast.LENGTH_SHORT).show();
 }
 
 @Override
@@ -198,11 +156,16 @@ public void onCategoryListener(Category category) {
 }
 
 @Override
+public void onFavClick(FavMeal favMeal) {
+
+}
+
+@Override
 public void onCountryClick(String country) {
 	Bundle bundle = new Bundle();
 	bundle.putString("country", country);
-	//Toast.makeText(getContext(), "Selected Country in home: " + country, Toast.LENGTH_SHORT).show();
 	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList, bundle);
 }
-
 }
+
+

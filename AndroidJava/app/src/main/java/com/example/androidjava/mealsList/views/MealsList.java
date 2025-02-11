@@ -16,10 +16,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.androidjava.Models.Meal;
+import com.example.androidjava.Models.MealRepository;
+import com.example.androidjava.Models.MealRepositoryImpl;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.R;
 import com.example.androidjava.adapters.MealAdapter;
+import com.example.androidjava.home.presenters.HomePresenter;
+import com.example.androidjava.home.presenters.HomePresenterImpl;
 import com.example.androidjava.listeners.OnMealClickListener;
+import com.example.androidjava.mealsList.presenters.MealsListPresenter;
+import com.example.androidjava.mealsList.presenters.MealsListPresenterImpl;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 
 import java.util.ArrayList;
@@ -30,10 +36,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MealsList extends Fragment implements OnMealClickListener {
+public class MealsList extends Fragment implements OnMealClickListener , MealsListView {
 RecyclerView recyclerView;
 MealAdapter mealAdapter;
 List<Meal> mealList =new ArrayList<>();
+private MealsListPresenter mealsListPresenter ;
+MealRepositoryImpl repository;
+
 
 
 private static final String ARG_PARAM1 = "param1";
@@ -64,6 +73,12 @@ public void onCreate(Bundle savedInstanceState) {
 		mParam1 = getArguments().getString(ARG_PARAM1);
 		mParam2 = getArguments().getString(ARG_PARAM2);
 	}
+	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
+	
+	//MealsLocalDataSource localDataSource = MealsLocalDataSource.getInstance(this);
+	//repository = new MealRepositoryImpl(remoteDataSource, localDataSource);
+	repository = new MealRepositoryImpl(remoteDataSource);
+	mealsListPresenter = new MealsListPresenterImpl(this, repository);
 }
 
 @Override
@@ -94,65 +109,15 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 		
 		
 		if (category != null ) {
-			//Toast.makeText(getContext(), "Category innside !=null= " + category+ " ,Country = "+country, Toast.LENGTH_SHORT).show();
-			getMealsByCategory(category);
-		} else if (country != null ) {
-		//	Toast.makeText(getContext(), "country innside ==null: " + category, Toast.LENGTH_SHORT).show();
+			mealsListPresenter.getMealsByCategory(category);
 			
-			getMealsByCountry(country);
+		
+		} else if (country != null ) {
+			mealsListPresenter.getMealsByCountry(country);
+	
 		}
 	}
 }
-private void getMealsByCountry(String country) {
-	MealsRemoteDataSourceImpl.searchByArea(country, new Callback<MealResponse>() {
-		@Override
-		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-			if (response.isSuccessful() && response.body() != null) {
-				
-				Toast.makeText(getContext(), "API call successful!", Toast.LENGTH_SHORT).show();
-				
-				mealList.clear();
-				mealList.addAll(response.body().getMeals());
-				mealAdapter.notifyDataSetChanged();
-			} else {
-				
-				Toast.makeText(getContext(), "Response not successful or body is null", Toast.LENGTH_SHORT).show();
-			}
-		}
-		
-		@Override
-		public void onFailure(Call<MealResponse> call, Throwable t) {
-			Toast.makeText(getContext(), "Failed to fetch meals: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-		}
-	});
-}
-
-
-private void getMealsByCategory(String category) {
-	MealsRemoteDataSourceImpl.searchByCategory(category, new Callback<MealResponse>() {
-		@Override
-		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-			if (response.isSuccessful() && response.body() != null) {
-				
-				//Toast.makeText(getContext(), "API call successful!", Toast.LENGTH_SHORT).show();
-				
-				mealList.clear();
-				mealList.addAll(response.body().getMeals());
-				mealAdapter.notifyDataSetChanged();
-			} else {
-			
-				Toast.makeText(getContext(), "Response not successful or body is null", Toast.LENGTH_SHORT).show();
-			}
-		}
-		
-		@Override
-		public void onFailure(Call<MealResponse> call, Throwable t) {
-			Toast.makeText(getContext(), "Failed to fetch meals: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-		}
-	});
-}
-
-
 
 @Override
 public void onMealClick(Meal meal) {
@@ -166,5 +131,18 @@ public void onMealClick(Meal meal) {
 	Navigation.findNavController(view).navigate(R.id.action_mealsList_to_mealDetails, bundle);
 	
 	
+}
+
+
+@Override
+public void showMeals(List<Meal> meals) {
+	mealList.clear();
+	mealList.addAll(meals);
+	mealAdapter.notifyDataSetChanged();
+}
+@Override
+public void showError(String message) {
+	Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+
 }
 }

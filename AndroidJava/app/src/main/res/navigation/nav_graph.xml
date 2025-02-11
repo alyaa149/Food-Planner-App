@@ -92,5 +92,10 @@
         android:name="com.example.androidjava.fragments.favoritesPage"
         android:label="fragment_favorites_page"
         tools:layout="@layout/fragment_favorites_page" />
+    <fragment
+        android:id="@+id/navBar"
+        android:name="com.example.androidjava.fragments.NavBar"
+        android:label="fragment_nav_bar"
+        tools:layout="@layout/fragment_nav_bar" />
 
 </navigation>

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.R;
+import com.example.androidjava.home.views.OnClickListener;
 import com.example.androidjava.listeners.OnMealClickListener;
 
 import java.util.List;
@@ -37,7 +38,8 @@ public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int positio
 	Meal meal = meals.get(position);
 	holder.title.setText(meal.getStrMeal());
 	holder.description.setText("");
-	holder.itemView.setOnClickListener(v-> listener.onMealClick(meal));
+	holder.thumbnail.setOnClickListener(v-> listener.onMealClick(meal));
+	//holder.heartImg.setOnClickListener(v -> listener.onFavClick(meal));
 	Glide.with(context)
 			.load(meal.getStrMealThumb())
 			.into(holder.thumbnail);
@@ -54,12 +56,13 @@ public int getItemCount() {
 public static class ViewHolder extends RecyclerView.ViewHolder{
 	public ImageView thumbnail;
 	public TextView title, description;
+	ImageView heartImg;
 	public ViewHolder(@NonNull View itemView) {
 		super(itemView);
 		thumbnail = itemView.findViewById(R.id.itemImg);
 		title = itemView.findViewById(R.id.Title);
 		description = itemView.findViewById(R.id.desc);
-		
+		heartImg=itemView.findViewById(R.id.heartImg);
 		
 		
 	}

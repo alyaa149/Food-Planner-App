@@ -21,8 +21,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 private Context context;
 private List<Category>categories;
 
-private OnCategoryListener listener;
-public CategoryAdapter(Context context, List<Category> categories, OnCategoryListener listener){
+private OnClickListener listener;
+public CategoryAdapter(Context context, List<Category> categories, OnClickListener listener){
 	this.listener = listener;
 this.categories =categories;
 this.context =context;
@@ -43,7 +43,7 @@ public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 	Glide.with(context)
 			.load(category.getStrCategoryThumb())
 			.into(holder.thumbnail);
-	holder.itemView.setOnClickListener(v -> listener.onCategoryListener(category));
+	holder.thumbnail.setOnClickListener(v -> listener.onCategoryListener(category));
 
 }
 

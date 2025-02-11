@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 @Entity(tableName = "planned_meals")
-
 public class PlannedMeal {
 @PrimaryKey(autoGenerate = false)
 private String idMeal;

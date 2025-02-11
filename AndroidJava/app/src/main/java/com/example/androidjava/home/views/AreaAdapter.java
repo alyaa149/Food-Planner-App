@@ -20,9 +20,9 @@ public class AreaAdapter extends RecyclerView.Adapter<AreaAdapter.ViewHolder>  {
 
 private Context context;
 private List<Meal> meals;
-private OnCountryClickListener listener;
+private OnClickListener listener;
 //private OnFavProductListener listener;
-public AreaAdapter(Context context, List<Meal> meals, OnCountryClickListener listener){
+public AreaAdapter(Context context, List<Meal> meals, OnClickListener listener){
 	this.listener =listener;
     this.context=context;
     this.meals=meals;
@@ -40,11 +40,12 @@ public void onBindViewHolder(@NonNull AreaAdapter.ViewHolder holder, int positio
 	holder.title.setText(meal.getStrArea());
 	holder.heartImg.setVisibility(View.GONE);
 	///holder.description.setText(meal.ge);
-	holder.itemView.setOnClickListener(v -> {
+	holder.thumbnail.setOnClickListener(v -> {
 		if (listener != null) {
 			listener.onCountryClick(meal.getStrArea());
 		}
 	});
+	//holder.heartImg.setOnClickListener(v -> listener.onFavClick(meal));
 	Glide.with(context)
 			.load(meal.getStrMealThumb())
 			.into(holder.thumbnail);

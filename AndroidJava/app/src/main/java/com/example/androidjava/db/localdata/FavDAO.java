@@ -1,5 +1,6 @@
 package com.example.androidjava.db.localdata;
 
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -7,7 +8,7 @@ import androidx.room.Query;
 import com.example.androidjava.Models.FavMeal;
 
 import java.util.List;
-
+@Dao
 public interface FavDAO {
 @Insert
 void insertFavoriteMeal(FavMeal meal);
