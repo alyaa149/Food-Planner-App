@@ -1,8 +1,5 @@
 package com.example.androidjava.network;
 
-import com.example.androidjava.Models.CategoryResponse;
-import com.example.androidjava.Models.MealResponse;
-
 public interface MealsRemoteDataSource {
 
 	void getCategories(NetworkCallback callback);
@@ -15,6 +12,10 @@ public interface MealsRemoteDataSource {
 	void getMealByIngredient(String ingredient, NetworkCallback callback);
 	void getMealByLetter(char letter, NetworkCallback callback);
 	void getMealBySearch(String query, NetworkCallback callback);
+	void createUserWithEmailAndPassword(String email, String password, AuthCallback callback);
+	void signInWithEmailAndPassword(String email, String password, AuthCallback callback);
+	void signInAndSignUpWithGoogle(String token, AuthCallback callback);
+	void signOut(AuthCallback callback);
 
 
 }

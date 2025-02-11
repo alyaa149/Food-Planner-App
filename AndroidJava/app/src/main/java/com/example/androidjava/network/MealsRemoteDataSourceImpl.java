@@ -1,9 +1,12 @@
 package com.example.androidjava.network;
 
+import android.util.Log;
+
 import com.example.androidjava.Models.CategoryResponse;
-import com.example.androidjava.Models.MealRepository;
 import com.example.androidjava.Models.MealResponse;
-import com.example.androidjava.home.views.HomeView;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -14,6 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MealsRemoteDataSourceImpl implements MealsRemoteDataSource {
 private static ApiService apiService;
+private FirebaseAuth auth;
 private static MealsRemoteDataSourceImpl instance;
 private static Retrofit retrofit;
 private static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
@@ -25,6 +29,7 @@ public MealsRemoteDataSourceImpl() {
 			           .addConverterFactory(GsonConverterFactory.create())
 			           .build();
 	apiService = retrofit.create(ApiService.class);
+	auth = FirebaseAuth.getInstance();
 }
 
 @Override
@@ -152,5 +157,41 @@ public void getMealByLetter(char letter, NetworkCallback callback) {
 @Override
 public void getMealBySearch(String query, NetworkCallback callback) {
 
+}
+
+@Override
+public void createUserWithEmailAndPassword(String email, String password, AuthCallback callback) {
+	Log.i("TAG", "data source: " + password+", "+email);
+	auth.createUserWithEmailAndPassword(email, password)
+			.addOnSuccessListener(authResult -> callback.onSuccess("User registered successfully"))
+			.addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+}
+
+@Override
+public void signInWithEmailAndPassword(String email, String password, AuthCallback callback) {
+	auth.signInWithEmailAndPassword(email, password)
+			.addOnSuccessListener(authResult -> callback.onSuccess("Login successful"))
+			.addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+}
+
+@Override
+public void signInAndSignUpWithGoogle(String token, AuthCallback callback) {
+	AuthCredential credential = GoogleAuthProvider.getCredential(token, null);
+	auth.signInWithCredential(credential)
+			.addOnSuccessListener(authResult -> {
+				if (authResult.getAdditionalUserInfo().isNewUser()) {
+					callback.onSuccess("New Google user signed up");
+				} else {
+					callback.onSuccess("Existing Google user logged in");
+				}
+			})
+			.addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+}
+
+@Override
+public void signOut(AuthCallback callback) {
+
+	auth.signOut();
+	
 }
 }

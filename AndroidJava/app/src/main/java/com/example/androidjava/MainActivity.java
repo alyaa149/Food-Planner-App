@@ -2,23 +2,17 @@ package com.example.androidjava;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.androidjava.Models.Category;
-import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.network.ApiService;
-import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +21,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 

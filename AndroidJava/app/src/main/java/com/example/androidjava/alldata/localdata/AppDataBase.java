@@ -1,0 +1,25 @@
+package com.example.androidjava.alldata.localdata;
+
+import android.content.Context;
+
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+
+import com.example.androidjava.Models.FavMeal;
+
+@androidx.room.Database(entities = {FavMeal.class}, version = 1)
+public abstract class AppDataBase extends RoomDatabase {
+private static AppDataBase instanse = null;
+
+public abstract FavDAO getMealDao();
+
+public static synchronized AppDataBase getInstanse(Context context) {
+	if (instanse == null) {
+		instanse = Room.databaseBuilder(context.getApplicationContext(), AppDataBase.class, "mealsdb").build();
+
+	}
+	return instanse;
+
+}
+
+}
