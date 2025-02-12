@@ -41,9 +41,9 @@ public void onBindViewHolder(@NonNull AreaAdapter.ViewHolder holder, int positio
 	holder.heartImg.setVisibility(View.GONE);
 	///holder.description.setText(meal.ge);
 	holder.thumbnail.setOnClickListener(v -> {
-		if (listener != null) {
+	//	if (listener != null) {
 			listener.onCountryClick(meal.getStrArea());
-		}
+		//}
 	});
 	
 	//holder.heartImg.setOnClickListener(v -> listener.onFavClick(meal));

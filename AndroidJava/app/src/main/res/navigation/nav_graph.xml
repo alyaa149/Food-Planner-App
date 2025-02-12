@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home2">
+    app:startDestination="@id/signUp2">
 
     <fragment
         android:id="@+id/home2"
@@ -44,22 +44,7 @@
         <action
             android:id="@+id/action_introduction_to_signUp"
             app:destination="@id/signUp" />
-        <action
-            android:id="@+id/action_introduction_to_signUp2"
-            app:destination="@id/signUp2" />
 
-    </fragment>
-    <fragment
-        android:id="@+id/signUp2"
-        android:name="com.example.androidjava.allpages.firebaseLoginAndSignUp.signUp.views.SignUp"
-        android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" >
-        <action
-            android:id="@+id/action_signUp2_to_home2"
-            app:destination="@id/home2" />
-        <action
-            android:id="@+id/action_signUp2_to_loginPage"
-            app:destination="@id/loginPage" />
     </fragment>
     <fragment
         android:id="@+id/loginPage"
@@ -97,5 +82,17 @@
         android:name="com.example.androidjava.fragments.NavBar"
         android:label="fragment_nav_bar"
         tools:layout="@layout/fragment_nav_bar" />
+    <fragment
+        android:id="@+id/signUp2"
+        android:name="com.example.androidjava.allpages.firebaseLoginAndSignUp.signUp.views.SignUp"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUp2_to_home2"
+            app:destination="@id/home2" />
+        <action
+            android:id="@+id/action_signUp2_to_loginPage"
+            app:destination="@id/loginPage" />
+    </fragment>
 
 </navigation>

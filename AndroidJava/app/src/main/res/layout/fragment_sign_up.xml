@@ -5,10 +5,7 @@
     android:id="@+id/signUp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@color/Green"
-
-
     tools:context=".allpages.firebaseLoginAndSignUp.signUp.views.SignUp">
 
     <androidx.constraintlayout.widget.Guideline
@@ -131,7 +128,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_margin="8dp"
-
                 android:background="?android:attr/listDivider" />
 
             <LinearLayout

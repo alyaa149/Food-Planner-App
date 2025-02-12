@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import com.example.androidjava.R;
 import com.example.androidjava.allpages.mealsList.presenters.MealsListPresenter;
 import com.example.androidjava.allpages.mealsList.presenters.MealsListPresenterImpl;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +84,14 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 @Override
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 	super.onViewCreated(view, savedInstanceState);
+	FirebaseAuth auth = FirebaseAuth.getInstance();
+	FirebaseUser user = auth.getCurrentUser();
+	
+	if (user == null) {
+		Toast.makeText(getContext(), "User is not logged in!", Toast.LENGTH_SHORT).show();
+	} else {
+		Log.d("DEBUG", "User is logged in: " + user.getEmail());
+	}
 	
 	if (getArguments() == null) {
 		Toast.makeText(getContext(), "Arguments are null", Toast.LENGTH_SHORT).show();
@@ -88,22 +99,29 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 		category = getArguments().getString("category");
 		country = getArguments().getString("country");
 		
-		Toast.makeText(getContext(), "Selected Category: " + category, Toast.LENGTH_SHORT).show();
-		Toast.makeText(getContext(), "Selected Country: " + country, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getContext(), "Selected Category form mealslist: " + category, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getContext(), "Selected Country: from mealslist " + country, Toast.LENGTH_SHORT).show();
 		
 		
 		recyclerView = view.findViewById(R.id.recyclerView);
 		mealAdapter = new MealAdapter(getContext(), mealList, MealsList.this);
-		recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
+		//recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		recyclerView.setAdapter(mealAdapter);
+		recyclerView.post(() -> {
+			Log.d("DEBUG", "RecyclerView child count: " + recyclerView.getChildCount());
+		});
+		
 		
 		
 		if (category != null ) {
+Log.i("DEBUG", "category != null " + category);
 			mealsListPresenter.getMealsByCategory(category);
 			
 		
 		} else if (country != null ) {
-			mealsListPresenter.getMealsByCountry(country);
+Log.i("DEBUG", "country != null " + country);
+mealsListPresenter.getMealsByCountry(country);
 	
 		}
 	}
@@ -113,8 +131,8 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 public void onMealClick(Meal meal) {
 	Bundle bundle = new Bundle();
 	if (meal == null || meal.getIdMeal() == null) {
-		Toast.makeText(getContext(), "Meal data is missing", Toast.LENGTH_SHORT).show();
-		return;
+Log.i("DEBUG", "Meal is null or id is null");
+return;
 	}
 	
 	bundle.putString("name", meal.getIdMeal());
@@ -126,13 +144,30 @@ public void onMealClick(Meal meal) {
 
 @Override
 public void showMeals(List<Meal> meals) {
-	mealList.clear();
-	mealList.addAll(meals);
-	mealAdapter.notifyDataSetChanged();
+	if(isAdded()) {
+		Log.d("DEBUG", "Meals received: " + meals.size());
+		Toast.makeText(getContext(), "Meals received: " + meals.size(), Toast.LENGTH_SHORT).show();
+		
+		if (meals == null || meals.isEmpty()) {
+			Toast.makeText(getContext(), "No meals received!", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
+		mealList.clear();
+		mealList.addAll(meals);
+		mealAdapter.notifyDataSetChanged(); // Ensure adapter knows the data changed
+		
+		recyclerView.post(() -> {
+			recyclerView.invalidate();
+			recyclerView.requestLayout();
+			Log.d("DEBUG", "RecyclerView forced to relayout");
+		});
+		Log.d("DEBUG", "RecyclerView is visible");
+	}
 }
+
 @Override
 public void showError(String message) {
-	Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-
+Log.i("DEBUG", "Error message: " + message);
 }
 }

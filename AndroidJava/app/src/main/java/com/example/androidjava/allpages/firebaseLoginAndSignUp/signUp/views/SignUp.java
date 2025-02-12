@@ -100,7 +100,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 		 email = emailTE.getText().toString();
 		 password = passET.getText().toString();
 		Log.i("TAG", "onViewCreated: " + email);
-		presenter.signUp("ll@g.com", "23456778");});
+		presenter.signUp(email, password);});
 	registerWithGoogleET.setOnClickListener(v -> initiateGoogleSignIn());
 }
 
@@ -149,7 +149,6 @@ public void onAuthFailure(String error) {
 		Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
 	}
 }
-
 }
 //
 //@Override

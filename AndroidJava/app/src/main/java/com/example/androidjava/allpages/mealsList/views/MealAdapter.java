@@ -1,11 +1,14 @@
 package com.example.androidjava.allpages.mealsList.views;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -36,8 +39,9 @@ public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int positio
 	Meal meal = meals.get(position);
 	holder.title.setText(meal.getStrMeal());
 	holder.description.setText("");
-	holder.thumbnail.setOnClickListener(v-> listener.onMealClick(meal));
+	holder.itemView.setOnClickListener(v-> listener.onMealClick(meal));
 	//holder.heartImg.setOnClickListener(v -> listener.onFavClick(meal));
+	Toast.makeText(context, "Meal Adapter ->" +meal.getStrMeal(), Toast.LENGTH_SHORT).show();
 	Glide.with(context)
 			.load(meal.getStrMealThumb())
 			.into(holder.thumbnail);
@@ -49,6 +53,8 @@ public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int positio
 
 @Override
 public int getItemCount() {
+	
+	Log.d("DEBUG", "Adapter size: " + meals.size());
 	return (meals != null) ? meals.size() : 0;
 }
 public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -61,11 +67,6 @@ public static class ViewHolder extends RecyclerView.ViewHolder{
 		title = itemView.findViewById(R.id.Title);
 		description = itemView.findViewById(R.id.desc);
 		heartImg=itemView.findViewById(R.id.heartImg);
-		
-		
 	}
 }
-
-
-
 }

@@ -43,7 +43,7 @@ public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 	Glide.with(context)
 			.load(category.getStrCategoryThumb())
 			.into(holder.thumbnail);
-	holder.thumbnail.setOnClickListener(v -> listener.onCategoryListener(category));
+	holder.itemView.setOnClickListener(v -> listener.onCategoryListener(category));
 
 }
 

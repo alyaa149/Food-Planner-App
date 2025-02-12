@@ -165,6 +165,15 @@ public void createUserWithEmailAndPassword(String email, String password, AuthCa
 	auth.createUserWithEmailAndPassword(email, password)
 			.addOnSuccessListener(authResult -> callback.onSuccess("User registered successfully"))
 			.addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+	
+//	FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+//			.addOnCompleteListener(task -> {
+//				if (task.isSuccessful()) {
+//					callback.onSuccess("Sign-up successful!");
+//				} else {
+//					callback.onFailure(task.getException().getMessage());
+//				}
+//			});
 }
 
 @Override
@@ -173,6 +182,7 @@ public void signInWithEmailAndPassword(String email, String password, AuthCallba
 			.addOnSuccessListener(authResult -> callback.onSuccess("Login successful"))
 			.addOnFailureListener(e -> callback.onFailure(e.getMessage()));
 }
+
 
 @Override
 public void signInAndSignUpWithGoogle(String token, AuthCallback callback) {

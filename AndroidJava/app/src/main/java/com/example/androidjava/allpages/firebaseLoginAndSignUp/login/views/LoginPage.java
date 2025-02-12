@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -131,6 +132,7 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 @Override
 public void onAuthSuccess(String message) {
 	if(isAdded()) {
+		Navigation.findNavController(requireView()).navigate(R.id.action_loginPage_to_home2);
 		Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
 	}
 }

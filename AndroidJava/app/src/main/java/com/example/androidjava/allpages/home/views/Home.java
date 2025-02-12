@@ -9,10 +9,10 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +24,9 @@ import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenter;
+import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenterImpl;
+import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthView;
 import com.example.androidjava.allpages.home.presenters.HomePresenter;
 import com.example.androidjava.allpages.home.presenters.HomePresenterImpl;
 import com.example.androidjava.allpages.mealsList.views.OnMealClickListener;
@@ -33,7 +36,7 @@ import com.google.android.material.chip.Chip;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends Fragment implements OnClickListener,HomeView {
+public class Home extends Fragment implements OnClickListener,HomeView , AuthView {
 
 
 private static final String ARG_PARAM1 = "param1";
@@ -41,6 +44,7 @@ private static final String ARG_PARAM2 = "param2";
 private List<Category> categoryList = new ArrayList<>();
 private List<Meal> areasList = new ArrayList<>();
 View view;
+Button signUpBtn;
 RecyclerView recyclerView;
 AreaAdapter areaAdapter;
 CardView randomMealCard;
@@ -52,6 +56,7 @@ private String mParam1;
 private String mParam2;
 Meal randomMeal = new Meal();
 private HomePresenter homePresenter;
+AuthPresenter temppresenter;
 
 public Home() {
 
@@ -90,14 +95,16 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	categotyChip = view.findViewById(R.id.categoryChip);
 	countryChip = view.findViewById(R.id.countryChip);
 	randomMealCard = view.findViewById(R.id.includedMealCell);
-	
+	signUpBtn =view.findViewById(R.id.signUpBtn);
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 	homePresenter.getDailyInspration();
 	homePresenter.showCategories();
+	temppresenter = new AuthPresenterImpl(this, new RepositoryImpl(new MealsRemoteDataSourceImpl()));
 	
 	categotyChip.setOnClickListener(v -> homePresenter.showCategories());
 	countryChip.setOnClickListener(v -> homePresenter.showCountries());
-	
+	signUpBtn.setOnClickListener(v->{
+		temppresenter.signOut();});
 	
 	super.onViewCreated(view, savedInstanceState);
 }
@@ -157,6 +164,17 @@ public void onCountryClick(String country) {
 	Bundle bundle = new Bundle();
 	bundle.putString("country", country);
 	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList, bundle);
+}
+
+@Override
+public void onAuthSuccess(String message) {
+	Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+
+}
+
+@Override
+public void onAuthFailure(String error) {
+Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 }
 }
 
