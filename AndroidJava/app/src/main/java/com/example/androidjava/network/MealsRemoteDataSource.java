@@ -10,7 +10,7 @@ public interface MealsRemoteDataSource {
 	void getMealByCategory(String category, NetworkCallback callback);
 	void getMealByArea(String area, NetworkCallback callback);
 	void getMealByIngredient(String ingredient, NetworkCallback callback);
-	void getMealByLetter(char letter, NetworkCallback callback);
+	//void getMealByLetter(char letter, NetworkCallback callback);
 	void getMealBySearch(String query, NetworkCallback callback);
 	void createUserWithEmailAndPassword(String email, String password, AuthCallback callback);
 	void signInWithEmailAndPassword(String email, String password, AuthCallback callback);

@@ -30,4 +30,5 @@
     <string name="Plan">Plan</string>
     <string name="Home">Home</string>
     <string name="settings">settings</string>
+    <string name="search_by_meal">Search by meal...</string>
 </resources>

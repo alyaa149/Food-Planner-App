@@ -13,6 +13,32 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchInputLayoutHome"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="50dp"
+            android:layout_marginBottom="50dp"
+            android:hint="Search...?"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="1dp"
+            app:endIconTint="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/searchrecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/SoftPink"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <TextView
             android:id="@+id/textView5"
             style="@style/bigTxt"
@@ -90,10 +116,10 @@
             android:layout_marginTop="10dp"
             tools:listitem="@layout/meal_cell" />
 
-        <Button
-            android:id="@+id/signUpBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="sign Up" />
+<!--        <Button-->
+<!--            android:id="@+id/signUpBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="sign Up" />-->
     </LinearLayout>
 </ScrollView>

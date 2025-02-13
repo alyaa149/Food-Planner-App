@@ -32,6 +32,8 @@ import com.example.androidjava.allpages.home.presenters.HomePresenterImpl;
 import com.example.androidjava.allpages.mealsList.views.OnMealClickListener;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +97,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	categotyChip = view.findViewById(R.id.categoryChip);
 	countryChip = view.findViewById(R.id.countryChip);
 	randomMealCard = view.findViewById(R.id.includedMealCell);
-	signUpBtn =view.findViewById(R.id.signUpBtn);
+	//signUpBtn =view.findViewById(R.id.signUpBtn);
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 	homePresenter.getDailyInspration();
 	homePresenter.showCategories();
@@ -103,8 +105,17 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	
 	categotyChip.setOnClickListener(v -> homePresenter.showCategories());
 	countryChip.setOnClickListener(v -> homePresenter.showCountries());
-	signUpBtn.setOnClickListener(v->{
-		temppresenter.signOut();});
+	TextInputLayout searchInputLayout = view.findViewById(R.id.searchInputLayoutHome);
+	TextInputEditText searchEditText = searchInputLayout.findViewById(R.id.searchET); // الوصول إلى TextInputEditText
+	
+	searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
+		if (hasFocus) {
+			Navigation.findNavController(view).navigate(R.id.action_home2_to_searchFragment2);
+		}
+	});
+
+	
+	
 	
 	super.onViewCreated(view, savedInstanceState);
 }
@@ -121,6 +132,7 @@ public void showCountries(List<Meal> countries) {
 
 @Override
 public void showRandomMeal(Meal meal) {
+	if(isAdded()){
 	ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
 	TextView mealName = randomMealCard.findViewById(R.id.Title);
 	TextView mealDesc = randomMealCard.findViewById(R.id.desc);
@@ -139,6 +151,7 @@ public void showRandomMeal(Meal meal) {
 		Navigation.findNavController(view).navigate(R.id.action_home2_to_mealDetails, bundle);
 		
 	});
+	}
 }
 
 @Override

@@ -1,39 +1,26 @@
 package com.example.androidjava;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.example.androidjava.Models.Category;
-import com.example.androidjava.Models.Meal;
-import com.example.androidjava.Models.MealResponse;
-import com.example.androidjava.network.ApiService;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import com.example.androidjava.allpages.favorites.view.favoritesPage;
+import com.example.androidjava.allpages.home.views.Home;
+import com.example.androidjava.allpages.plan.view.plansFragment;
+import com.example.androidjava.allpages.search.view.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
-
-Meal meal;
-
-
-Retrofit retrofit;
-ApiService apiService;
-private static final String TAG = "FOOD";
-private static final String url = "https://www.themealdb.com/api/json/v1/1/";
-
-private List<Category> categoryList = new ArrayList<>();
-List<Meal> meals = new ArrayList<>();
+LinearLayout navHome,navSearch,navFavorites,navPlans;
 
 @Override
 protected void onCreate(Bundle savedInstanceState) {
@@ -45,46 +32,48 @@ protected void onCreate(Bundle savedInstanceState) {
 		v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 		return insets;
 	});
-//	BottomAppBar bottomAppBar = findViewById(R.id.bottomAppBar);
-//	BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-//
-//	NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
-//
-//	navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-//
-//		if ( destination.getId() == R.id.loginPage || destination.getId() == R.id.splashScreen || destination.getId() == R.id.introduction || destination.getId() == R.id.signUp2) {
-//			bottomAppBar.setVisibility(View.GONE);
-//		} else {
-//			bottomAppBar.setVisibility(View.VISIBLE);
-//		}
-//	});
+	 navHome = findViewById(R.id.nav_home);
+	 navFavorites = findViewById(R.id.nav_favorites);
+	 navSearch = findViewById(R.id.nav_search);
+	 navPlans = findViewById(R.id.nav_plans);
+
 	
-}
-
-
-
-private void searchByName(String name) {
-	Call<MealResponse> myCall = apiService.searchByName(name);
-	myCall.enqueue(new Callback<MealResponse>() {
-		@Override
-		public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-			if (response.isSuccessful() && response.body() != null) {
-				meals = response.body().getMeals();
-				for (Meal meal1 : response.body().getMeals()) {
-					Log.i("SEARCH", "Search result: " + meal1.getStrArea());
-				}
-				
-			}
-		}
-		
-		@Override
-		public void onFailure(Call<MealResponse> call, Throwable t) {
-			Log.i("SEARCH", "Error: " + t.getMessage());
-			
-		}
+	navHome.setOnClickListener(v -> {
+		loadFragment(new Home());
+		setActiveItem(v.findViewById(R.id.homeImg), v.findViewById(R.id.homeTV));
 	});
 	
+	navFavorites.setOnClickListener(v -> {
+		loadFragment(new favoritesPage());
+	//	setActiveItem(v.findViewById(R.id.), v.findViewById(R.id.));
+	});
+
+	navSearch.setOnClickListener(v -> {
+		loadFragment(new SearchFragment());
+	//	setActiveItem(v.findViewById(R.id.), v.findViewById(R.id.));
+	});
+
+	navPlans.setOnClickListener(v -> {
+		loadFragment(new plansFragment());
+	//	setActiveItem(v.findViewById(R.id.), v.findViewById(R.id.));
+	});
+	
+	
+	
 }
+private void loadFragment(Fragment fragment) {
+	FragmentManager fragmentManager = getSupportFragmentManager();
+	FragmentTransaction transaction = fragmentManager.beginTransaction();
+	transaction.replace(R.id.nav_host_fragment_container, fragment);
+	transaction.commit();
+}
+private void setActiveItem(ImageView icon, TextView text) {
+
+	icon.setColorFilter(getResources().getColor(R.color.nav_item_active_color));
+	text.setTextColor(getResources().getColor(R.color.nav_item_active_color));
+
+}
+
 
 }
 

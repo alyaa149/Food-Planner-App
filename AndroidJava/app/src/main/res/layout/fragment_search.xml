@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout3"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="8dp"
+    tools:context=".allpages.search.view.SearchFragment">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/filterCard"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:visibility="gone"
+        app:cardElevation="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchInputLayout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/searchByCategoryTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/SoftPink"
+                android:clickable="true"
+
+                android:elevation="4dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:text="Search by Categories"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/searchByCategoryIngredientTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:cursorVisible="true"
+                android:elevation="4dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:paddingTop="20dp"
+                android:text="Search by Ingredient"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/searchByCountriesTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/SoftPink"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:paddingTop="20dp"
+                android:text="Search by Countries"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        android:layout_marginBottom="50dp"
+        android:hint="@string/search_by_meal"
+        app:boxStrokeColor="@color/black"
+        app:boxStrokeWidth="1dp"
+        app:endIconDrawable="@drawable/filter"
+        app:endIconMode="custom"
+        app:endIconTint="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/searchrecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/SoftPink"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchrecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchInputLayout"
+        tools:listitem="@layout/meal_cell" />
+</androidx.constraintlayout.widget.ConstraintLayout>

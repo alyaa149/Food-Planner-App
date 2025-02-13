@@ -28,13 +28,22 @@ public void getAllCategories(NetworkCallback callback) {
 @Override
 public void getAllCountries(NetworkCallback callback) {
 	remoteDataSource.getCountries(callback);
-
 }
 
 
 @Override
 public void getRandomMeal(NetworkCallback callback) {
  remoteDataSource.getRandomMeal(callback);
+}
+
+@Override
+public void getMealsByIngredient(String ingredient, NetworkCallback callback) {
+	remoteDataSource.getMealByIngredient(ingredient, callback);
+}
+
+@Override
+public void getMealsByName(String name, NetworkCallback callback) {
+	remoteDataSource.getMealByName(name, callback);
 }
 
 @Override

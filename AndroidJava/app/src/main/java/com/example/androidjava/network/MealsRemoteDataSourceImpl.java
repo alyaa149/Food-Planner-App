@@ -8,6 +8,9 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,135 +27,82 @@ private static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/
 
 
 public MealsRemoteDataSourceImpl() {
-	retrofit = new Retrofit.Builder()
-			           .baseUrl(BASE_URL)
-			           .addConverterFactory(GsonConverterFactory.create())
-			           .build();
+	retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJava3CallAdapterFactory.create()).build();
 	apiService = retrofit.create(ApiService.class);
 	auth = FirebaseAuth.getInstance();
 }
 
 @Override
 public void getCategories(NetworkCallback callback) {
-	apiService.getAllCategories().enqueue(new Callback<CategoryResponse>() {
-		@Override
-		public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
-			callback.onSuccess(response.body());
-		}
-		
-		@Override
-		public void onFailure(Call<CategoryResponse> call, Throwable t) {
-			callback.onFailure("Failed to fetch categories");
-		}
-	});
+	apiService.getAllCategories().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(response -> callback.onSuccess(response), error -> callback.onFailure("Failed to fetch categories"));
+
+
+//			.enqueue(new Callback<CategoryResponse>() {
+//		@Override
+//		public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
+//			callback.onSuccess(response.body());
+//		}
+//
+//		@Override
+//		public void onFailure(Call<CategoryResponse> call, Throwable t) {
+//			callback.onFailure("Failed to fetch categories");
+//		}
+//	});
 }
 
 @Override
 public void getCountries(NetworkCallback callback) {
-	apiService.getAllAreas().enqueue(
-			
-			new Callback<MealResponse>() {
-				@Override
-				public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-					callback.onSuccessCountry(response.body());
-				}
-				
-				@Override
-				public void onFailure(Call<MealResponse> call, Throwable t) {
-					callback.onFailure("Failed to fetch countries");
-					
-				}
-			}
-	);
+	apiService.getAllAreas().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(response -> callback.onSuccessCountry(response), error -> callback.onFailure("Failed to fetch countries"));
 }
 
 @Override
 public void getRandomMeal(NetworkCallback callback) {
-	apiService.getRandomMeal().enqueue(
-			new Callback<MealResponse>() {
-				@Override
-				public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-					callback.onSuccessMeal(response.body());
-				}
-				
-				@Override
-				public void onFailure(Call<MealResponse> call, Throwable t) {
-					callback.onFailure("Failed to fetch random meal");
-				}
-			}
-	
-	);
+	apiService.getRandomMeal()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(response -> callback.onSuccessMeal(response), error -> callback.onFailure("Failed to getRandomMeal"));
 }
 
 @Override
 public void getMealById(int id, NetworkCallback callback) {
-apiService.getMealById(id).enqueue(
-		new Callback<MealResponse>() {
-			@Override
-			public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-				callback.onSuccessMeal(response.body());
-			}
-			
-			@Override
-			public void onFailure(Call<MealResponse> call, Throwable t) {
-				callback.onFailure("Failed to fetch countries");
-			}
-		}
-);
+	apiService.getMealById(id)
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(response -> callback.onSuccessMeal(response), error -> callback.onFailure("Failed to getMealById"));
 }
 
 @Override
 public void getMealByName(String name, NetworkCallback callback) {
-
+	apiService.searchByName(name)
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(response -> callback.onSuccessMeal(response), error -> callback.onFailure("Failed to search by meal"));
 }
 
 @Override
 public void getMealByCategory(String category, NetworkCallback callback) {
-apiService.filterByCategory(category).enqueue(
-	
-				
-				new Callback<MealResponse>() {
-					@Override
-					public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-						callback.onSuccessMeal(response.body());
-					}
-					
-					@Override
-					public void onFailure(Call<MealResponse> call, Throwable t) {
-						callback.onFailure("Failed to fetch countries");
-						
-					}}
-				
-		
-);
+	apiService.filterByCategory(category).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(response -> callback.onSuccessMeal(response), error -> callback.onFailure("Failed to fetch categories"));
 }
 
 @Override
 public void getMealByArea(String area, NetworkCallback callback) {
-apiService.filterByArea(area).enqueue(
-		new Callback<MealResponse>() {
-			@Override
-			public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-				callback.onSuccessMeal(response.body());
-			}
-			
-			@Override
-			public void onFailure(Call<MealResponse> call, Throwable t) {
-				callback.onFailure("Failed to fetch countries");
-			}
-		}
-);
+	apiService.filterByArea(area).subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(response -> callback.onSuccessMeal(response), error -> callback.onFailure("Failed to get meal by id"));
 }
 
 @Override
 public void getMealByIngredient(String ingredient, NetworkCallback callback) {
-apiService.filterByIngredient(ingredient);
+	apiService.filterByIngredient(ingredient)
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(response -> callback.onSuccessMeal(response), error -> callback.onFailure("Failed to get meal by inngredient"));
 }
 
-@Override
-public void getMealByLetter(char letter, NetworkCallback callback) {
-
-}
+//@Override
+//public void getMealByLetter(char letter, NetworkCallback callback) {
+//  //apiService.filterByLetter(letter).subscribeOn(Schedulers.io())
+//}
 
 @Override
 public void getMealBySearch(String query, NetworkCallback callback) {
@@ -161,11 +111,9 @@ public void getMealBySearch(String query, NetworkCallback callback) {
 
 @Override
 public void createUserWithEmailAndPassword(String email, String password, AuthCallback callback) {
-	Log.i("TAG", "data source: " + password+", "+email);
-	auth.createUserWithEmailAndPassword(email, password)
-			.addOnSuccessListener(authResult -> callback.onSuccess("User registered successfully"))
-			.addOnFailureListener(e -> callback.onFailure(e.getMessage()));
-	
+	Log.i("TAG", "data source: " + password + ", " + email);
+	auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> callback.onSuccess("User registered successfully")).addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+
 //	FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
 //			.addOnCompleteListener(task -> {
 //				if (task.isSuccessful()) {
@@ -178,29 +126,25 @@ public void createUserWithEmailAndPassword(String email, String password, AuthCa
 
 @Override
 public void signInWithEmailAndPassword(String email, String password, AuthCallback callback) {
-	auth.signInWithEmailAndPassword(email, password)
-			.addOnSuccessListener(authResult -> callback.onSuccess("Login successful"))
-			.addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+	auth.signInWithEmailAndPassword(email, password).addOnSuccessListener(authResult -> callback.onSuccess("Login successful")).addOnFailureListener(e -> callback.onFailure(e.getMessage()));
 }
 
 
 @Override
 public void signInAndSignUpWithGoogle(String token, AuthCallback callback) {
 	AuthCredential credential = GoogleAuthProvider.getCredential(token, null);
-	auth.signInWithCredential(credential)
-			.addOnSuccessListener(authResult -> {
-				if (authResult.getAdditionalUserInfo().isNewUser()) {
-					callback.onSuccess("New Google user signed up");
-				} else {
-					callback.onSuccess("Existing Google user logged in");
-				}
-			})
-			.addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+	auth.signInWithCredential(credential).addOnSuccessListener(authResult -> {
+		if (authResult.getAdditionalUserInfo().isNewUser()) {
+			callback.onSuccess("New Google user signed up");
+		} else {
+			callback.onSuccess("Existing Google user logged in");
+		}
+	}).addOnFailureListener(e -> callback.onFailure(e.getMessage()));
 }
 
 @Override
 public void signOut(AuthCallback callback) {
-
+	
 	auth.signOut();
 	
 }

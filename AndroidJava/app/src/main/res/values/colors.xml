@@ -6,4 +6,6 @@
     <color name="Green">#BAD8B6</color>
     <color name="SoftPink">#F5CECE</color>
     <color name="red">#DD4F4F</color>
+    <color name="nav_item_color">#757575</color>
+    <color name="nav_item_active_color">#FF4081</color>
 </resources>
