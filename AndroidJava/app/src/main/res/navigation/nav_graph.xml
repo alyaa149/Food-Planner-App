@@ -6,22 +6,6 @@
     app:startDestination="@id/home2">
 
     <fragment
-        android:id="@+id/home2"
-        android:name="com.example.androidjava.allpages.home.views.Home"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_home2_to_mealDetails"
-            app:destination="@id/mealDetails" />
-        <action
-            android:id="@+id/action_home2_to_mealsList"
-            app:destination="@id/mealsList" />
-        <action
-            android:id="@+id/action_home2_to_searchFragment2"
-            app:destination="@id/searchFragment" />
-    </fragment>
-
-    <fragment
         android:id="@+id/splashScreen"
         android:name="com.example.androidjava.fragments.SplashScreen"
         android:label="fragment_splash_screen"
@@ -74,12 +58,19 @@
         <action
             android:id="@+id/action_mealsList_to_mealDetails"
             app:destination="@id/mealDetails" />
+        <action
+            android:id="@+id/action_mealsList_to_favoritesPage"
+            app:destination="@id/favoritesPage" />
     </fragment>
     <fragment
         android:id="@+id/favoritesPage"
         android:name="com.example.androidjava.allpages.favorites.view.favoritesPage"
         android:label="fragment_favorites_page"
-        tools:layout="@layout/fragment_favorites_page" />
+        tools:layout="@layout/fragment_favorites_page" >
+        <action
+            android:id="@+id/action_favoritesPage_to_mealDetails"
+            app:destination="@id/mealDetails" />
+    </fragment>
 
     <fragment
         android:id="@+id/signUp2"
@@ -87,11 +78,11 @@
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
-            android:id="@+id/action_signUp2_to_home2"
-            app:destination="@id/home2" />
-        <action
             android:id="@+id/action_signUp2_to_loginPage"
             app:destination="@id/loginPage" />
+        <action
+            android:id="@+id/action_signUp2_to_home2"
+            app:destination="@id/home2" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -101,10 +92,28 @@
         <action
             android:id="@+id/action_searchFragment_to_mealDetails"
             app:destination="@id/mealDetails" />
+        <action
+            android:id="@+id/action_searchFragment_to_favoritesPage"
+            app:destination="@id/favoritesPage" />
     </fragment>
     <fragment
         android:id="@+id/plansFragment"
         android:name="com.example.androidjava.allpages.plan.view.plansFragment"
         android:label="plansFragment" />
+    <fragment
+        android:id="@+id/home2"
+        android:name="com.example.androidjava.allpages.home.views.Home"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home2_to_mealDetails"
+            app:destination="@id/mealDetails" />
+        <action
+            android:id="@+id/action_home2_to_mealsList"
+            app:destination="@id/mealsList" />
+        <action
+            android:id="@+id/action_home2_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
 
 </navigation>

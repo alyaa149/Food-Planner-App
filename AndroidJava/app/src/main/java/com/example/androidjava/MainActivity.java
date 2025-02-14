@@ -13,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.androidjava.allpages.favorites.view.favoritesPage;
 import com.example.androidjava.allpages.home.views.Home;
@@ -36,27 +38,31 @@ protected void onCreate(Bundle savedInstanceState) {
 	 navFavorites = findViewById(R.id.nav_favorites);
 	 navSearch = findViewById(R.id.nav_search);
 	 navPlans = findViewById(R.id.nav_plans);
-
 	
 	navHome.setOnClickListener(v -> {
-		loadFragment(new Home());
-		setActiveItem(v.findViewById(R.id.homeImg), v.findViewById(R.id.homeTV));
+		setActiveItem(navHome.findViewById(R.id.homeImg), navHome.findViewById(R.id.homeTV));
+		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+		navController.navigate(R.id.home2);
 	});
 	
 	navFavorites.setOnClickListener(v -> {
-		loadFragment(new favoritesPage());
-	//	setActiveItem(v.findViewById(R.id.), v.findViewById(R.id.));
+		setActiveItem(navFavorites.findViewById(R.id.favImg), navFavorites.findViewById(R.id.favTV));
+		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+		navController.navigate(R.id.favoritesPage);
 	});
-
+	
 	navSearch.setOnClickListener(v -> {
-		loadFragment(new SearchFragment());
-	//	setActiveItem(v.findViewById(R.id.), v.findViewById(R.id.));
+		setActiveItem(navSearch.findViewById(R.id.searchImg), navSearch.findViewById(R.id.searchTV));
+		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+		navController.navigate(R.id.searchFragment);
+	});
+	
+	navPlans.setOnClickListener(v -> {
+		setActiveItem(navPlans.findViewById(R.id.planImg), navPlans.findViewById(R.id.planTV));
+		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+		navController.navigate(R.id.plansFragment);
 	});
 
-	navPlans.setOnClickListener(v -> {
-		loadFragment(new plansFragment());
-	//	setActiveItem(v.findViewById(R.id.), v.findViewById(R.id.));
-	});
 	
 	
 	
@@ -73,8 +79,6 @@ private void setActiveItem(ImageView icon, TextView text) {
 	text.setTextColor(getResources().getColor(R.color.nav_item_active_color));
 
 }
-
-
 }
 
 

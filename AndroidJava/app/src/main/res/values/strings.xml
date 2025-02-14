@@ -31,4 +31,6 @@
     <string name="Home">Home</string>
     <string name="settings">settings</string>
     <string name="search_by_meal">Search by meal...</string>
+    <string name="add_meal_to_favorites_to_save_it">Add meal to favorites to save it !</string>
+    <string name="favorites_meals">Favorites Meals</string>
 </resources>

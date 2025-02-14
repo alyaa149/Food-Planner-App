@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.mealsList.presenters.MealsListPresenter;
 import com.example.androidjava.allpages.mealsList.presenters.MealsListPresenterImpl;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
@@ -68,9 +69,8 @@ public void onCreate(Bundle savedInstanceState) {
 	}
 	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
 	
-	//MealsLocalDataSource localDataSource = MealsLocalDataSource.getInstance(this);
-	//repository = new MealRepositoryImpl(remoteDataSource, localDataSource);
-	repository = new RepositoryImpl(remoteDataSource);
+	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
+	repository = new RepositoryImpl(remoteDataSource, localDataSource);
 	mealsListPresenter = new MealsListPresenterImpl(this, repository);
 }
 
@@ -99,9 +99,9 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 		category = getArguments().getString("category");
 		country = getArguments().getString("country");
 		
-		Toast.makeText(getContext(), "Selected Category form mealslist: " + category, Toast.LENGTH_SHORT).show();
-		Toast.makeText(getContext(), "Selected Country: from mealslist " + country, Toast.LENGTH_SHORT).show();
-		
+//		Toast.makeText(getContext(), "Selected Category form mealslist: " + category, Toast.LENGTH_SHORT).show();
+//		Toast.makeText(getContext(), "Selected Country: from mealslist " + country, Toast.LENGTH_SHORT).show();
+//
 		
 		recyclerView = view.findViewById(R.id.recyclerView);
 		mealAdapter = new MealAdapter(getContext(), mealList, MealsList.this);
@@ -137,7 +137,15 @@ return;
 	
 	bundle.putString("name", meal.getIdMeal());
 	Navigation.findNavController(view).navigate(R.id.action_mealsList_to_mealDetails, bundle);
-	
+}
+
+@Override
+public void onFavClick(Meal meal) {
+	if (isAdded()) {
+		Toast.makeText(getContext(), "Meal click ->" +meal.getStrMeal(), Toast.LENGTH_SHORT).show();
+	mealsListPresenter.addMealToFavorites(meal);
+		//Navigation.findNavController(view).navigate(R.id.action_mealsList_to_favoritesPage);
+	}
 	
 }
 
@@ -146,7 +154,7 @@ return;
 public void showMeals(List<Meal> meals) {
 	if(isAdded()) {
 		Log.d("DEBUG", "Meals received: " + meals.size());
-		Toast.makeText(getContext(), "Meals received: " + meals.size(), Toast.LENGTH_SHORT).show();
+	//	Toast.makeText(getContext(), "Meals received: " + meals.size(), Toast.LENGTH_SHORT).show();
 		
 		if (meals == null || meals.isEmpty()) {
 			Toast.makeText(getContext(), "No meals received!", Toast.LENGTH_SHORT).show();

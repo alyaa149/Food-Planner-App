@@ -22,6 +22,8 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
 private Context context;
 private List<Meal> meals;
 private OnMealClickListener listener;
+
+
 public MealAdapter(Context context, List<Meal> meals,OnMealClickListener listener){
 	this.context=context;
 	this.listener=listener;
@@ -39,28 +41,33 @@ public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int positio
 	Meal meal = meals.get(position);
 	holder.title.setText(meal.getStrMeal());
 	holder.description.setText("");
-	holder.itemView.setOnClickListener(v-> listener.onMealClick(meal));
-	//holder.heartImg.setOnClickListener(v -> listener.onFavClick(meal));
-	Toast.makeText(context, "Meal Adapter ->" +meal.getStrMeal(), Toast.LENGTH_SHORT).show();
+	holder.thumbnail.setOnClickListener(v-> listener.onMealClick(meal));
+	holder.heartImg.setOnClickListener(v -> {
+		listener.onFavClick(meal);
+		holder.isFav = !holder.isFav;
+		
+	
+		holder.heartImg.setImageResource(holder.isFav ? R.drawable.fav : R.drawable.notfav);
+		
+	});
 	Glide.with(context)
 			.load(meal.getStrMealThumb())
 			.into(holder.thumbnail);
-//	ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
-//	params.width = (int) (params.width * 0.8);  // Decrease width by 10%
-//	params.height = (int) (params.height * 0.8); // Decrease height by 10%
-//	holder.itemView.setLayoutParams(params);
+
 }
 
 @Override
 public int getItemCount() {
 	
-	Log.d("DEBUG", "Adapter size: " + meals.size());
+	
 	return (meals != null) ? meals.size() : 0;
 }
 public static class ViewHolder extends RecyclerView.ViewHolder{
 	public ImageView thumbnail;
 	public TextView title, description;
 	ImageView heartImg;
+	public boolean isFav = false;
+	
 	public ViewHolder(@NonNull View itemView) {
 		super(itemView);
 		thumbnail = itemView.findViewById(R.id.itemImg);

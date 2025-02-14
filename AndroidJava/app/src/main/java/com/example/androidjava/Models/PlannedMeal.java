@@ -1,5 +1,6 @@
 package com.example.androidjava.Models;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -7,10 +8,19 @@ import java.util.Date;
 
 @Entity(tableName = "planned_meals")
 public class PlannedMeal {
-@PrimaryKey(autoGenerate = false)
+@PrimaryKey(autoGenerate = false) @NonNull
 private String idMeal;
 private String strMeal;
-Date date;
+String date;
+
+public String getDate() {
+	return date;
+}
+
+public void setDate(String date) {
+	this.date = date;
+}
+
 private String strDrinkAlternate;
 private String strCategory;
 private String strArea;
@@ -33,11 +43,11 @@ public String strIngredient12;
 public String strIngredient13;
 public String strIngredient14;
 public String strIngredient15;
-public Object strIngredient16;
-public Object strIngredient17;
-public Object strIngredient18;
-public Object strIngredient19;
-public Object strIngredient20;
+public String strIngredient16;
+public String strIngredient17;
+public String strIngredient18;
+public String strIngredient19;
+public String strIngredient20;
 public String strMeasure1;
 public String strMeasure2;
 public String strMeasure3;
@@ -157,23 +167,23 @@ public void setStrIngredient15(String strIngredient15) {
 	this.strIngredient15 = strIngredient15;
 }
 
-public void setStrIngredient16(Object strIngredient16) {
+public void setStrIngredient16(String strIngredient16) {
 	this.strIngredient16 = strIngredient16;
 }
 
-public void setStrIngredient17(Object strIngredient17) {
+public void setStrIngredient17(String strIngredient17) {
 	this.strIngredient17 = strIngredient17;
 }
 
-public void setStrIngredient18(Object strIngredient18) {
+public void setStrIngredient18(String strIngredient18) {
 	this.strIngredient18 = strIngredient18;
 }
 
-public void setStrIngredient19(Object strIngredient19) {
+public void setStrIngredient19(String strIngredient19) {
 	this.strIngredient19 = strIngredient19;
 }
 
-public void setStrIngredient20(Object strIngredient20) {
+public void setStrIngredient20(String strIngredient20) {
 	this.strIngredient20 = strIngredient20;
 }
 

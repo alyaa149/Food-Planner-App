@@ -7,14 +7,19 @@ import com.example.androidjava.network.AuthCallback;
 import com.example.androidjava.network.MealsRemoteDataSource;
 import com.example.androidjava.network.NetworkCallback;
 
+import java.util.Date;
+import java.util.List;
+
+import io.reactivex.rxjava3.core.Observable;
+
 public class RepositoryImpl implements Repository {
 
 private MealsRemoteDataSource  remoteDataSource;
 private MealsLocalDataSource localDataSource;
-public RepositoryImpl(MealsRemoteDataSource remoteDataSource) {
+public RepositoryImpl(MealsRemoteDataSource remoteDataSource,MealsLocalDataSource localDataSource) {
 
 this.remoteDataSource = remoteDataSource;
-//this.localDataSource = localDataSource;
+this.localDataSource = localDataSource;
 
 }
 
@@ -81,5 +86,43 @@ remoteDataSource.signInAndSignUpWithGoogle(token, callback);
 @Override
 public void signOut(AuthCallback callback) {
 remoteDataSource.signOut(callback);
+}
+
+@Override
+public void addToFavorites(Meal meal) {
+	localDataSource.insert(meal);
+	
+}
+
+@Override
+public Observable<List<Meal>> getAllFavorites() {
+	return localDataSource.getAllMeals();
+}
+
+@Override
+public void delete(Meal meal) {
+	localDataSource.delete(meal);
+	
+}
+
+@Override
+public void insertPlannedMeal(PlannedMeal meal) {
+	localDataSource.insertPlannedMeal(meal);
+	
+}
+
+@Override
+public void deletePlannedMeal(PlannedMeal meal) {
+	localDataSource.deletePlannedMeal(meal);
+}
+
+@Override
+public Observable<List<PlannedMeal>> getAllPlannedMeals() {
+	return localDataSource.getAllPlannedMeals();
+}
+
+@Override
+public void deletePlannedMealsByDate(String date) {
+	localDataSource.deletePlannedMealsByDate(date);
 }
 }

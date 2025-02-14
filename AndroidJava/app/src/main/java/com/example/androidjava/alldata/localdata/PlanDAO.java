@@ -1,5 +1,8 @@
 package com.example.androidjava.alldata.localdata;
 
+
+
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -9,19 +12,23 @@ import com.example.androidjava.Models.PlannedMeal;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+
+@Dao
 public interface PlanDAO {
 @Insert
-void insertPlannedMeal(PlannedMeal meal);
+Completable insertPlannedMeal(PlannedMeal meal);
 
 @Delete
-void deletePlannedMeal(PlannedMeal meal);
+Completable deletePlannedMeal(PlannedMeal meal);
 
 @Query("SELECT * FROM planned_meals")
-List<PlannedMeal> getAllPlannedMeals();
+Observable<List<PlannedMeal>> getAllPlannedMeals();
 
 @Query("SELECT * FROM planned_meals WHERE date = :date")
-List<PlannedMeal> getPlannedMealsByDate(Date date);
+Observable<List<PlannedMeal>> getPlannedMealsByDate(String date);
 
 @Query("DELETE FROM planned_meals WHERE date = :date")
-void deletePlannedMealsByDate(Date date);
+Completable deletePlannedMealsByDate(String date);
 }

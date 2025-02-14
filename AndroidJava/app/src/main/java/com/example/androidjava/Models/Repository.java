@@ -3,6 +3,11 @@ package com.example.androidjava.Models;
 import com.example.androidjava.network.AuthCallback;
 import com.example.androidjava.network.NetworkCallback;
 
+import java.util.Date;
+import java.util.List;
+
+import io.reactivex.rxjava3.core.Observable;
+
 public interface Repository {
 public void getAllCategories(NetworkCallback callback);
 public void getAllCountries(NetworkCallback callback) ;
@@ -16,6 +21,18 @@ public void signUp(String email, String password, AuthCallback callback);
 public void signIn(String email, String password, AuthCallback callback);
 public void signInWithGoogle(String token, AuthCallback callback);
 public void signOut(AuthCallback callback);
+//====================================================
+//fav meals
+void addToFavorites(Meal meal);
+Observable<List<Meal>> getAllFavorites();
+void delete(Meal meal);
+//=======================================================
+//planned meals
+void insertPlannedMeal(PlannedMeal meal);
+void deletePlannedMeal(PlannedMeal meal);
+Observable<List<PlannedMeal>> getAllPlannedMeals();
+void deletePlannedMealsByDate(String date);
+
 
 
 }

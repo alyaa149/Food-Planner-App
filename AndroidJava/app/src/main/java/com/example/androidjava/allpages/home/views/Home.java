@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,11 +21,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Category;
-import com.example.androidjava.Models.FavMeal;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.alldata.localdata.MealsLocalDataSource;
+import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenter;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenterImpl;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthView;
@@ -49,6 +52,7 @@ View view;
 Button signUpBtn;
 RecyclerView recyclerView;
 AreaAdapter areaAdapter;
+ImageView heartImg;
 CardView randomMealCard;
 Chip categotyChip;
 Chip countryChip;
@@ -79,9 +83,9 @@ public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
 	
-	//MealsLocalDataSource localDataSource = MealsLocalDataSource.getInstance(this);
-	//repository = new MealRepositoryImpl(remoteDataSource, localDataSource);
-	repository = new RepositoryImpl(remoteDataSource);
+	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
+	repository = new RepositoryImpl(remoteDataSource, localDataSource);
+	//repository = new RepositoryImpl(remoteDataSource);
 	homePresenter = new HomePresenterImpl(this, repository);
 }
 
@@ -101,21 +105,9 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 	homePresenter.getDailyInspration();
 	homePresenter.showCategories();
-	temppresenter = new AuthPresenterImpl(this, new RepositoryImpl(new MealsRemoteDataSourceImpl()));
-	
+
 	categotyChip.setOnClickListener(v -> homePresenter.showCategories());
 	countryChip.setOnClickListener(v -> homePresenter.showCountries());
-	TextInputLayout searchInputLayout = view.findViewById(R.id.searchInputLayoutHome);
-	TextInputEditText searchEditText = searchInputLayout.findViewById(R.id.searchET); // الوصول إلى TextInputEditText
-	
-	searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
-		if (hasFocus) {
-			Navigation.findNavController(view).navigate(R.id.action_home2_to_searchFragment2);
-		}
-	});
-
-	
-	
 	
 	super.onViewCreated(view, savedInstanceState);
 }
@@ -133,6 +125,7 @@ public void showCountries(List<Meal> countries) {
 @Override
 public void showRandomMeal(Meal meal) {
 	if(isAdded()){
+		heartImg = randomMealCard.findViewById(R.id.heartImg);
 	ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
 	TextView mealName = randomMealCard.findViewById(R.id.Title);
 	TextView mealDesc = randomMealCard.findViewById(R.id.desc);
@@ -140,6 +133,9 @@ public void showRandomMeal(Meal meal) {
 	Glide.with(getContext()).load(meal.getStrMealThumb()).into(mealImage);
 	mealName.setText(meal.getStrMeal());
 	mealDesc.setText(meal.getStrArea());
+	heartImg.setOnClickListener(v ->{homePresenter.addMealToFavorites(meal);Toast.makeText(getContext(), "Meal added to favorites", Toast.LENGTH_SHORT).show();} );
+	
+	
 	randomMealCard.setOnClickListener(v-> {
 		Bundle bundle = new Bundle();
 		if (meal == null || meal.getIdMeal() == null) {
@@ -148,7 +144,9 @@ public void showRandomMeal(Meal meal) {
 		}
 		
 		bundle.putString("name", meal.getIdMeal());
-		Navigation.findNavController(view).navigate(R.id.action_home2_to_mealDetails, bundle);
+		NavController navController = NavHostFragment.findNavController(this);
+		navController.navigate(R.id.action_home2_to_mealDetails,bundle);
+	//	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealDetails, bundle);
 		
 	});
 	}
@@ -163,14 +161,15 @@ public void showError(String message) {
 public void onCategoryListener(Category category) {
 	Bundle bundle = new Bundle();
 	bundle.putString("category", category.getStrCategory());
-	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList, bundle);
-	
+	NavController navController = NavHostFragment.findNavController(this);
+	navController.navigate(R.id.action_home2_to_mealsList, bundle);
 }
 
-@Override
-public void onFavClick(FavMeal favMeal) {
 
-}
+//@Override
+//public void onFavClick(Meal favMeal) {
+//
+//}
 
 @Override
 public void onCountryClick(String country) {
@@ -178,6 +177,7 @@ public void onCountryClick(String country) {
 	bundle.putString("country", country);
 	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList, bundle);
 }
+
 
 @Override
 public void onAuthSuccess(String message) {

@@ -5,20 +5,24 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.androidjava.Models.FavMeal;
+import com.example.androidjava.Models.Meal;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+
 @Dao
 public interface FavDAO {
 @Insert
-void insertFavoriteMeal(FavMeal meal);
+Completable insertFavoriteMeal(Meal meal);
 
 @Delete
-void deleteFavoriteMeal(FavMeal meal);
+Completable deleteFavoriteMeal(Meal meal);
 
 @Query("SELECT * FROM favorite_meals")
-List<FavMeal> getAllFavoriteMeals();
+Observable<List<Meal>> getAllFavoriteMeals();
 
 @Query("SELECT * FROM favorite_meals WHERE idMeal = :mealId")
-FavMeal getFavoriteMealById(String mealId);
+Meal checkFavoriteMealById(int mealId);
 }

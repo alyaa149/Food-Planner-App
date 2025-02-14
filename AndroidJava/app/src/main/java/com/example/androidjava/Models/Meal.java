@@ -1,14 +1,15 @@
 package com.example.androidjava.Models;
 
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-
+@Entity(tableName = "favorite_meals")
 public class Meal implements Serializable {
-
+@PrimaryKey(autoGenerate = false) @NonNull
 public String idMeal;
 public String strMeal;
 public String strDrinkAlternate;
@@ -60,7 +61,6 @@ public String strMeasure19;
 public String strMeasure20;
 public String strSource;
 public String strImageSource;
-
 public void setIdMeal(String idMeal) {
 	this.idMeal = idMeal;
 }

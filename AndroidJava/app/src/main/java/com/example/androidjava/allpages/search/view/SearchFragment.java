@@ -28,6 +28,7 @@ import com.example.androidjava.Models.Category;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.home.presenters.HomePresenterImpl;
 import com.example.androidjava.allpages.mealsList.presenters.MealsListPresenter;
 import com.example.androidjava.allpages.mealsList.views.MealAdapter;
@@ -83,11 +84,11 @@ public void onCreate(Bundle savedInstanceState) {
 		mParam1 = getArguments().getString(ARG_PARAM1);
 		mParam2 = getArguments().getString(ARG_PARAM2);
 	}
+	
 	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
 	
-	//MealsLocalDataSource localDataSource = MealsLocalDataSource.getInstance(this);
-	//repository = new MealRepositoryImpl(remoteDataSource, localDataSource);
-	repository = new RepositoryImpl(remoteDataSource);
+	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
+	repository = new RepositoryImpl(remoteDataSource, localDataSource);
 	searchPresenter = new SearchPresenterImpl(this, repository);
 }
 
@@ -136,7 +137,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 		
 	});
 	filterMeal();
-	searchByCountryTV.setOnClickListener(v->{searchInput("country");filterCard.setVisibility(View.GONE); });
+	searchByCountryTV.setOnClickListener(v->{searchInput("country");filterCard.setVisibility(View.GONE);});
 	searchByCategoryTV.setOnClickListener(v->{searchInput("category");filterCard.setVisibility(View.GONE);});
 	searchByIngredientTV.setOnClickListener(v->{searchInput("ingredient");filterCard.setVisibility(View.GONE);});
 	
@@ -208,6 +209,14 @@ public void onMealClick(Meal meal) {
 	navController.navigate(R.id.action_searchFragment_to_mealDetails, bundle);
 }
 
+@Override
+public void onFavClick(Meal meal) {
+	if (isAdded()) {
+		Toast.makeText(getContext(), "Meal click ->" +meal.getIdMeal(), Toast.LENGTH_SHORT).show();
+		searchPresenter.addMealToFavorites(meal);
+		Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_favoritesPage);
+	}
+}
 
 @Override
 public void showMeals(List<Meal> meals) {

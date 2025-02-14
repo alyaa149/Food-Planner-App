@@ -1,6 +1,7 @@
 package com.example.androidjava.allpages.search.presenter;
 
 import com.example.androidjava.Models.CategoryResponse;
+import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.Models.Repository;
 import com.example.androidjava.allpages.home.presenters.HomePresenter;
@@ -65,5 +66,16 @@ repository.getMealsByCountry(query, this);
 public void searchIngredients(String query) {
 	repository.getMealsByIngredient(query, this);
 
+}
+
+@Override
+public void addMealToFavorites(Meal meal) {
+	repository.addToFavorites(meal);
+	
+}
+
+@Override
+public void removeMealFromFavorites(Meal meal) {
+	repository.delete(meal);
 }
 }

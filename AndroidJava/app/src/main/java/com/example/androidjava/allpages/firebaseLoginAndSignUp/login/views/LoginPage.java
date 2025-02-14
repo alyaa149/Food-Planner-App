@@ -16,8 +16,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.alldata.localdata.MealsLocalDataSource;
+import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenter;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenterImpl;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthView;
@@ -41,6 +44,7 @@ private AuthPresenter presenter;
 FirebaseAuth auth;
 FirebaseUser curUser;
 Button loginBtn;
+Repository repository;
 TextInputEditText passET;
 TextInputEditText emailTE;
 LinearLayout loginWithGoogleET;
@@ -85,7 +89,12 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 	auth = FirebaseAuth.getInstance();
 	passET = view.findViewById(R.id.passET);
-	presenter = new AuthPresenterImpl(this, new RepositoryImpl(new MealsRemoteDataSourceImpl()));
+	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
+	
+	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
+	repository = new RepositoryImpl(remoteDataSource, localDataSource);
+	
+	presenter = new AuthPresenterImpl(this, repository);
 	loginWithGoogleET = view.findViewById(R.id.loginWithGoogleET);
 	loginWithGoogleET.setOnClickListener(v -> initiateGoogleSignIn());
 	emailTE = view.findViewById(R.id.emailTE);

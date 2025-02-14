@@ -1,125 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".allpages.home.views.Home">
 
+    <TextView
+        android:id="@+id/textView5"
+        style="@style/bigTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/daily_inspiration"
+        android:textColor="@color/DarkGreen"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
     <LinearLayout
+        android:id="@+id/randomMealContainer"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/includedMealCell"
+            layout="@layout/meal_cell" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/SoftPink" />
+
+    <TextView
+        android:id="@+id/textView4"
+        style="@style/bigTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/dishes"
+        android:textColor="@color/DarkGreen"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginTop="8dp"
+        android:elevation="5dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/searchInputLayoutHome"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="50dp"
-            android:layout_marginBottom="50dp"
-            android:hint="Search...?"
-            app:boxStrokeColor="@color/black"
-            app:boxStrokeWidth="1dp"
-            app:endIconTint="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/searchrecyclerView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/searchET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/SoftPink"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/textView5"
-            style="@style/bigTxt"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/categoryChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/daily_inspiration"
-            android:textColor="@color/DarkGreen"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:backgroundTint="@color/DarkGreen"
+            android:elevation="4dp"
+            android:text="@string/categories"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:chipStrokeColor="@color/DarkGreen" />
 
-        <LinearLayout
-            android:id="@+id/randomMealContainer"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <include
-                android:id="@+id/includedMealCell"
-                layout="@layout/meal_cell" />
-        </LinearLayout>
-
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/SoftPink" />
-
-        <TextView
-            android:id="@+id/textView4"
-            style="@style/bigTxt"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/countryChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/dishes"
-            android:textColor="@color/DarkGreen"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:backgroundTint="@color/DarkGreen"
+            android:elevation="4dp"
+            android:text="@string/countries"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:chipStrokeColor="@color/DarkGreen" />
+    </com.google.android.material.chip.ChipGroup>
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:elevation="5dp">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        tools:listitem="@layout/meal_cell" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/categoryChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/DarkGreen"
-                android:elevation="4dp"
-                android:text="@string/categories"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:chipStrokeColor="@color/DarkGreen" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/countryChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/DarkGreen"
-                android:elevation="4dp"
-                android:text="@string/countries"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:chipStrokeColor="@color/DarkGreen" />
-        </com.google.android.material.chip.ChipGroup>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            tools:listitem="@layout/meal_cell" />
-
-<!--        <Button-->
-<!--            android:id="@+id/signUpBtn"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="sign Up" />-->
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

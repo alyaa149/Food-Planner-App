@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenter;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenterImpl;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthView;
@@ -39,6 +40,7 @@ public class SignUp extends Fragment implements AuthView {
 TextInputEditText passET,emailTE;
 AuthPresenter presenter;
 Button signUpBtn;
+RepositoryImpl repository;
 LinearLayout logInTV,registerWithGoogleET;
 FirebaseAuth auth;
 private static final String ARG_PARAM1 = "param1";
@@ -86,7 +88,11 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	signUpBtn = view.findViewById(R.id.loginBtn);
 	registerWithGoogleET = view.findViewById(R.id.loginWithGoogleET);
 	auth = FirebaseAuth.getInstance();
-	presenter = new AuthPresenterImpl(this, new RepositoryImpl(new MealsRemoteDataSourceImpl()));
+	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
+	
+	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
+	repository = new RepositoryImpl(remoteDataSource, localDataSource);
+	presenter = new AuthPresenterImpl(this, repository);
 	//Log.i("TAG", "onViewCreated: " + email);
 	logInTV.setOnClickListener(v->
 	{

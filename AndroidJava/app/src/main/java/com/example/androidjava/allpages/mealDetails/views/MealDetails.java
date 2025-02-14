@@ -23,6 +23,7 @@ import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
 //import com.example.androidjava.adapters.StepAdapter;
+import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.mealDetails.presenters.MealDetailsPresenterImpl;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 
@@ -80,7 +81,9 @@ public void onCreate(Bundle savedInstanceState) {
 		mParam2 = getArguments().getString(ARG_PARAM2);
 	}
 	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
-	repository = new RepositoryImpl(remoteDataSource);
+	
+	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
+	repository = new RepositoryImpl(remoteDataSource, localDataSource);
 	mealDetailsPresenterImpl = new MealDetailsPresenterImpl(repository, this);
 }
 
@@ -97,7 +100,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	getTheMealFromArguments();
 //	Toast.makeText(getContext(), "Meal ingredient0 : " + meal.getStrIngredient1(), Toast.LENGTH_SHORT).show();
 	init();
-	Toast.makeText(getContext(), "Meal id : " + Integer.parseInt(mealId), Toast.LENGTH_SHORT).show();
+//	Toast.makeText(getContext(), "Meal id : " + Integer.parseInt(mealId), Toast.LENGTH_SHORT).show();
 	mealDetailsPresenterImpl.getMealDetails(Integer.parseInt(mealId));
 	
 	
