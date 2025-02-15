@@ -3,11 +3,10 @@ package com.example.androidjava.Models;
 import android.util.Log;
 
 import com.example.androidjava.alldata.localdata.MealsLocalDataSource;
-import com.example.androidjava.network.AuthCallback;
+import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
 import com.example.androidjava.network.MealsRemoteDataSource;
 import com.example.androidjava.network.NetworkCallback;
 
-import java.util.Date;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;

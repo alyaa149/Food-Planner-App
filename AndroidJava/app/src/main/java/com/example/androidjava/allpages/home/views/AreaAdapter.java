@@ -64,7 +64,7 @@ public static class ViewHolder extends RecyclerView.ViewHolder{
 		super(itemView);
 		thumbnail = itemView.findViewById(R.id.itemImg);
 		title = itemView.findViewById(R.id.Title);
-		description = itemView.findViewById(R.id.desc);
+		//description = itemView.findViewById(R.id.desc);
 		heartImg=itemView.findViewById(R.id.heartImg);
 	
 		

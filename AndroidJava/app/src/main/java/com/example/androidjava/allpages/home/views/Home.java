@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,13 +36,14 @@ import com.example.androidjava.allpages.home.presenters.HomePresenterImpl;
 import com.example.androidjava.allpages.mealsList.views.OnMealClickListener;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends Fragment implements OnClickListener,HomeView , AuthView {
+public class Home extends Fragment implements OnClickListener, HomeView, AuthView {
 
 
 private static final String ARG_PARAM1 = "param1";
@@ -49,7 +51,7 @@ private static final String ARG_PARAM2 = "param2";
 private List<Category> categoryList = new ArrayList<>();
 private List<Meal> areasList = new ArrayList<>();
 View view;
-Button signUpBtn;
+ImageView signUpImg;
 RecyclerView recyclerView;
 AreaAdapter areaAdapter;
 ImageView heartImg;
@@ -62,7 +64,7 @@ private String mParam1;
 private String mParam2;
 Meal randomMeal = new Meal();
 private HomePresenter homePresenter;
-AuthPresenter temppresenter;
+AuthPresenter authPresenter;
 
 public Home() {
 
@@ -85,8 +87,12 @@ public void onCreate(Bundle savedInstanceState) {
 	
 	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
 	repository = new RepositoryImpl(remoteDataSource, localDataSource);
-	//repository = new RepositoryImpl(remoteDataSource);
 	homePresenter = new HomePresenterImpl(this, repository);
+	authPresenter = new AuthPresenterImpl(this, repository);
+	if (getArguments() != null) {
+		mParam1 = getArguments().getString(ARG_PARAM1);
+		mParam2 = getArguments().getString(ARG_PARAM2);
+	}
 }
 
 @Override
@@ -101,14 +107,14 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	categotyChip = view.findViewById(R.id.categoryChip);
 	countryChip = view.findViewById(R.id.countryChip);
 	randomMealCard = view.findViewById(R.id.includedMealCell);
-	//signUpBtn =view.findViewById(R.id.signUpBtn);
+	signUpImg =view.findViewById(R.id.leaveImg);
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 	homePresenter.getDailyInspration();
 	homePresenter.showCategories();
-
+	
 	categotyChip.setOnClickListener(v -> homePresenter.showCategories());
 	countryChip.setOnClickListener(v -> homePresenter.showCountries());
-	
+	signUpImg.setOnClickListener(v-> {authPresenter.signOut(); Navigation.findNavController(view).navigate(R.id.action_home2_to_loginPage);});
 	super.onViewCreated(view, savedInstanceState);
 }
 
@@ -124,37 +130,44 @@ public void showCountries(List<Meal> countries) {
 
 @Override
 public void showRandomMeal(Meal meal) {
-	if(isAdded()){
+	if (isAdded()) {
 		heartImg = randomMealCard.findViewById(R.id.heartImg);
-	ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
-	TextView mealName = randomMealCard.findViewById(R.id.Title);
-	TextView mealDesc = randomMealCard.findViewById(R.id.desc);
-	
-	Glide.with(getContext()).load(meal.getStrMealThumb()).into(mealImage);
-	mealName.setText(meal.getStrMeal());
-	mealDesc.setText(meal.getStrArea());
-	heartImg.setOnClickListener(v ->{homePresenter.addMealToFavorites(meal);Toast.makeText(getContext(), "Meal added to favorites", Toast.LENGTH_SHORT).show();} );
-	
-	
-	randomMealCard.setOnClickListener(v-> {
-		Bundle bundle = new Bundle();
-		if (meal == null || meal.getIdMeal() == null) {
-			Toast.makeText(getContext(), "Meal data is missing", Toast.LENGTH_SHORT).show();
-			return;
-		}
+		ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
+		TextView mealName = randomMealCard.findViewById(R.id.Title);
+		//TextView mealDesc = randomMealCard.findViewById(R.id.desc);
 		
-		bundle.putString("name", meal.getIdMeal());
-		NavController navController = NavHostFragment.findNavController(this);
-		navController.navigate(R.id.action_home2_to_mealDetails,bundle);
-	//	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealDetails, bundle);
+		Glide.with(getContext()).load(meal.getStrMealThumb()).into(mealImage);
+		mealName.setText(meal.getStrMeal());
+		//mealDesc.setText(meal.getStrArea());
+		heartImg.setOnClickListener(v -> {
+			homePresenter.addMealToFavorites(meal);
+			Snackbar.make(view, "Meal added to favorites", Snackbar.LENGTH_SHORT)
+					.show();
 		
-	});
+		});
+		
+		
+		randomMealCard.setOnClickListener(v -> {
+			Bundle bundle = new Bundle();
+			if (meal == null || meal.getIdMeal() == null) {
+				Toast.makeText(getContext(), "Meal data is missing", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
+			bundle.putString("name", meal.getIdMeal());
+			NavController navController = NavHostFragment.findNavController(this);
+			navController.navigate(R.id.action_home2_to_mealDetails, bundle);
+			//	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealDetails, bundle);
+			
+		});
 	}
 }
 
 @Override
 public void showError(String message) {
-	Toast.makeText(getContext(), "Error: " + message, Toast.LENGTH_SHORT).show();
+	Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
+			.show();
+	//Toast.makeText(getContext(), "Error: " + message, Toast.LENGTH_SHORT).show();
 }
 
 @Override
@@ -181,13 +194,16 @@ public void onCountryClick(String country) {
 
 @Override
 public void onAuthSuccess(String message) {
-	Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-
+	Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
+			.show();
+	
 }
 
 @Override
 public void onAuthFailure(String error) {
-Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+	Snackbar.make(view, error, Snackbar.LENGTH_SHORT)
+			.show();
+//Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 }
 }
 

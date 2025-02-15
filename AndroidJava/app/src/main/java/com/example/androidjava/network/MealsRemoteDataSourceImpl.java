@@ -2,8 +2,11 @@ package com.example.androidjava.network;
 
 import android.util.Log;
 
-import com.example.androidjava.Models.CategoryResponse;
-import com.example.androidjava.Models.MealResponse;
+import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -11,9 +14,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -144,8 +144,28 @@ public void signInAndSignUpWithGoogle(String token, AuthCallback callback) {
 
 @Override
 public void signOut(AuthCallback callback) {
+	FirebaseAuth auth = FirebaseAuth.getInstance();
 	
+	// Sign out from Firebase Authentication
 	auth.signOut();
 	
+	// Check if user signed in with Google
+	GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(auth.getApp().getApplicationContext());
+	
+	if (account != null) {
+		GoogleSignIn.getClient(auth.getApp().getApplicationContext(), GoogleSignInOptions.DEFAULT_SIGN_IN)
+				.signOut()
+				.addOnCompleteListener(task -> {
+					if (task.isSuccessful()) {
+						callback.onSuccess("Google Sign-Out successful");
+					} else {
+						callback.onFailure("Google Sign-Out failed");
+					}
+				});
+	} else {
+		callback.onSuccess("Google Sign-Out successful");  // If not signed in with Google, just return success
+	}
 }
+
+
 }

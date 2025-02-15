@@ -1,5 +1,7 @@
 package com.example.androidjava.network;
 
+import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
+
 public interface MealsRemoteDataSource {
 
 	void getCategories(NetworkCallback callback);

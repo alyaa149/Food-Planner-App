@@ -40,7 +40,7 @@ public MealAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int 
 public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int position) {
 	Meal meal = meals.get(position);
 	holder.title.setText(meal.getStrMeal());
-	holder.description.setText("");
+//	holder.description.setText("");
 	holder.thumbnail.setOnClickListener(v-> listener.onMealClick(meal));
 	holder.heartImg.setOnClickListener(v -> {
 		listener.onFavClick(meal);
@@ -72,7 +72,7 @@ public static class ViewHolder extends RecyclerView.ViewHolder{
 		super(itemView);
 		thumbnail = itemView.findViewById(R.id.itemImg);
 		title = itemView.findViewById(R.id.Title);
-		description = itemView.findViewById(R.id.desc);
+		//description = itemView.findViewById(R.id.desc);
 		heartImg=itemView.findViewById(R.id.heartImg);
 	}
 }

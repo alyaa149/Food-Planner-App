@@ -1,5 +1,9 @@
 package com.example.androidjava.allpages.mealDetails.views;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +24,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Meal;
+import com.example.androidjava.Models.PlannedMeal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
 //import com.example.androidjava.adapters.StepAdapter;
@@ -28,10 +33,16 @@ import com.example.androidjava.allpages.mealDetails.presenters.MealDetailsPresen
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MealDetails extends Fragment implements MealDetailsView {
 
@@ -54,7 +65,7 @@ private MealDetailsPresenterImpl mealDetailsPresenterImpl ;
 RepositoryImpl repository;
 
 TextView mealArea, mealName, steps;
-ImageView mealImg;
+ImageView mealImg, planSaveImg;
 View view;
 List<Meal> meals = new ArrayList<>();
 Map<String, String> ingredientsDetails = new HashMap<>();
@@ -102,7 +113,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	init();
 //	Toast.makeText(getContext(), "Meal id : " + Integer.parseInt(mealId), Toast.LENGTH_SHORT).show();
 	mealDetailsPresenterImpl.getMealDetails(Integer.parseInt(mealId));
-	
+	planSaveImg.setOnClickListener(v -> showPlanDaysDialog(meal));
 	
 }
 
@@ -114,6 +125,7 @@ public void init() {
 	mealImg = view.findViewById(R.id.mealImage);
 	steps = view.findViewById(R.id.steps);
 	webView = view.findViewById(R.id.mealVideo);
+	planSaveImg = view.findViewById(R.id.planSaveImg);
 }
 
 
@@ -139,13 +151,40 @@ private void showIngredients() {
 		
 		if (!ingredientsDetails.isEmpty()) {
 			ingrediantAdapter = new IngrediantAdapter(getContext(), ingredientsDetails);
-			recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+			recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 			recyclerView.setAdapter(ingrediantAdapter);
 			ingrediantAdapter.notifyDataSetChanged();
 		}
 	} catch (Exception e) {
 		e.printStackTrace(); // Handle reflection errors
 	}
+}
+private void showPlanDaysDialog(Meal meal) {
+	Calendar calendar = Calendar.getInstance();
+	DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
+			R.style.RedDatePickerDialog,
+			(view, year, month, dayOfMonth) -> {
+				String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+				//saveMealToPlan(meal, selectedDate);
+			},
+			calendar.get(Calendar.YEAR),
+			calendar.get(Calendar.MONTH),
+			calendar.get(Calendar.DAY_OF_MONTH)
+	);
+//	datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.RED));
+	datePickerDialog.setOnShowListener(dialog -> {
+		datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
+		datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+	});
+	
+	datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+	datePickerDialog.show();
+}
+private void saveMealToPlan(Meal meal, String selectedDate) {
+	// Create a new PlanMeal object
+	PlannedMeal planMeal = new PlannedMeal();
+	
+
 }
 
 

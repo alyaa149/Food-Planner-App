@@ -3,7 +3,6 @@ package com.example.androidjava.allpages.firebaseLoginAndSignUp;
 import android.util.Log;
 
 import com.example.androidjava.Models.Repository;
-import com.example.androidjava.network.AuthCallback;
 
 public class AuthPresenterImpl implements AuthPresenter{
 private AuthView view;

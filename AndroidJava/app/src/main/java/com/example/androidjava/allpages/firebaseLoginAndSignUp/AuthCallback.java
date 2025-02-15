@@ -1,6 +1,4 @@
-package com.example.androidjava.network;
-
-import com.example.androidjava.Models.CategoryResponse;
+package com.example.androidjava.allpages.firebaseLoginAndSignUp;
 
 public interface AuthCallback {
 void onSuccess(String response);

@@ -1,9 +1,8 @@
 package com.example.androidjava.Models;
 
-import com.example.androidjava.network.AuthCallback;
+import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
 import com.example.androidjava.network.NetworkCallback;
 
-import java.util.Date;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;

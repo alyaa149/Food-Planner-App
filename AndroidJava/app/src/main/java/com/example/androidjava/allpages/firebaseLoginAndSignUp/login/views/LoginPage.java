@@ -101,19 +101,18 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	loginBtn = view.findViewById(R.id.loginBtn);
 	loginBtn.setOnClickListener(v -> presenter.signIn(emailTE.getText().toString(), passET.getText().toString()));
 }
-	
 
+
+private void initiateGoogleSignIn() {
+	GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+			                          .requestIdToken(getString(R.string.default_web_client_id))
+			                          .requestEmail()
+			                          .build();
+	GoogleSignInClient googleSignInUser = GoogleSignIn.getClient(requireContext(), gso);
 	
-	private void initiateGoogleSignIn() {
-		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-				                          .requestIdToken(getString(R.string.default_web_client_id))
-				                          .requestEmail()
-				                          .build();
-		GoogleSignInClient googleSignInUser = GoogleSignIn.getClient(requireContext(), gso);
-		
-		Intent signInGoogleIntent = googleSignInUser.getSignInIntent();
-		startActivityForResult(signInGoogleIntent, 100);
-	}
+	Intent signInGoogleIntent = googleSignInUser.getSignInIntent();
+	startActivityForResult(signInGoogleIntent, 100);
+}
 
 @Override
 public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -137,10 +136,9 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 
 
-
 @Override
 public void onAuthSuccess(String message) {
-	if(isAdded()) {
+	if (isAdded()) {
 		Navigation.findNavController(requireView()).navigate(R.id.action_loginPage_to_home2);
 		Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
 	}
@@ -148,7 +146,7 @@ public void onAuthSuccess(String message) {
 
 @Override
 public void onAuthFailure(String error) {
-	if(isAdded()) {
+	if (isAdded()) {
 		Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
 	}
 }

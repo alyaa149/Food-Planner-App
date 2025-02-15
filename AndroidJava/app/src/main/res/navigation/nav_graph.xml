@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home2">
+    app:startDestination="@id/signUp2">
 
     <fragment
         android:id="@+id/splashScreen"
@@ -114,6 +114,9 @@
         <action
             android:id="@+id/action_home2_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_home2_to_loginPage"
+            app:destination="@id/loginPage" />
     </fragment>
 
 </navigation>
