@@ -3,6 +3,7 @@ package com.example.androidjava.allpages.favorites.presenter;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.allpages.favorites.view.FavoritesView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -16,7 +17,7 @@ public FavoritesPresenterImpl(FavoritesView favoritesView, RepositoryImpl mealsR
 }
 @Override
 public void getFavorites() {
-	mealsRepository.getAllFavorites()
+	mealsRepository.getAllFavorites(FirebaseAuth.getInstance().getCurrentUser().getUid())
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(

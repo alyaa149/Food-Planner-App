@@ -8,10 +8,12 @@ import com.example.androidjava.allpages.home.presenters.HomePresenter;
 import com.example.androidjava.allpages.home.views.HomeView;
 import com.example.androidjava.allpages.search.view.SearchView;
 import com.example.androidjava.network.NetworkCallback;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SearchPresenterImpl implements SearchPresenter, NetworkCallback {
 private SearchView searchView;
 private Repository repository;
+private  String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 public SearchPresenterImpl(SearchView searchView, Repository repository) {
 	this.searchView = searchView;
@@ -70,12 +72,14 @@ public void searchIngredients(String query) {
 
 @Override
 public void addMealToFavorites(Meal meal) {
+	meal.setUserId(userId);
 	repository.addToFavorites(meal);
 	
 }
 
 @Override
 public void removeMealFromFavorites(Meal meal) {
+	meal.setUserId(userId);
 	repository.delete(meal);
 }
 }

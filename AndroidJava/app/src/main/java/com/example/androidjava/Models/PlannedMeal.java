@@ -11,7 +11,19 @@ public class PlannedMeal {
 @PrimaryKey(autoGenerate = false) @NonNull
 private String idMeal;
 private String strMeal;
+@NonNull
 String date;
+@NonNull
+private String userId;
+
+@NonNull
+public String getUserId() {
+	return userId;
+}
+
+public void setUserId(@NonNull String userId) {
+	this.userId = userId;
+}
 
 public String getDate() {
 	return date;

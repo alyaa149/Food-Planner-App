@@ -22,11 +22,10 @@ private FavDAO favDao;
 private static MealsLocalDataSourceImp localDataSource = null;
 Observable<List<Meal>> storedFavMeals;
 Observable<List<PlannedMeal>> storedPlannedMeals;
-
+private String userId;
 private MealsLocalDataSourceImp(Context context) {
 	AppDataBase db = AppDataBase.getInstanse(context.getApplicationContext());
 	favDao = db.getMealDao();
-	storedFavMeals = favDao.getAllFavoriteMeals();
 	dao = db.getPlanMealDao();
 	storedPlannedMeals = dao.getAllPlannedMeals();
 }
@@ -40,6 +39,7 @@ public static MealsLocalDataSourceImp getInstance(Context context) {
 
 @Override
 public void insert(Meal meal) {
+	Log.i("DEBUG", "insert id in local ds: " + meal.getIdMeal());
 	favDao.insertFavoriteMeal(meal).subscribeOn(Schedulers.io())
 			.subscribe(() -> Log.d("DEBUG", "Product Inserted"),
 					error -> Log.e("DEBUG", "Insert Error", error));
@@ -55,8 +55,8 @@ public void delete(Meal meal) {
 }
 
 @Override
-public Observable<List<Meal>> getAllMeals() {
-	return storedFavMeals;
+public Observable<List<Meal>> getAllMeals(String userId) {
+	return favDao.getAllFavoriteMeals(userId);
 }
 
 @Override

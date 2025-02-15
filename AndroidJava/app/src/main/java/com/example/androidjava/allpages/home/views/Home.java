@@ -39,6 +39,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,11 +136,13 @@ public void showRandomMeal(Meal meal) {
 		ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
 		TextView mealName = randomMealCard.findViewById(R.id.Title);
 		//TextView mealDesc = randomMealCard.findViewById(R.id.desc);
+		String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 		
 		Glide.with(getContext()).load(meal.getStrMealThumb()).into(mealImage);
 		mealName.setText(meal.getStrMeal());
 		//mealDesc.setText(meal.getStrArea());
 		heartImg.setOnClickListener(v -> {
+			meal.setUserId(userId);
 			homePresenter.addMealToFavorites(meal);
 			Snackbar.make(view, "Meal added to favorites", Snackbar.LENGTH_SHORT)
 					.show();
@@ -194,8 +197,8 @@ public void onCountryClick(String country) {
 
 @Override
 public void onAuthSuccess(String message) {
-	Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
-			.show();
+//	Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
+		//	.show();
 	
 }
 

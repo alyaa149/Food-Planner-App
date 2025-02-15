@@ -90,7 +90,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	auth = FirebaseAuth.getInstance();
 	passET = view.findViewById(R.id.passET);
 	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
-	
+//	String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
 	repository = new RepositoryImpl(remoteDataSource, localDataSource);
 	

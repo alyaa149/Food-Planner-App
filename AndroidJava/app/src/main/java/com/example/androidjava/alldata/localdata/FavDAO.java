@@ -20,8 +20,8 @@ Completable insertFavoriteMeal(Meal meal);
 @Delete
 Completable deleteFavoriteMeal(Meal meal);
 
-@Query("SELECT * FROM favorite_meals")
-Observable<List<Meal>> getAllFavoriteMeals();
+@Query("SELECT * FROM favorite_meals WHERE userId = :userId")
+Observable<List<Meal>> getAllFavoriteMeals(String userId);
 
 @Query("SELECT * FROM favorite_meals WHERE idMeal = :mealId")
 Meal checkFavoriteMealById(int mealId);

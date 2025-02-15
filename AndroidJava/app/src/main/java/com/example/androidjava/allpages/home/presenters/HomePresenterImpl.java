@@ -6,10 +6,12 @@ import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.allpages.home.views.HomeView;
 import com.example.androidjava.network.NetworkCallback;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomePresenterImpl implements HomePresenter, NetworkCallback {
 private HomeView homeView;
 private Repository repository;
+private  String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 public HomePresenterImpl(HomeView homeView, Repository repository) {
 	this.homeView = homeView;
@@ -34,12 +36,14 @@ public void showCountries() {
 
 @Override
 public void addMealToFavorites(Meal meal) {
+	meal.setUserId(userId);
 	repository.addToFavorites(meal);
 	
 }
 
 @Override
 public void removeMealFromFavorites(Meal meal) {
+	meal.setUserId(userId);
 	repository.delete(meal);
 }
 

@@ -94,8 +94,8 @@ public void addToFavorites(Meal meal) {
 }
 
 @Override
-public Observable<List<Meal>> getAllFavorites() {
-	return localDataSource.getAllMeals();
+public Observable<List<Meal>> getAllFavorites(String userId) {
+	return localDataSource.getAllMeals(userId);
 }
 
 @Override

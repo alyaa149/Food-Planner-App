@@ -23,7 +23,7 @@ public void signOut(AuthCallback callback);
 //====================================================
 //fav meals
 void addToFavorites(Meal meal);
-Observable<List<Meal>> getAllFavorites();
+Observable<List<Meal>> getAllFavorites(String userId);
 void delete(Meal meal);
 //=======================================================
 //planned meals

@@ -11,7 +11,19 @@ import java.io.Serializable;
 public class Meal implements Serializable {
 @PrimaryKey(autoGenerate = false) @NonNull
 public String idMeal;
+@NonNull
+private String userId;
 public String strMeal;
+
+@NonNull
+public String getUserId() {
+	return userId;
+}
+
+public void setUserId(@NonNull String userId) {
+	this.userId = userId;
+}
+
 public String strDrinkAlternate;
 public String strCategory;
 public String strArea;

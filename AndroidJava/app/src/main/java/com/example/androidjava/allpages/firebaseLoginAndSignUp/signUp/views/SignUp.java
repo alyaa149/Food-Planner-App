@@ -32,11 +32,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignUp#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class SignUp extends Fragment implements AuthView {
 TextInputEditText passET,emailTE;
 AuthPresenter presenter;
@@ -158,25 +154,3 @@ public void onAuthFailure(String error) {
 	}
 }
 }
-//
-//@Override
-//public void onSignUpSuccess() {
-//Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
-//Navigation.findNavController(requireView()).navigate(R.id.action_signUp2_to_home2);
-//}
-//
-//@Override
-//public void onSignUpFailure(String message) {
-//Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-//}
-//
-//@Override
-//public void onGoogleSignInSuccess() {
-//Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
-//Navigation.findNavController(requireView()).navigate(R.id.action_signUp2_to_home2);
-//}
-//
-//@Override
-//public void onGoogleSignInFailure(String message) {
-//Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-//}

@@ -143,7 +143,8 @@ return;
 public void onFavClick(Meal meal) {
 	if (isAdded()) {
 		Toast.makeText(getContext(), "Meal click ->" +meal.getStrMeal(), Toast.LENGTH_SHORT).show();
-	mealsListPresenter.addMealToFavorites(meal);
+
+		mealsListPresenter.addMealToFavorites(meal);
 		//Navigation.findNavController(view).navigate(R.id.action_mealsList_to_favoritesPage);
 	}
 	
