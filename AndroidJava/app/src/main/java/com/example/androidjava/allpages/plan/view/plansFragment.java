@@ -24,6 +24,7 @@ import com.example.androidjava.allpages.mealsList.views.MealAdapter;
 import com.example.androidjava.allpages.mealsList.views.OnMealClickListener;
 import com.example.androidjava.allpages.plan.presenter.PlanPresenterImpl;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -99,6 +100,7 @@ view = inflater.inflate(R.layout.fragment_plans, container, false);
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 	super.onViewCreated(view, savedInstanceState);
 	getNext7Days();
+//plansPresenter.removeMealFromPlanned(FirebaseAuth.getInstance().getUid().toString() ,"53040",16,02,2025);
 
 }
 
@@ -110,7 +112,7 @@ public void showMeals(List<PlannedMeal> meals) {
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 	recyclerView.setAdapter(planAdapter);
 	Log.d("DEBUG", "showMeals() called. Meals count: " + meals.size());
-meals.forEach(meal -> Log.d("DEBUG", "Meal in plans: " + meal.getMeal().getStrMeal()+" year : "+meal.getYear()));
+meals.forEach(meal -> Log.d("DEBUG", "Meal in plans: " + meal.getMeal().getStrMeal()+"mealId "+meal.getMeal().getIdMeal()+" year : "+meal.getYear()));
 }
 
 @Override

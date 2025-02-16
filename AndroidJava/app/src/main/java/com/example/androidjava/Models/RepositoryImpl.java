@@ -111,8 +111,8 @@ public void insertPlannedMeal(PlannedMeal meal) {
 }
 
 @Override
-public void deletePlannedMeal(PlannedMeal meal) {
-	localDataSource.deletePlannedMeal(meal);
+public void deletePlannedMeal(String userId, String mealId, int day, int month, int year) {
+	localDataSource.deletePlannedMeal(userId, mealId, day, month, year);
 }
 
 @Override

@@ -7,6 +7,6 @@ public interface PlanPresenter {
 	void getPlannedMeals();
 	void getMealsByDay(int day ,int month ,int year);
 void addMealToFavorites(Meal meal);
-	void removeMealFromPlanned(PlannedMeal meal);
+	void removeMealFromPlanned(String userId, String mealId, int day, int month, int year);
 
 }

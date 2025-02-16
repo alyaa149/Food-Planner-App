@@ -66,8 +66,8 @@ public void addMealToFavorites(Meal meal) {
 
 
 @Override
-public void removeMealFromPlanned(PlannedMeal meal) {
-	mealsRepository.deletePlannedMeal(meal);
+public void removeMealFromPlanned(String userId, String mealId, int day, int month, int year) {
+	mealsRepository.deletePlannedMeal(userId, mealId, day, month, year);
 }
 
 

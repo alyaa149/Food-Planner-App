@@ -70,13 +70,13 @@ public void insertPlannedMeal(PlannedMeal meal) {
 }
 
 @Override
-public void deletePlannedMeal(PlannedMeal meal) {
-	dao.deletePlannedMeal(meal)
-			.subscribeOn(Schedulers.io())
-			.subscribe(
-					() -> Log.d("DEBUG", "planned meal Deleted"),
-					error -> Log.e("DEBUG", "Delete Error", error)
-			);
+public void deletePlannedMealsByDate(String date) {
+//	dao.deletePlannedMeal(meal)
+//			.subscribeOn(Schedulers.io())
+//			.subscribe(
+//					() -> Log.d("DEBUG", "planned meal Deleted"),
+//					error -> Log.e("DEBUG", "Delete Error", error)
+//			);
 }
 
 @Override
@@ -91,8 +91,8 @@ public Observable<List<PlannedMeal>> getPlannedMealByDate(String userId, int day
 }
 
 @Override
-public void deletePlannedMealsByDate(String date) {
-	dao.deletePlannedMealsByDate(date)
+public void deletePlannedMeal(String userId, String mealId, int day, int month, int year) {
+	dao.deletePlannedMealsByDate(userId,mealId,day,month,year)
 			.subscribeOn(Schedulers.io())
 			.subscribe(
 					() -> Log.d("DEBUG", "Product Deleted"),

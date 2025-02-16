@@ -25,7 +25,7 @@ import com.example.androidjava.allpages.search.view.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 LinearLayout navHome,navSearch,navFavorites,navPlans;
-private NavController navController;
+//private NavController navController;
 
 @Override
 protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +37,16 @@ protected void onCreate(Bundle savedInstanceState) {
 		v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 		return insets;
 	});
-	navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
-	
-	SharedPreferences preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-	boolean isLoggedIn = preferences.getBoolean("isLoggedIn", false);
-	
-	if (isLoggedIn) {
-		navController.navigate(R.id.homeFragment);
-	} else {
-		navController.navigate(R.id.loginPage);
-	}
+//	navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+//
+//	SharedPreferences preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+//	boolean isLoggedIn = preferences.getBoolean("isLoggedIn", false);
+//
+//	if (isLoggedIn) {
+//		navController.navigate(R.id.homeFragment);
+//	} else {
+//		navController.navigate(R.id.loginPage);
+//	}
 	 navHome = findViewById(R.id.nav_home);
 	 navFavorites = findViewById(R.id.nav_favorites);
 	 navSearch = findViewById(R.id.nav_search);

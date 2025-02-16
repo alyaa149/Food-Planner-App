@@ -13,7 +13,7 @@ void insert(Meal meal);
 void delete(Meal meal);
 Observable<List<Meal>> getAllMeals(String userId);
 void insertPlannedMeal(PlannedMeal meal);
-void deletePlannedMeal(PlannedMeal meal);
+void deletePlannedMeal(String userId, String mealId, int day, int month, int year);
 Observable<List<PlannedMeal>> getAllPlannedMeals(String userId);
 Observable<List<PlannedMeal>> getPlannedMealByDate(String userId ,int day, int month, int year);
 void deletePlannedMealsByDate(String date);

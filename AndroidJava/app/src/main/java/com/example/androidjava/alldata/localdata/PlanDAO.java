@@ -30,6 +30,6 @@ Observable<List<PlannedMeal>> getAllPlannedMeals(String userId);
 @Query("SELECT * FROM planned_meals WHERE userIdPlan =:userId AND day = :day AND month = :month AND year = :year")
 Observable<List<PlannedMeal>> getPlannedMealByDate(String userId ,int day, int month, int year);
 
-@Query("DELETE FROM planned_meals WHERE day = :date")
-Completable deletePlannedMealsByDate(String date);
+@Query("DELETE FROM planned_meals WHERE userIdPlan=:userId AND mealId = :mealId AND day = :day AND month = :month AND year = :year")
+Completable deletePlannedMealsByDate(String userId,String mealId,int day,int month,int year);
 }
