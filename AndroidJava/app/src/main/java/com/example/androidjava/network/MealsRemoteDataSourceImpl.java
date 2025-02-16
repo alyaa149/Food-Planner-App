@@ -1,5 +1,7 @@
 package com.example.androidjava.network;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
@@ -24,6 +26,7 @@ private FirebaseAuth auth;
 private static MealsRemoteDataSourceImpl instance;
 private static Retrofit retrofit;
 private static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
+
 
 
 public MealsRemoteDataSourceImpl() {

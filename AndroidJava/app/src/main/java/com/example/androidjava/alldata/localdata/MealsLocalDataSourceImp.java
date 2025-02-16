@@ -21,13 +21,12 @@ private PlanDAO dao;
 private FavDAO favDao;
 private static MealsLocalDataSourceImp localDataSource = null;
 Observable<List<Meal>> storedFavMeals;
-Observable<List<PlannedMeal>> storedPlannedMeals;
-private String userId;
+
+
 private MealsLocalDataSourceImp(Context context) {
 	AppDataBase db = AppDataBase.getInstanse(context.getApplicationContext());
 	favDao = db.getMealDao();
 	dao = db.getPlanMealDao();
-	storedPlannedMeals = dao.getAllPlannedMeals();
 }
 
 public static MealsLocalDataSourceImp getInstance(Context context) {
@@ -64,7 +63,7 @@ public void insertPlannedMeal(PlannedMeal meal) {
 	dao.insertPlannedMeal(meal)
 			.subscribeOn(Schedulers.io())
 			.subscribe(
-					() -> Log.d("DEBUG", "Product Inserted"),
+					() -> Log.d("DEBUG", "planned meal Inserted"),
 					error -> Log.e("DEBUG", "Insert Error", error)
 			);
 	
@@ -75,14 +74,20 @@ public void deletePlannedMeal(PlannedMeal meal) {
 	dao.deletePlannedMeal(meal)
 			.subscribeOn(Schedulers.io())
 			.subscribe(
-					() -> Log.d("DEBUG", "Product Deleted"),
+					() -> Log.d("DEBUG", "planned meal Deleted"),
 					error -> Log.e("DEBUG", "Delete Error", error)
 			);
 }
 
 @Override
-public Observable<List<PlannedMeal>> getAllPlannedMeals() {
-	return storedPlannedMeals;
+public Observable<List<PlannedMeal>> getAllPlannedMeals(String userId) {
+	Log.d("DEBUG", "DAO method getAllPlannedMeals() called for user: " + userId);
+	return dao.getAllPlannedMeals(userId);
+}
+
+@Override
+public Observable<List<PlannedMeal>> getPlannedMealByDate(String userId, int day, int month, int year) {
+	return dao.getPlannedMealByDate(userId, day, month, year);
 }
 
 @Override

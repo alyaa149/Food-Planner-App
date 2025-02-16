@@ -33,4 +33,6 @@
     <string name="search_by_meal">Search by meal...</string>
     <string name="add_meal_to_favorites_to_save_it">Add meal to favorites to save it !</string>
     <string name="favorites_meals">Favorites Meals</string>
+    <string name="foodienator">Foodienator</string>
+    <string name="your_favorite_meals_here">your favorite meals here!</string>
 </resources>

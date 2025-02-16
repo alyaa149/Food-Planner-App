@@ -116,8 +116,13 @@ public void deletePlannedMeal(PlannedMeal meal) {
 }
 
 @Override
-public Observable<List<PlannedMeal>> getAllPlannedMeals() {
-	return localDataSource.getAllPlannedMeals();
+public Observable<List<PlannedMeal>> getAllPlannedMeals(String userId) {
+	return localDataSource.getAllPlannedMeals(userId);
+}
+
+@Override
+public Observable<List<PlannedMeal>> getPlannedMealByDate(String userId, int day, int month, int year) {
+	return localDataSource.getPlannedMealByDate(userId, day, month, year);
 }
 
 @Override

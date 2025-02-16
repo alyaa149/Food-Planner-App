@@ -99,7 +99,11 @@
     <fragment
         android:id="@+id/plansFragment"
         android:name="com.example.androidjava.allpages.plan.view.plansFragment"
-        android:label="plansFragment" />
+        android:label="plansFragment" >
+        <action
+            android:id="@+id/action_plansFragment_to_mealDetails"
+            app:destination="@id/mealDetails" />
+    </fragment>
     <fragment
         android:id="@+id/home2"
         android:name="com.example.androidjava.allpages.home.views.Home"

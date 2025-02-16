@@ -29,7 +29,8 @@ void delete(Meal meal);
 //planned meals
 void insertPlannedMeal(PlannedMeal meal);
 void deletePlannedMeal(PlannedMeal meal);
-Observable<List<PlannedMeal>> getAllPlannedMeals();
+Observable<List<PlannedMeal>> getAllPlannedMeals(String userId);
+Observable<List<PlannedMeal>> getPlannedMealByDate(String userId ,int day, int month, int year);
 void deletePlannedMealsByDate(String date);
 
 

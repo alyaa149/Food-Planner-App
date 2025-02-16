@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import com.example.androidjava.R;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.mealDetails.presenters.MealDetailsPresenterImpl;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -50,7 +52,9 @@ public class MealDetails extends Fragment implements MealDetailsView {
 private static final String ARG_PARAM1 = "param1";
 private static final String ARG_PARAM2 = "param2";
 
-
+int dayPlan;
+int monthPlan;
+int yearPlan;
 private String mParam1;
 private String mParam2;
 WebView webView;
@@ -160,6 +164,7 @@ private void showIngredients() {
 	}
 }
 private void showPlanDaysDialog(Meal meal) {
+
 	Calendar calendar = Calendar.getInstance();
 	DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
 			R.style.RedDatePickerDialog,
@@ -173,18 +178,25 @@ private void showPlanDaysDialog(Meal meal) {
 	);
 //	datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.RED));
 	datePickerDialog.setOnShowListener(dialog -> {
-		datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
-		datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+		Button positiveButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE);
+		Button negativeButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE);
+		
+		// ✅ Set colors
+		positiveButton.setTextColor(Color.RED);
+		negativeButton.setTextColor(Color.BLACK);
+		
+		// ✅ Set the click listener here
+		positiveButton.setOnClickListener(v -> {
+			dayPlan = datePickerDialog.getDatePicker().getDayOfMonth();
+			monthPlan = datePickerDialog.getDatePicker().getMonth() + 1; // Months are 0-based
+			yearPlan = datePickerDialog.getDatePicker().getYear();
+			mealDetailsPresenterImpl.insertPlannedMeal(meal, dayPlan, monthPlan, yearPlan);
+		});
 	});
+
 	
 	datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
 	datePickerDialog.show();
-}
-private void saveMealToPlan(Meal meal, String selectedDate) {
-	// Create a new PlanMeal object
-	PlannedMeal planMeal = new PlannedMeal();
-	
-
 }
 
 
@@ -231,4 +243,10 @@ public void showMealDetails(Meal meal) {
 public void showError(String message) {
 	Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
 }
+
+//@Override
+//public void showSuccessInsertPlanMessage(String message) {
+//	Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+//
+//}
 }

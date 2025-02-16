@@ -1,10 +1,13 @@
 package com.example.androidjava.allpages.mealDetails.presenters;
 
 import com.example.androidjava.Models.CategoryResponse;
+import com.example.androidjava.Models.Meal;
+import com.example.androidjava.Models.PlannedMeal;
 import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.allpages.mealDetails.views.MealDetailsView;
 import com.example.androidjava.network.NetworkCallback;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MealDetailsPresenterImpl implements MealDetailsPresenter, NetworkCallback {
 private Repository repository;
@@ -44,5 +47,15 @@ public void getMealDetails(int mealId) {
 public void showError(String errorMessage) {
 	mealDetailsView.showError("Error: " + errorMessage);
 }
+
+@Override
+public void insertPlannedMeal(Meal meal, int day ,int month, int year) {
+	String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+	PlannedMeal plannedMeal = new PlannedMeal(meal,Integer.parseInt(meal.getIdMeal()) ,userId,day,month,year);
+	repository.insertPlannedMeal(plannedMeal);
+	
+}
+
+
 }
 

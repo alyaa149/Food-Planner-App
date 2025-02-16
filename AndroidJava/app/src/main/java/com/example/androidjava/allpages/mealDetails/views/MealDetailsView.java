@@ -7,4 +7,6 @@ import java.util.List;
 public interface MealDetailsView {
 	void showMealDetails(Meal meal);
 void showError(String message);
+//void showSuccessInsertPlanMessage(String message);
+
 }

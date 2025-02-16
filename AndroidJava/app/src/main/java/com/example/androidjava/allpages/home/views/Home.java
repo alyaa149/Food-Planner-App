@@ -115,7 +115,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	
 	categotyChip.setOnClickListener(v -> homePresenter.showCategories());
 	countryChip.setOnClickListener(v -> homePresenter.showCountries());
-	signUpImg.setOnClickListener(v-> {authPresenter.signOut(); Navigation.findNavController(view).navigate(R.id.action_home2_to_loginPage);});
+	signUpImg.setOnClickListener(v-> {authPresenter.signOut();});
 	super.onViewCreated(view, savedInstanceState);
 }
 
@@ -170,7 +170,6 @@ public void showRandomMeal(Meal meal) {
 public void showError(String message) {
 	Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
 			.show();
-	//Toast.makeText(getContext(), "Error: " + message, Toast.LENGTH_SHORT).show();
 }
 
 @Override
@@ -197,16 +196,15 @@ public void onCountryClick(String country) {
 
 @Override
 public void onAuthSuccess(String message) {
-//	Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
-		//	.show();
-	
+	Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
+			.show();
+	Navigation.findNavController(view).navigate(R.id.action_home2_to_loginPage);
 }
 
 @Override
 public void onAuthFailure(String error) {
 	Snackbar.make(view, error, Snackbar.LENGTH_SHORT)
 			.show();
-//Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
 }
 }
 
