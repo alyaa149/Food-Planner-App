@@ -10,5 +10,6 @@ void showCategories(List<Category> categories);
 void showCountries(List<Meal> areas);
 void showRandomMeal(Meal meal);
 void showError(String message);
+void showFireBaseSuccess(String message);
 
 }

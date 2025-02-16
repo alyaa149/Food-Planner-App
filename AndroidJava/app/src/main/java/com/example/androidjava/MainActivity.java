@@ -3,12 +3,15 @@ package com.example.androidjava;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -17,6 +20,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.androidjava.allpages.favorites.view.favoritesPage;
 import com.example.androidjava.allpages.home.views.Home;
@@ -30,61 +34,57 @@ LinearLayout navHome,navSearch,navFavorites,navPlans;
 @Override
 protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	EdgeToEdge.enable(this);
-	setContentView(R.layout.activity_main);
-	ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-		Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-		v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-		return insets;
-	});
-//	navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
-//
-//	SharedPreferences preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-//	boolean isLoggedIn = preferences.getBoolean("isLoggedIn", false);
-//
-//	if (isLoggedIn) {
-//		navController.navigate(R.id.homeFragment);
-//	} else {
-//		navController.navigate(R.id.loginPage);
-//	}
-	 navHome = findViewById(R.id.nav_home);
-	 navFavorites = findViewById(R.id.nav_favorites);
-	 navSearch = findViewById(R.id.nav_search);
-	 navPlans = findViewById(R.id.nav_plans);
+	setContentView(R.layout.activity_main); // Ensure layout is set first
 	
-	navHome.setOnClickListener(v -> {
-		setActiveItem(navHome.findViewById(R.id.homeImg), navHome.findViewById(R.id.homeTV));
-		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+	// Get NavController correctly
+	NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+			                                                    .findFragmentById(R.id.nav_host_fragment_container);
+	
+	if (navHostFragment == null) {
+		Log.e("NavController", "NavHostFragment is NULL! Check activity_main.xml.");
+		return;
+	}
+	
+	NavController navController = navHostFragment.getNavController();
+	
+
+	CardView bottomNav = findViewById(R.id.navigation_bar);
+	
+	
+	navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+		if (destination.getId() == R.id.splashScreen ||
+				    destination.getId() == R.id.introduction ||
+				    destination.getId() == R.id.loginPage ||
+				    destination.getId() == R.id.signUp2) {
+			bottomNav.setVisibility(View.GONE);
+		} else {
+			bottomNav.setVisibility(View.VISIBLE);
+		}
+	});
+	
+	setupNavigation(navController);
+}
+
+private void setupNavigation(NavController navController) {
+	findViewById(R.id.nav_home).setOnClickListener(v -> {
+		Log.d("Navigation", "Navigating to Home");
 		navController.navigate(R.id.home2);
 	});
 	
-	navFavorites.setOnClickListener(v -> {
-		setActiveItem(navFavorites.findViewById(R.id.favImg), navFavorites.findViewById(R.id.favTV));
-		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+	findViewById(R.id.nav_favorites).setOnClickListener(v -> {
+		Log.d("Navigation", "Navigating to Favorites");
 		navController.navigate(R.id.favoritesPage);
 	});
 	
-	navSearch.setOnClickListener(v -> {
-		setActiveItem(navSearch.findViewById(R.id.searchImg), navSearch.findViewById(R.id.searchTV));
-		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+	findViewById(R.id.nav_search).setOnClickListener(v -> {
+		Log.d("Navigation", "Navigating to Search");
 		navController.navigate(R.id.searchFragment);
 	});
 	
-	navPlans.setOnClickListener(v -> {
-		setActiveItem(navPlans.findViewById(R.id.planImg), navPlans.findViewById(R.id.planTV));
-		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+	findViewById(R.id.nav_plans).setOnClickListener(v -> {
+		Log.d("Navigation", "Navigating to Plans");
 		navController.navigate(R.id.plansFragment);
 	});
-
-	
-	
-	
-}
-private void loadFragment(Fragment fragment) {
-	FragmentManager fragmentManager = getSupportFragmentManager();
-	FragmentTransaction transaction = fragmentManager.beginTransaction();
-	transaction.replace(R.id.nav_host_fragment_container, fragment);
-	transaction.commit();
 }
 private void setActiveItem(ImageView icon, TextView text) {
 

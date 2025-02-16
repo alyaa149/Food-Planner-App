@@ -44,7 +44,7 @@ public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int positio
 	Meal meal = meals.get(position);
 	holder.title.setText(meal.getStrMeal());
 	
-	// Change background based on selection
+
 	if (position == selectedPosition) {
 		holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.SoftPink)); // Selected
 	} else {
@@ -52,8 +52,8 @@ public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int positio
 	}
 	
 	holder.itemView.setOnClickListener(v -> {
-		selectedPosition = position;  // Update selected position
-		notifyDataSetChanged();  // Refresh the list to update colors
+		selectedPosition = position;
+		notifyDataSetChanged();
 	});
 	
 	holder.thumbnail.setOnClickListener(v -> listener.onMealClick(meal));
@@ -75,6 +75,12 @@ public int getItemCount() {
 	
 	return (meals != null) ? meals.size() : 0;
 }
+public void updateMeals(List<Meal> newMeals) {
+	this.meals.clear();
+	this.meals.addAll(newMeals);
+	notifyDataSetChanged();
+}
+
 public static class ViewHolder extends RecyclerView.ViewHolder{
 	public ImageView thumbnail;
 	public TextView title, description;

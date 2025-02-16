@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,11 +20,13 @@ import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.PlannedMeal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.alldata.localdata.AppDataBase;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.mealsList.views.MealAdapter;
 import com.example.androidjava.allpages.mealsList.views.OnMealClickListener;
 import com.example.androidjava.allpages.plan.presenter.PlanPresenterImpl;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
@@ -31,18 +34,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link plansFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class plansFragment extends Fragment  implements PlansView,OnDayClickListener, OnMealClickListener {
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private static final String ARG_PARAM1 = "param1";
 private static final String ARG_PARAM2 = "param2";
+
+int day,month,year,curDay,curMonth,curYear;
 List<String> days =new ArrayList<>();
 List<Meal> mealsOfTheDay;
 View view;
@@ -52,12 +52,13 @@ private String mParam1;
 private String mParam2;
 MealAdapter mealAdapter;
 RecyclerView recyclerView;
-PlanAdapter planAdapter;
+DayPlanAdapter dayPlanAdapter;
 
 RepositoryImpl repository;
 MealsLocalDataSourceImp localDataSource;
 MealsRemoteDataSourceImpl remoteDataSource;
 PlanPresenterImpl plansPresenter;
+List<PlannedMeal> plannedMeals;
 
 
 
@@ -93,34 +94,77 @@ public void onCreate(Bundle savedInstanceState) {
 public View onCreateView(LayoutInflater inflater, ViewGroup container,
                          Bundle savedInstanceState) {
 view = inflater.inflate(R.layout.fragment_plans, container, false);
+	getNext7Days();
 	return view;
 }
 
 @Override
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 	super.onViewCreated(view, savedInstanceState);
-	getNext7Days();
-//plansPresenter.removeMealFromPlanned(FirebaseAuth.getInstance().getUid().toString() ,"53040",16,02,2025);
-
+//	AppDataBase database = AppDataBase.getInstanse(getContext());
+//	Executors.newSingleThreadExecutor().execute(() -> {
+//		database.clearAllTables(); // Deletes all data from all tables
+//	});
+	
 }
-
 @Override
-public void showMeals(List<PlannedMeal> meals) {
-
-	planAdapter = new PlanAdapter(getContext(), days,this);
+public void showMeals(List<PlannedMeal> plannedMeals) {
+	this.plannedMeals = plannedMeals;
+	
+	dayPlanAdapter = new DayPlanAdapter(getContext(), days, this);
 	recyclerView = view.findViewById(R.id.recyclerView2);
-	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-	recyclerView.setAdapter(planAdapter);
-	Log.d("DEBUG", "showMeals() called. Meals count: " + meals.size());
-meals.forEach(meal -> Log.d("DEBUG", "Meal in plans: " + meal.getMeal().getStrMeal()+"mealId "+meal.getMeal().getIdMeal()+" year : "+meal.getYear()));
+	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+	recyclerView.setAdapter(dayPlanAdapter);
+	
+	Log.d("DEBUG", "showMeals() called. Meals count: " + plannedMeals.size());
+	plannedMeals.forEach(meal -> Log.d("DEBUG", "Meal in plans: " + meal.getMeal().getStrMeal() + " mealId " + meal.getMeal().getIdMeal() + " year : " + meal.getYear()));
 }
 
 @Override
 public void showMealsByDate(List<Meal> meals) {
-	mealAdapter = new MealAdapter(getContext(),meals,this);
-	recyclerView = view.findViewById(R.id.planrecyclerView);
-	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-	recyclerView.setAdapter(mealAdapter);
+//	if (mealAdapter == null) {
+//
+//		mealAdapter = new MealAdapter(getContext(), meals, this);
+//		recyclerView = view.findViewById(R.id.planrecyclerView);
+//		recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+//		recyclerView.setAdapter(mealAdapter);
+//
+//		new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//			@Override
+//			public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//				return false;
+//			}
+//
+//			@Override
+//			public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//				int position = viewHolder.getAdapterPosition();
+//				Log.d("DEBUG", "Day: " + day + ", Month: " + month + ", Year: " + year);
+//
+//				if (meals.isEmpty()) {
+//					Log.e("DEBUG", "Swipe ignored: Meals list is empty!");
+//					mealAdapter.notifyDataSetChanged();
+//					return;
+//				}
+//
+//				if (position >= 0 && position < meals.size()) {
+//					Meal meal = meals.get(position);
+//					String mealId = meal.getIdMeal();
+//					Log.d("DEBUG", "Removing meal: " + mealId);
+//					plansPresenter.removeMealFromPlanned(mealId, day, month, year);
+//					plansPresenter.removeMealFromPlannedFireBase(day, month, year, meal);
+//					meals.remove(position);
+//					mealAdapter.notifyItemRemoved(position);
+//				} else {
+//					Log.e("DEBUG", "Invalid swipe position: " + position + ", List size: " + meals.size());
+//				}
+//			}
+//		}).attachToRecyclerView(recyclerView);
+//
+//	} else {
+//		mealAdapter.updateMeals(meals);
+//
+//	}
+	
 	Log.d("DEBUG", "Total Meals: " + meals.size());
 }
 
@@ -140,6 +184,66 @@ public  void getNext7Days() {
 @Override
 public void showError(String message) {
 	Log.d("DEBUG", "Error in plans: " + message);
+}
+
+@Override
+public void showSuccessFireBase(String message) {
+	Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+	
+}
+
+@Override
+public void showMealsByFireBase(List<Meal> meals) {
+	Log.d("DEBUG", "Received meals from Firebase: " + meals.size());
+	for (Meal meal : meals) {
+		Log.d("DEBUG", "Meal: " + meal.getStrMeal());
+	}
+	
+	if (mealAdapter == null) {
+		
+		mealAdapter = new MealAdapter(getContext(), meals, this);
+		recyclerView = view.findViewById(R.id.planrecyclerView);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+		recyclerView.setAdapter(mealAdapter);
+		
+		new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+			@Override
+			public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+				return false;
+			}
+			
+			@Override
+			public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+				int position = viewHolder.getAdapterPosition();
+				Log.d("DEBUG", "Day: " + day + ", Month: " + month + ", Year: " + year);
+				
+				if (meals.isEmpty()) {
+					Log.e("DEBUG", "Swipe ignored: Meals list is empty!");
+					mealAdapter.notifyDataSetChanged();
+					return;
+				}
+				
+				if (position >= 0 && position < meals.size()) {
+					Meal meal = meals.get(position);
+					String mealId = meal.getIdMeal();
+					Log.d("DEBUG", "Removing meal: " + mealId);
+					plansPresenter.removeMealFromPlanned(mealId, day, month, year);
+					plansPresenter.removeMealFromPlannedFireBase(day, month, year, meal);
+					meals.remove(position);
+					mealAdapter.notifyItemRemoved(position);
+				} else {
+					Log.e("DEBUG", "Invalid swipe position: " + position + ", List size: " + meals.size());
+				}
+			}
+		}).attachToRecyclerView(recyclerView);
+		
+	} else {
+		mealAdapter.updateMeals(meals);
+		
+	}
+	
+	Log.d("DEBUG", "Total Meals: " + meals.size());
+	
 }
 
 @Override
@@ -169,7 +273,13 @@ public void onFavClick(Meal meal) {
 
 @Override
 public void onDayClick(int day, int month, int year) {
+	
+	this.day=day;
+	this.month=month;
+	this.year=year;
+	
 	Log.d("DEBUG", "onDayClick() called with: day = [" + day + "], month = [" + month + "], year = [" + year + "]");
-	plansPresenter.getMealsByDay(day,month,year);
+	//plansPresenter.getMealsByDay(day,month,year);
+	plansPresenter.getPlannedMealsByDate(FirebaseAuth.getInstance().getCurrentUser().getUid(), day, month, year);
 }
 }

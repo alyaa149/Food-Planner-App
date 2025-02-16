@@ -191,6 +191,7 @@ private void showPlanDaysDialog(Meal meal) {
 			monthPlan = datePickerDialog.getDatePicker().getMonth() + 1; // Months are 0-based
 			yearPlan = datePickerDialog.getDatePicker().getYear();
 			mealDetailsPresenterImpl.insertPlannedMeal(meal, dayPlan, monthPlan, yearPlan);
+		    mealDetailsPresenterImpl.insertPlannedMealFireBase(dayPlan, monthPlan, yearPlan, meal);
 		});
 	});
 
@@ -242,6 +243,12 @@ public void showMealDetails(Meal meal) {
 @Override
 public void showError(String message) {
 	Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+}
+
+@Override
+public void showSuccess(String message) {
+	Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+	
 }
 
 //@Override

@@ -6,12 +6,13 @@ import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.allpages.home.views.HomeView;
 import com.example.androidjava.network.NetworkCallback;
+import com.example.androidjava.network.RealTimeFireBaseCallBack;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomePresenterImpl implements HomePresenter, NetworkCallback {
 private HomeView homeView;
 private Repository repository;
-private  String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+private String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 public HomePresenterImpl(HomeView homeView, Repository repository) {
 	this.homeView = homeView;
@@ -47,23 +48,56 @@ public void removeMealFromFavorites(Meal meal) {
 	repository.delete(meal);
 }
 
+@Override
+public void deleteMealFireBase(Meal meal) {
+	repository.deleteDBUsersFavReference(meal, new RealTimeFireBaseCallBack() {
+		@Override
+		public void onSuccess() {
+			homeView.showFireBaseSuccess("Meal deleted successfully!");
+		}
+		
+		@Override
+		public void onFailure(Exception e) {
+			homeView.showError("Error: " + e.getMessage());
+		}
+	});
+	
+}
+
+@Override
+public void addMealToFireBase(Meal meal) {
+	repository.insertDBUsersFavReference(meal, new RealTimeFireBaseCallBack() {
+		@Override
+		public void onSuccess() {
+			homeView.showFireBaseSuccess("Meal added successfully!");
+		}
+		
+		@Override
+		public void onFailure(Exception e) {
+			homeView.showError("Error: " + e.getMessage());
+		}
+	});
+	
+	
+}
+
 
 @Override
 public void onSuccessMeal(MealResponse response) {
-
-homeView.showRandomMeal(response.getMeals().get(0));
+	
+	homeView.showRandomMeal(response.getMeals().get(0));
 }
 
 @Override
 public void onSuccess(CategoryResponse response) {
 	homeView.showCategories(response.getCategories());
-
+	
 }
 
 @Override
 public void onSuccessCountry(MealResponse response) {
 	homeView.showCountries(response.getMeals());
-
+	
 }
 
 @Override

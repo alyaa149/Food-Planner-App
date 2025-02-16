@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.example.androidjava.Models.Meal;
+import com.example.androidjava.Models.PlannedMeal;
+import com.example.androidjava.Utils.SharedStrings;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -12,9 +17,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -149,10 +164,9 @@ public void signInAndSignUpWithGoogle(String token, AuthCallback callback) {
 public void signOut(AuthCallback callback) {
 	FirebaseAuth auth = FirebaseAuth.getInstance();
 	
-	// Sign out from Firebase Authentication
+
 	auth.signOut();
-	
-	// Check if user signed in with Google
+
 	GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(auth.getApp().getApplicationContext());
 	
 	if (account != null) {
@@ -168,6 +182,151 @@ public void signOut(AuthCallback callback) {
 	} else {
 		callback.onSuccess("Google Sign-Out successful");  // If not signed in with Google, just return success
 	}
+}
+
+private DatabaseReference getDBUsersReference() {
+	
+	if (SharedStrings.auth.getCurrentUser() == null) {
+		return null;
+	}
+	return FirebaseDatabase.getInstance().getReference("Meals").child(auth.getCurrentUser().getUid());
+}
+
+
+
+@Override
+public void insertDBUsersPlanReference(int day, int month, int year, Meal meal, RealTimeFireBaseCallBack listener) {
+	DatabaseReference dbRef = getDBUsersReference();
+	if (dbRef == null) {
+		listener.onFailure(new Exception("User is not authenticated"));
+		return;
+	}
+	
+	String dateKey = formatDateKey(day, month, year);
+	dbRef.child("MyPlans").child(dateKey).child(meal.getIdMeal()).setValue(meal)
+			.addOnSuccessListener(aVoid -> listener.onSuccess())
+			.addOnFailureListener(listener::onFailure);
+}
+
+@Override
+public void deleteDBUsersPlanReference(int day, int month, int year, Meal meal, RealTimeFireBaseCallBack listener) {
+	DatabaseReference dbRef = getDBUsersReference();
+	if (dbRef == null) {
+		listener.onFailure(new Exception("User is not authenticated"));
+		return;
+	}
+	
+	String dateKey = formatDateKey(day, month, year);
+	dbRef.child("MyPlans").child(dateKey).child(meal.getIdMeal()).removeValue()
+			.addOnSuccessListener(aVoid -> listener.onSuccess())
+			.addOnFailureListener(listener::onFailure);
+}
+private String formatDateKey(int day, int month, int year) {
+	return day + " " + month + " " + year; // Format: "16/2/2025"
+}
+
+@Override
+public void insertDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listener) {
+	DatabaseReference dbRef = getDBUsersReference();
+	if (dbRef == null) {
+		listener.onFailure(new Exception("User is not authenticated"));
+		return;
+	}
+	
+	dbRef.child("MyFavs").child(meal.getIdMeal()).setValue(meal)
+			.addOnSuccessListener(aVoid -> listener.onSuccess())
+			.addOnFailureListener(listener::onFailure);
+}
+
+@Override
+public void deleteDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listener) {
+	DatabaseReference dbRef = getDBUsersReference();
+	if (dbRef == null) {
+		listener.onFailure(new Exception("User is not authenticated"));
+		return;
+	}
+	
+	dbRef.child("MyFavs").child(meal.getIdMeal()).removeValue()
+			.addOnSuccessListener(aVoid -> listener.onSuccess())
+			.addOnFailureListener(listener::onFailure);
+}
+
+@Override
+public void getPlannedMealByDate(String userId, int day, int month, int year, AllMealsCallBackFirBase<List<PlannedMeal>> callback) {
+	List<PlannedMeal> plannedMeals = new ArrayList<>();
+	String dateKey = day + " " + month + " " + year;
+	DatabaseReference dbRef = getDBUsersReference().child("MyPlans").child(dateKey);
+	
+	Log.d("DEBUG", "Fetching meals from Firebase: " + dateKey);
+	
+	dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+		@Override
+		public void onDataChange(@NonNull DataSnapshot snapshot) {
+			Log.d("DEBUG", "Firebase snapshot exists? " + snapshot.exists());
+			Log.d("DEBUG", "Firebase snapshot children count: " + snapshot.getChildrenCount());
+			
+			for (DataSnapshot mealSnapshot : snapshot.getChildren()) {
+				Log.d("DEBUG", "Snapshot Key: " + mealSnapshot.getKey());
+				Log.d("DEBUG", "Snapshot Value: " + mealSnapshot.getValue());
+				
+				Meal meal = mealSnapshot.getValue(Meal.class);
+				if (meal != null && meal.getIdMeal() != null) {
+					PlannedMeal plannedMeal = new PlannedMeal(meal);
+					plannedMeals.add(plannedMeal);
+					Log.d("DEBUG", "Planned Meal exists: " + plannedMeal.getMeal().getIdMeal() + " - " + plannedMeal.getMeal().getStrMeal());
+				} else {
+					Log.e("DEBUG", "Skipping a null Meal object: " + mealSnapshot.getKey());
+				}
+			}
+			
+			if (plannedMeals.isEmpty()) {
+				Log.d("DEBUG", "No planned meals found in Firebase.");
+			}
+			
+			callback.onSuccess(plannedMeals);
+		}
+		
+		@Override
+		public void onCancelled(@NonNull DatabaseError error) {
+			callback.onFailure(error.getMessage());
+		}
+	});
+}
+
+
+
+public void getAllFavMealsByFireBase(String userId, OnMealsLoadedListener listener) {
+	DatabaseReference dbRef = getDBUsersReference().child("MyFavs");
+	
+	Log.d("DEBUG", "Fetching meals from: " + dbRef.toString());
+	
+	dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+		@Override
+		public void onDataChange(@NonNull DataSnapshot snapshot) {
+			List<Meal> favoriteMeals = new ArrayList<>();
+			
+			Log.d("DEBUG", "Snapshot exists: " + snapshot.exists());
+			
+			for (DataSnapshot mealSnapshot : snapshot.getChildren()) {
+				Meal meal = mealSnapshot.getValue(Meal.class);
+				if (meal != null) {
+					Log.d("DEBUG", "Meal retrieved: " + meal.getStrMeal());
+					favoriteMeals.add(meal);
+				} else {
+					Log.e("DEBUG", "Null meal detected!");
+				}
+			}
+			
+			Log.d("DEBUG", "Total meals fetched: " + favoriteMeals.size());
+			listener.onMealsLoaded(favoriteMeals);
+		}
+		
+		@Override
+		public void onCancelled(@NonNull DatabaseError error) {
+			Log.e("DEBUG", "Firebase error: " + error.getMessage());
+			listener.onError(error.getMessage());
+		}
+	});
 }
 
 

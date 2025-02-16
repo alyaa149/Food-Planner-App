@@ -1,5 +1,6 @@
 package com.example.androidjava.allpages.home.views;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -35,11 +36,14 @@ import com.example.androidjava.allpages.home.presenters.HomePresenter;
 import com.example.androidjava.allpages.home.presenters.HomePresenterImpl;
 import com.example.androidjava.allpages.mealsList.views.OnMealClickListener;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +70,8 @@ private String mParam2;
 Meal randomMeal = new Meal();
 private HomePresenter homePresenter;
 AuthPresenter authPresenter;
+FirebaseDatabase database;
+DatabaseReference databaseReference;
 
 public Home() {
 
@@ -104,6 +110,8 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle sa
 
 @Override
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+	
+	super.onViewCreated(view, savedInstanceState);
 	recyclerView = view.findViewById(R.id.recyclerView);
 	categotyChip = view.findViewById(R.id.categoryChip);
 	countryChip = view.findViewById(R.id.countryChip);
@@ -113,10 +121,12 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	homePresenter.getDailyInspration();
 	homePresenter.showCategories();
 	
-	categotyChip.setOnClickListener(v -> homePresenter.showCategories());
-	countryChip.setOnClickListener(v -> homePresenter.showCountries());
+	categotyChip.setOnClickListener(v -> {homePresenter.showCategories();
+		countryChip.setChipBackgroundColor(
+				ColorStateList.valueOf(getResources().getColor(R.color.nav_item_active_color)));});
+	countryChip.setOnClickListener(v -> {homePresenter.showCountries();});
 	signUpImg.setOnClickListener(v-> {authPresenter.signOut();});
-	super.onViewCreated(view, savedInstanceState);
+
 }
 
 @Override
@@ -144,6 +154,8 @@ public void showRandomMeal(Meal meal) {
 		heartImg.setOnClickListener(v -> {
 			meal.setUserId(userId);
 			homePresenter.addMealToFavorites(meal);
+			homePresenter.addMealToFireBase(meal);
+//			sendData(meal);
 			Snackbar.make(view, "Meal added to favorites", Snackbar.LENGTH_SHORT)
 					.show();
 		
@@ -170,6 +182,11 @@ public void showRandomMeal(Meal meal) {
 public void showError(String message) {
 	Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
 			.show();
+}
+
+@Override
+public void showFireBaseSuccess(String message) {
+	Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
 }
 
 @Override

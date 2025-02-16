@@ -7,6 +7,7 @@ import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.allpages.mealDetails.views.MealDetailsView;
 import com.example.androidjava.network.NetworkCallback;
+import com.example.androidjava.network.RealTimeFireBaseCallBack;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MealDetailsPresenterImpl implements MealDetailsPresenter, NetworkCallback {
@@ -53,6 +54,26 @@ public void insertPlannedMeal(Meal meal, int day ,int month, int year) {
 	String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 	PlannedMeal plannedMeal = new PlannedMeal(meal,Integer.parseInt(meal.getIdMeal()) ,userId,day,month,year);
 	repository.insertPlannedMeal(plannedMeal);
+	
+}
+
+@Override
+public void insertPlannedMealFireBase(int day ,int month, int year, Meal meal) {
+	repository.insertDBUsersPlanReference(day,month,year,meal, new RealTimeFireBaseCallBack() {
+		@Override
+		public void onSuccess() {
+			mealDetailsView.showSuccess("Meal inserted successfully into Fire Base");
+		}
+		
+		@Override
+		public void onFailure(Exception e) {
+			mealDetailsView.showError(
+					"Failed to insert meal into fire Base: " + e.getMessage()
+			);
+		}
+	});
+	
+	
 	
 }
 

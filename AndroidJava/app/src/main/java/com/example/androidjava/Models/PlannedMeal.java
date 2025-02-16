@@ -28,6 +28,11 @@ private String userIdPlan;
 public String getUserIdPlan() {
 	return userIdPlan;
 }
+public PlannedMeal() {
+}
+public PlannedMeal(Meal meal) {
+	this.meal = meal;
+}
 
 public void setUserIdPlan(@NonNull String userIdPlan) {
 	this.userIdPlan = userIdPlan;

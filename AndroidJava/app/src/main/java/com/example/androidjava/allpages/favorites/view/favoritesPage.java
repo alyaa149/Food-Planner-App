@@ -27,6 +27,7 @@ import com.example.androidjava.allpages.mealsList.views.MealAdapter;
 import com.example.androidjava.allpages.mealsList.views.MealsList;
 import com.example.androidjava.allpages.mealsList.views.OnMealClickListener;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,8 @@ public void onCreate(Bundle savedInstanceState) {
 	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
 	repository = new RepositoryImpl(remoteDataSource, localDataSource);
 	favoritesPresenter = new FavoritesPresenterImpl(this, repository) ;
-	favoritesPresenter.getFavorites();
+//	favoritesPresenter.getFavorites();
+	favoritesPresenter.getFavoritesFromFireBase();
 }
 
 @Override
@@ -110,32 +112,66 @@ private void checkEmptyList() {
 
 @Override
 public void showFavProducts(List<Meal> meals) {
-	if(isAdded()) {
-		Log.d("DEBUG", "Meals received: " + meals.size());
-		Toast.makeText(getContext(), "Meals received: " + meals.size(), Toast.LENGTH_SHORT).show();
-		
-		if (meals == null || meals.isEmpty()) {
-			Toast.makeText(getContext(), "No meals received!", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		
-		mealList.clear();
-		mealList.addAll(meals);
-		mealAdapter.notifyDataSetChanged();
-		checkEmptyList();
-		
-		recyclerView.post(() -> {
-			recyclerView.invalidate();
-			recyclerView.requestLayout();
-			Log.d("DEBUG", "RecyclerView forced to relayout");
-		});
-		Log.d("DEBUG", "RecyclerView is visible");
-	}
+//	if(isAdded()) {
+//		Log.d("DEBUG", "Meals received: " + meals.size());
+//		Toast.makeText(getContext(), "Meals received: " + meals.size(), Toast.LENGTH_SHORT).show();
+//
+//		if (meals == null || meals.isEmpty()) {
+//			Toast.makeText(getContext(), "No meals received!", Toast.LENGTH_SHORT).show();
+//			return;
+//		}
+//
+//		mealList.clear();
+//		mealList.addAll(meals);
+//		mealAdapter.notifyDataSetChanged();
+//		checkEmptyList();
+//
+//		recyclerView.post(() -> {
+//			recyclerView.invalidate();
+//			recyclerView.requestLayout();
+//			Log.d("DEBUG", "RecyclerView forced to relayout");
+//		});
+//		Log.d("DEBUG", "RecyclerView is visible");
+//	}
 }
+
+@Override
+public void showFavProductsFireBase(List<Meal> meals) {
+	if (isAdded() && getContext() != null) {
+		Toast.makeText(getContext(), "Meals received: " + meals.size(), Toast.LENGTH_SHORT).show();
+	}
+	
+	Log.d("DEBUG", "showFavProductsFireBase called with " + meals.size() + " meals");
+	
+	if (meals == null || meals.isEmpty()) {
+		Log.e("DEBUG", "No meals received!");
+		Toast.makeText(getContext(), "No meals received!", Toast.LENGTH_SHORT).show();
+		return;
+	}
+	
+	mealList.clear();
+	mealList.addAll(meals);
+	mealAdapter.notifyDataSetChanged();
+	Log.d("DEBUG", "Meal adapter updated!");
+	
+	recyclerView.post(() -> {
+		recyclerView.invalidate();
+		recyclerView.requestLayout();
+		Log.d("DEBUG", "RecyclerView forced to relayout");
+	});
+}
+
+
 
 @Override
 public void showError(String message) {
 	Log.i("DEBUG", "Error message: " + message);
+}
+
+@Override
+public void showFireBaseSuccess(String message) {
+	Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+	
 }
 
 @Override
@@ -155,6 +191,7 @@ public void onFavClick(Meal meal) {
 	if (isAdded()) {
 		Toast.makeText(getContext(), "Meal click ->" +meal.getStrMeal(), Toast.LENGTH_SHORT).show();
 		favoritesPresenter.removeMealFromFavorites(meal);
+		favoritesPresenter.deleteFavMealFireBase(meal);
 		mealAdapter.notifyDataSetChanged();
 		checkEmptyList();
 		//Navigation.findNavController(view).navigate(R.id.action_mealsList_to_favoritesPage);

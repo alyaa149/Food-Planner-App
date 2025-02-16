@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface FavoritesView {
 	void showFavProducts(List<Meal> meals);
+void showFavProductsFireBase(List<Meal> meals);
 	void showError(String message);
+	void showFireBaseSuccess(String message);
 
 }

@@ -8,5 +8,7 @@ public interface HomePresenter {
 	void showCountries();
 void addMealToFavorites(Meal meal);
 void removeMealFromFavorites(Meal meal);
+void deleteMealFireBase(Meal meal);
+void addMealToFireBase(Meal meal);
 
 }

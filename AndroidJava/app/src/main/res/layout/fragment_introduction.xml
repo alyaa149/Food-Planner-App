@@ -8,15 +8,18 @@
     android:background="@color/DarkGreen"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".fragments.Introduction">
+    tools:context=".Introduction">
 
 
     <ImageView
         android:id="@+id/dishImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginLeft="35dp"
-        android:layout_weight=".3" />
+        android:layout_marginRight="35dp"
+        android:layout_weight=".3"
+        app:srcCompat="@drawable/logoapp" />
+
 
     <TextView
         android:id="@+id/appName"
@@ -26,11 +29,10 @@
         android:layout_weight=".1"
         android:fontFamily="monospace"
         android:gravity="center"
-        android:text="@string/foodienator"
+        android:text="Hungry Plan"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold" />
-
 
     <TextView
         android:id="@+id/textView2"
@@ -60,7 +62,6 @@
             android:layout_height="50dp"
             android:layout_weight="1"
 
-
             android:backgroundTint="@color/SoftPink"
             android:text="Sign in"
             android:textColor="@color/white"
@@ -82,12 +83,5 @@
             app:strokeColor="@color/DarkGreen"
             app:strokeWidth="1dp" />
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight=".3"
-        android:src="@drawable/logo" />
 
 </LinearLayout>

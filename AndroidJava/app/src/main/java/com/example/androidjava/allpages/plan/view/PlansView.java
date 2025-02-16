@@ -9,5 +9,7 @@ public interface PlansView {
 	void showMeals(List<PlannedMeal> meals);
 	void showMealsByDate(List<Meal> meals);
 	void showError(String message);
+	void showSuccessFireBase(String message);
+	void showMealsByFireBase(List<Meal> meals);
 //	void showMeal(PlannedMeal meal);
 }

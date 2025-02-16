@@ -1,7 +1,10 @@
 package com.example.androidjava.Models;
 
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
+import com.example.androidjava.network.AllMealsCallBackFirBase;
 import com.example.androidjava.network.NetworkCallback;
+import com.example.androidjava.network.OnMealsLoadedListener;
+import com.example.androidjava.network.RealTimeFireBaseCallBack;
 
 import java.util.List;
 
@@ -31,7 +34,15 @@ void insertPlannedMeal(PlannedMeal meal);
 void deletePlannedMeal(String userId, String mealId, int day, int month, int year);
 Observable<List<PlannedMeal>> getAllPlannedMeals(String userId);
 Observable<List<PlannedMeal>> getPlannedMealByDate(String userId ,int day, int month, int year);
-void deletePlannedMealsByDate(String date);
+//==============================================
+//Real time firebase
+void insertDBUsersPlanReference(int day, int month, int year, Meal meal, RealTimeFireBaseCallBack listener);
+void deleteDBUsersPlanReference(int day, int month, int year, Meal meal, RealTimeFireBaseCallBack listener);
+void insertDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listener);
+void deleteDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listener);
+void getPlannedMealsByDate(String userId, int day, int month, int year, AllMealsCallBackFirBase<List<PlannedMeal>> callback);
+void getAllFavoriteMeals(String userId, OnMealsLoadedListener listener);
+
 
 
 

@@ -9,19 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.androidjava.Models.Meal;
-import com.example.androidjava.Models.PlannedMeal;
 import com.example.androidjava.R;
-import com.example.androidjava.allpages.mealsList.views.MealAdapter;
 
 import java.util.List;
 
-public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
+public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.ViewHolder> {
 private Context context;
 private List<String> days;
 OnDayClickListener listener;
 	
-	public PlanAdapter(Context context, List<String> days,OnDayClickListener listener) {
+	public DayPlanAdapter(Context context, List<String> days, OnDayClickListener listener) {
 		this.context = context;
 		this.days = days;
 		this.listener=listener;
@@ -29,13 +26,13 @@ OnDayClickListener listener;
 	}
 @NonNull
 @Override
-public PlanAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+public DayPlanAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 	View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.plan_item, parent, false);
-	return new PlanAdapter.ViewHolder(view);
+	return new DayPlanAdapter.ViewHolder(view);
 }
 
 @Override
-public void onBindViewHolder(@NonNull PlanAdapter.ViewHolder holder, int position) {
+public void onBindViewHolder(@NonNull DayPlanAdapter.ViewHolder holder, int position) {
 		String day = days.get(position);
 	
 	holder.dayTextView.setText(day);

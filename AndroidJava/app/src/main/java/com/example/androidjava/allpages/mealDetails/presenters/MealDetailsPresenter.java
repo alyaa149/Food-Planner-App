@@ -8,4 +8,5 @@ public interface MealDetailsPresenter  {
 	
     void showError(String errorMessage);
 	void  insertPlannedMeal(Meal meal, int day ,int month, int year);
+	void insertPlannedMealFireBase(int day,int month,int year,Meal meal);
 }

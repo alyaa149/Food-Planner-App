@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginPage">
+    app:startDestination="@id/splashScreen">
 
     <fragment
         android:id="@+id/splashScreen"
-        android:name="com.example.androidjava.fragments.SplashScreen"
+        android:name="com.example.androidjava.SplashScreen"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen" >
         <action
@@ -25,12 +25,15 @@
     </fragment>
     <fragment
         android:id="@+id/introduction"
-        android:name="com.example.androidjava.fragments.Introduction"
+        android:name="com.example.androidjava.Introduction"
         android:label="fragment_introduction"
         tools:layout="@layout/fragment_introduction" >
         <action
-            android:id="@+id/action_introduction_to_signUp"
-            app:destination="@id/signUp" />
+            android:id="@+id/action_introduction_to_loginPage"
+            app:destination="@id/loginPage" />
+        <action
+            android:id="@+id/action_introduction_to_signUp2"
+            app:destination="@id/signUp2" />
 
     </fragment>
     <fragment

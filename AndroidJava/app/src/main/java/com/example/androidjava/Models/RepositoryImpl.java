@@ -4,8 +4,11 @@ import android.util.Log;
 
 import com.example.androidjava.alldata.localdata.MealsLocalDataSource;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
+import com.example.androidjava.network.AllMealsCallBackFirBase;
 import com.example.androidjava.network.MealsRemoteDataSource;
 import com.example.androidjava.network.NetworkCallback;
+import com.example.androidjava.network.OnMealsLoadedListener;
+import com.example.androidjava.network.RealTimeFireBaseCallBack;
 
 import java.util.List;
 
@@ -126,7 +129,37 @@ public Observable<List<PlannedMeal>> getPlannedMealByDate(String userId, int day
 }
 
 @Override
-public void deletePlannedMealsByDate(String date) {
-	localDataSource.deletePlannedMealsByDate(date);
+public void insertDBUsersPlanReference(int day, int month, int year, Meal meal, RealTimeFireBaseCallBack listener) {
+	remoteDataSource.insertDBUsersPlanReference(day, month, year, meal, listener);
 }
+
+@Override
+public void deleteDBUsersPlanReference(int day, int month, int year, Meal meal, RealTimeFireBaseCallBack listener) {
+	remoteDataSource.deleteDBUsersPlanReference(day, month, year, meal, listener);
+}
+
+@Override
+public void insertDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listener) {
+	remoteDataSource.insertDBUsersFavReference(meal, listener);
+}
+
+@Override
+public void deleteDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listener) {
+	remoteDataSource.deleteDBUsersFavReference(meal, listener);
+}
+
+
+
+@Override
+public void getPlannedMealsByDate(String userId, int day, int month, int year, AllMealsCallBackFirBase<List<PlannedMeal>> callback) {
+	remoteDataSource.getPlannedMealByDate(userId, day, month, year, callback);
+}
+@Override
+public void getAllFavoriteMeals(String userId, OnMealsLoadedListener listener) {
+	remoteDataSource.getAllFavMealsByFireBase(userId, listener);
+}
+
+
+
+
 }
