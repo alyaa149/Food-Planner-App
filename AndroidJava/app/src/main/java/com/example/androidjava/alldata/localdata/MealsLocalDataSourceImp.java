@@ -80,6 +80,16 @@ public void insertPlannedMeal(PlannedMeal meal) {
 			);
 	
 }
+@Override
+public void insertPlannedMeals(List<PlannedMeal> meals) {
+	dao.insertPlannedMeals(meals)
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(
+					()-> Log.d("DEBUG", "Meals Inserted"),
+					error -> Log.e("DEBUG", "Insert Error", error)
+			);
+}
 
 @Override
 public void deletePlannedMealsByDate(String date) {

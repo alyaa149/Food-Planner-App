@@ -190,7 +190,7 @@ private void showPlanDaysDialog(Meal meal) {
 			dayPlan = datePickerDialog.getDatePicker().getDayOfMonth();
 			monthPlan = datePickerDialog.getDatePicker().getMonth() + 1; // Months are 0-based
 			yearPlan = datePickerDialog.getDatePicker().getYear();
-			mealDetailsPresenterImpl.insertPlannedMeal(meal, dayPlan, monthPlan, yearPlan);
+			//mealDetailsPresenterImpl.insertPlannedMeal(meal, dayPlan, monthPlan, yearPlan);
 		    mealDetailsPresenterImpl.insertPlannedMealFireBase(dayPlan, monthPlan, yearPlan, meal);
 		});
 	});

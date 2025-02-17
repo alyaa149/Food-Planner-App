@@ -11,5 +11,6 @@ public interface PlansView {
 	void showError(String message);
 	void showSuccessFireBase(String message);
 	void showMealsByFireBase(List<Meal> meals);
+	void showPlannedMeals(List<PlannedMeal> meals);
 //	void showMeal(PlannedMeal meal);
 }

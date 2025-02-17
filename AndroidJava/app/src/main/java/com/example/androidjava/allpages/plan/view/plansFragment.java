@@ -65,7 +65,6 @@ List<PlannedMeal> plannedMeals;
 
 
 public plansFragment() {
-	// Required empty public constructor
 }
 
 
@@ -102,6 +101,7 @@ view = inflater.inflate(R.layout.fragment_plans, container, false);
 	recyclerView = view.findViewById(R.id.recyclerView2);
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 	recyclerView.setAdapter(dayPlanAdapter);
+	
 	return view;
 }
 
@@ -185,16 +185,15 @@ public void showError(String message) {
 @Override
 public void showSuccessFireBase(String message) {
 	Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
-	
 }
 
 @Override
 public void showMealsByFireBase(List<Meal> meals) {
+	
 	Log.d("DEBUG", "Received meals from Firebase: " + meals.size());
 	for (Meal meal : meals) {
 		Log.d("DEBUG", "Meal: " + meal.getStrMeal());
 	}
-
 	if (mealAdapter == null) {
 
 		mealAdapter = new MealAdapter(getContext(), meals, this);
@@ -243,6 +242,12 @@ public void showMealsByFireBase(List<Meal> meals) {
 }
 
 @Override
+public void showPlannedMeals(List<PlannedMeal> meals) {
+	Log.d("DEBUG", "Received planned meals from Firebase backup: " + meals.get(0).getMealId()+meals.get(0).getDay()+meals.get(0).getMonth()+meals.get(0).getYear()+meals.get(0).getMeal().getStrMeal());
+	plansPresenter.addMealsToRoom(meals);
+}
+
+@Override
 public void onMealClick(Meal meal) {
 	Bundle bundle = new Bundle();
 	if (meal == null || meal.getIdMeal() == null) {
@@ -278,7 +283,7 @@ public void onDayClick(int day, int month, int year) {
 	//plansPresenter.getMealsByDay(day,month,year);
 	if (NetworkUtils.isNetworkAvailable(getContext())) {
 		plansPresenter.getPlannedMealsByDate(FirebaseAuth.getInstance().getUid(), day, month, year);
-		
+		plansPresenter.fetchPlannedMeals();
 	}else{
 		plansPresenter.getMealsByDay(day,month,year);
 	}

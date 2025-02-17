@@ -5,8 +5,10 @@ import android.util.Log;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.PlannedMeal;
 import com.example.androidjava.Models.RepositoryImpl;
+import com.example.androidjava.Utils.SharedStrings;
 import com.example.androidjava.allpages.plan.view.PlansView;
 import com.example.androidjava.network.AllMealsCallBackFirBase;
+import com.example.androidjava.network.BackUpCallBack;
 import com.example.androidjava.network.RealTimeFireBaseCallBack;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -68,6 +70,12 @@ public void getPlannedMealsByDate(String userId, int day, int month, int year) {
 			planView.showError(error);
 		}
 	});
+}
+
+@Override
+public void addMealsToRoom(List<PlannedMeal> meals) {
+	mealsRepository.insertPlannedMeals(meals);
+	
 }
 
 @Override
@@ -144,6 +152,20 @@ public void removeMealFromPlannedFireBase(int day, int month, int year, Meal mea
 		}
 	});
 }
-
+@Override
+public void fetchPlannedMeals() {
+	mealsRepository.getPlannedMeals(SharedStrings.userId, new BackUpCallBack() {
+		@Override
+		public void onSuccess(List<PlannedMeal> plannedMeals) {
+		
+			planView.showPlannedMeals(plannedMeals);
+		}
+		
+		@Override
+		public void onFailure(Exception e) {
+			planView.showError(e.getMessage());
+		}
+	});
+}
 
 }

@@ -8,6 +8,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.PlannedMeal;
 
 import java.util.Date;
@@ -32,4 +33,7 @@ Observable<List<PlannedMeal>> getPlannedMealByDate(String userId ,int day, int m
 
 @Query("DELETE FROM planned_meals WHERE userIdPlan=:userId AND mealId = :mealId AND day = :day AND month = :month AND year = :year")
 Completable deletePlannedMealsByDate(String userId,String mealId,int day,int month,int year);
+
+@Insert(onConflict = OnConflictStrategy.REPLACE)
+Completable insertPlannedMeals(List<PlannedMeal> meals);
 }

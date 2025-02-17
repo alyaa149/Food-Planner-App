@@ -26,10 +26,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleEmitter;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -43,7 +46,6 @@ private static Retrofit retrofit;
 private static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
 
 
-
 public MealsRemoteDataSourceImpl() {
 	retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJava3CallAdapterFactory.create()).build();
 	apiService = retrofit.create(ApiService.class);
@@ -53,19 +55,7 @@ public MealsRemoteDataSourceImpl() {
 @Override
 public void getCategories(NetworkCallback callback) {
 	apiService.getAllCategories().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(response -> callback.onSuccess(response), error -> callback.onFailure("Failed to fetch categories"));
-
-
-//			.enqueue(new Callback<CategoryResponse>() {
-//		@Override
-//		public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
-//			callback.onSuccess(response.body());
-//		}
-//
-//		@Override
-//		public void onFailure(Call<CategoryResponse> call, Throwable t) {
-//			callback.onFailure("Failed to fetch categories");
-//		}
-//	});
+	
 }
 
 @Override
@@ -117,16 +107,14 @@ public void getMealByIngredient(String ingredient, NetworkCallback callback) {
 			.subscribe(response -> callback.onSuccessMeal(response), error -> callback.onFailure("Failed to get meal by inngredient"));
 }
 
-//@Override
-//public void getMealByLetter(char letter, NetworkCallback callback) {
-//  //apiService.filterByLetter(letter).subscribeOn(Schedulers.io())
-//}
 
 @Override
 public void getMealBySearch(String query, NetworkCallback callback) {
 
 }
 
+//===================================================================
+//firebase
 @Override
 public void createUserWithEmailAndPassword(String email, String password, AuthCallback callback) {
 	Log.i("TAG", "data source: " + password + ", " + email);
@@ -164,9 +152,9 @@ public void signInAndSignUpWithGoogle(String token, AuthCallback callback) {
 public void signOut(AuthCallback callback) {
 	FirebaseAuth auth = FirebaseAuth.getInstance();
 	
-
+	
 	auth.signOut();
-
+	
 	GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(auth.getApp().getApplicationContext());
 	
 	if (account != null) {
@@ -184,6 +172,8 @@ public void signOut(AuthCallback callback) {
 	}
 }
 
+//=========================================================
+//firebase
 private DatabaseReference getDBUsersReference() {
 	
 	if (SharedStrings.auth.getCurrentUser() == null) {
@@ -191,7 +181,6 @@ private DatabaseReference getDBUsersReference() {
 	}
 	return FirebaseDatabase.getInstance().getReference("Meals").child(auth.getCurrentUser().getUid());
 }
-
 
 
 @Override
@@ -221,6 +210,7 @@ public void deleteDBUsersPlanReference(int day, int month, int year, Meal meal, 
 			.addOnSuccessListener(aVoid -> listener.onSuccess())
 			.addOnFailureListener(listener::onFailure);
 }
+
 private String formatDateKey(int day, int month, int year) {
 	return day + " " + month + " " + year; // Format: "16/2/2025"
 }
@@ -250,23 +240,6 @@ public void deleteDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listen
 			.addOnSuccessListener(aVoid -> listener.onSuccess())
 			.addOnFailureListener(listener::onFailure);
 }
-//public void getAllPlannedMealsToSpecificUserFirebase(String userId, new RealTimeFireBaseCallBack() {
-//	@Override
-//	public void onDataChange(@NonNull DataSnapshot snapshot) {
-//		List<PlannedMeal> meals = new ArrayList<>();
-//		for (DataSnapshot mealSnapshot : snapshot.getChildren()) {
-//			PlannedMeal meal = mealSnapshot.getValue(PlannedMeal.class);
-//			meals.add(meal);
-//		}
-//
-//	}
-//
-//	@Override
-//	public void onCancelled(@NonNull DatabaseError error) {
-//		Log.e("Firebase", "Error fetching meals: " + error.getMessage());
-//	}
-//});
-
 
 
 @Override
@@ -312,7 +285,6 @@ public void getPlannedMealByDate(String userId, int day, int month, int year, Al
 }
 
 
-
 public void getAllFavMealsByFireBase(String userId, OnMealsLoadedListener listener) {
 	DatabaseReference dbRef = getDBUsersReference().child("MyFavs");
 	
@@ -346,6 +318,64 @@ public void getAllFavMealsByFireBase(String userId, OnMealsLoadedListener listen
 		}
 	});
 }
+@Override
+public void getPlannedMeals(String userId, BackUpCallBack callback) {
+	DatabaseReference myPlansRef = getDBUsersReference().child("MyPlans");
+	
+	myPlansRef.addListenerForSingleValueEvent(new ValueEventListener() {
+		@Override
+		public void onDataChange(DataSnapshot snapshot) {
+			List<PlannedMeal> plannedMeals = new ArrayList<>();
+			
+			if (!snapshot.exists()) {
+				callback.onSuccess(plannedMeals);  // Return empty list if no plans
+				return;
+			}
+			
+			for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
+				String key = dateSnapshot.getKey();
+				if (key == null) continue;
+				
+				String[] dateParts = key.split(" ");
+				if (dateParts.length != 3) continue;
+				
+				int day, month, year;
+				try {
+					day = Integer.parseInt(dateParts[0]);
+					month = Integer.parseInt(dateParts[1]);
+					year = Integer.parseInt(dateParts[2]);
+				} catch (NumberFormatException e) {
+					continue; // Skip invalid date format
+				}
+				
+				for (DataSnapshot mealSnapshot : dateSnapshot.getChildren()) {
+					Meal meal = mealSnapshot.getValue(Meal.class);
+					if (meal == null) continue;
+					
+					String mealIdStr = mealSnapshot.getKey();
+					if (mealIdStr == null) continue;
+					
+					int mealId;
+					try {
+						mealId = Integer.parseInt(mealIdStr);
+					} catch (NumberFormatException e) {
+						continue;
+					}
+					
+					PlannedMeal plannedMeal = new PlannedMeal(meal, mealId, userId, day, month, year);
+					plannedMeals.add(plannedMeal);
+				}
+			}
+			
+			callback.onSuccess(plannedMeals);
+		}
+		@Override
+		public void onCancelled(DatabaseError error) {
+			callback.onFailure(error.toException());
+		}
+	});
+}
+
 
 
 }

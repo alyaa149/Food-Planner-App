@@ -33,6 +33,7 @@ void insertDBUsersFavReference(Meal meal,RealTimeFireBaseCallBack callBack);
 void deleteDBUsersFavReference(Meal meal,RealTimeFireBaseCallBack callBack);
 void getPlannedMealByDate(String userId, int day, int month, int year,AllMealsCallBackFirBase<List<PlannedMeal>> callback);
  void getAllFavMealsByFireBase(String userId, OnMealsLoadedListener listener);
+public void getPlannedMeals(String userId, BackUpCallBack callback);
 
 
 

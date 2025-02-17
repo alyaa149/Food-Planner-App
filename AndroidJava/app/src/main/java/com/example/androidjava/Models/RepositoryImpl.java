@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSource;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
 import com.example.androidjava.network.AllMealsCallBackFirBase;
+import com.example.androidjava.network.BackUpCallBack;
 import com.example.androidjava.network.MealsRemoteDataSource;
 import com.example.androidjava.network.NetworkCallback;
 import com.example.androidjava.network.OnMealsLoadedListener;
@@ -163,7 +164,14 @@ public void addMealsToFavorites(List<Meal> meals) {
 	 localDataSource.insertMeals(meals);
 }
 
-
+@Override
+public void insertPlannedMeals(List<PlannedMeal> meals) {
+	localDataSource.insertPlannedMeals(meals);
+}
+@Override
+public void getPlannedMeals(String userId, BackUpCallBack callback) {
+	remoteDataSource.getPlannedMeals(userId, callback);
+}
 
 
 }

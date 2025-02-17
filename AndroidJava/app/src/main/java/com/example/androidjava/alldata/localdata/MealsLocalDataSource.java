@@ -18,4 +18,5 @@ void deletePlannedMeal(String userId, String mealId, int day, int month, int yea
 Observable<List<PlannedMeal>> getAllPlannedMeals(String userId);
 Observable<List<PlannedMeal>> getPlannedMealByDate(String userId ,int day, int month, int year);
 void deletePlannedMealsByDate(String date);
+void insertPlannedMeals(List<PlannedMeal> meals);
 }

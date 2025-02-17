@@ -2,6 +2,7 @@ package com.example.androidjava.Models;
 
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthCallback;
 import com.example.androidjava.network.AllMealsCallBackFirBase;
+import com.example.androidjava.network.BackUpCallBack;
 import com.example.androidjava.network.NetworkCallback;
 import com.example.androidjava.network.OnMealsLoadedListener;
 import com.example.androidjava.network.RealTimeFireBaseCallBack;
@@ -28,6 +29,8 @@ public void signOut(AuthCallback callback);
 void addToFavorites(Meal meal);
 Observable<List<Meal>> getAllFavorites(String userId);
 void delete(Meal meal);
+void addMealsToFavorites(List<Meal> meals);
+void insertPlannedMeals(List<PlannedMeal> meals);
 //=======================================================
 //planned meals
 void insertPlannedMeal(PlannedMeal meal);
@@ -42,7 +45,7 @@ void insertDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listener);
 void deleteDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listener);
 void getPlannedMealsByDate(String userId, int day, int month, int year, AllMealsCallBackFirBase<List<PlannedMeal>> callback);
 void getAllFavoriteMeals(String userId, OnMealsLoadedListener listener);
-void addMealsToFavorites(List<Meal> meals);
+void getPlannedMeals(String userId, BackUpCallBack callback);
 
 
 
