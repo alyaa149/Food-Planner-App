@@ -158,6 +158,10 @@ public void getPlannedMealsByDate(String userId, int day, int month, int year, A
 public void getAllFavoriteMeals(String userId, OnMealsLoadedListener listener) {
 	remoteDataSource.getAllFavMealsByFireBase(userId, listener);
 }
+@Override
+public void addMealsToFavorites(List<Meal> meals) {
+	 localDataSource.insertMeals(meals);
+}
 
 
 

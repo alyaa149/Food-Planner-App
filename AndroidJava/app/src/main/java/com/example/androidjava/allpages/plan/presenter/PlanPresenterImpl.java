@@ -33,7 +33,7 @@ public void getPlannedMeals() {
 			.subscribe(
 					meals -> {
 						Log.d("DEBUG", "Meals in presenter: " + meals.size());
-						planView.showMeals(meals);},
+						planView.showAllMealsFromRoom(meals);},
 					error -> planView.showError(error.getMessage())
 			);
 }
@@ -116,6 +116,11 @@ public void addMealToFavFireBase(Meal meal) {
 		public void onFailure(Exception e) {
 			planView.showError(e.getMessage());
 		}
+		
+		@Override
+		public void onSuccess(List<PlannedMeal> meals) {
+		
+		}
 	});
 	
 }
@@ -131,6 +136,11 @@ public void removeMealFromPlannedFireBase(int day, int month, int year, Meal mea
 		@Override
 		public void onFailure(Exception e) {
 			planView.showError(e.getMessage());
+		}
+		
+		@Override
+		public void onSuccess(List<PlannedMeal> meals) {
+		
 		}
 	});
 }

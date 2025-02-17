@@ -1,5 +1,7 @@
 package com.example.androidjava.allpages.home.views;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
@@ -12,7 +14,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +31,7 @@ import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.alldata.localdata.AppDataBase;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSource;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenter;
@@ -47,6 +52,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class Home extends Fragment implements OnClickListener, HomeView, AuthView {
 
@@ -90,6 +96,10 @@ public static Home newInstance(String param1, String param2) {
 @Override
 public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+//		AppDataBase database = AppDataBase.getInstanse(getContext());
+//	Executors.newSingleThreadExecutor().execute(() -> {
+//		database.clearAllTables(); // Deletes all data from all tables
+//	});
 	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
 	
 	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
@@ -100,12 +110,23 @@ public void onCreate(Bundle savedInstanceState) {
 		mParam1 = getArguments().getString(ARG_PARAM1);
 		mParam2 = getArguments().getString(ARG_PARAM2);
 	}
+	
 }
 
 @Override
 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	view = inflater.inflate(R.layout.fragment_home, container, false);
+	Log.i("DEBUG", "isUserLoggedIn in Home Fragment" + isUserLoggedIn(getContext()));
+	if (!isUserLoggedIn(getContext())) {
+	Navigation.findNavController(view).navigate(R.id.action_home2_to_loginPage);
+	}
 	return view;
+}
+public void clearUserLoginStatus(Context context) {
+	SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+	SharedPreferences.Editor editor = sharedPreferences.edit();
+	editor.putBoolean("isLoggedIn", false);  // Set to false
+	editor.apply();
 }
 
 @Override
@@ -153,7 +174,7 @@ public void showRandomMeal(Meal meal) {
 		//mealDesc.setText(meal.getStrArea());
 		heartImg.setOnClickListener(v -> {
 			meal.setUserId(userId);
-			homePresenter.addMealToFavorites(meal);
+			//homePresenter.addMealToFavorites(meal);
 			homePresenter.addMealToFireBase(meal);
 //			sendData(meal);
 			Snackbar.make(view, "Meal added to favorites", Snackbar.LENGTH_SHORT)
@@ -186,7 +207,7 @@ public void showError(String message) {
 
 @Override
 public void showFireBaseSuccess(String message) {
-	Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
+	Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
 }
 
 @Override
@@ -198,11 +219,6 @@ public void onCategoryListener(Category category) {
 }
 
 
-//@Override
-//public void onFavClick(Meal favMeal) {
-//
-//}
-
 @Override
 public void onCountryClick(String country) {
 	Bundle bundle = new Bundle();
@@ -210,9 +226,13 @@ public void onCountryClick(String country) {
 	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList, bundle);
 }
 
-
+private boolean isUserLoggedIn(Context context) {
+	SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+	return sharedPreferences.getBoolean("isLoggedIn", false);
+}
 @Override
 public void onAuthSuccess(String message) {
+	clearUserLoginStatus(getContext());
 	Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
 			.show();
 	Navigation.findNavController(view).navigate(R.id.action_home2_to_loginPage);

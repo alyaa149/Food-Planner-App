@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.Utils.NetworkUtils;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.favorites.presenter.FavoritesPresenter;
 import com.example.androidjava.allpages.favorites.presenter.FavoritesPresenterImpl;
@@ -77,7 +79,16 @@ public void onCreate(Bundle savedInstanceState) {
 	repository = new RepositoryImpl(remoteDataSource, localDataSource);
 	favoritesPresenter = new FavoritesPresenterImpl(this, repository) ;
 //	favoritesPresenter.getFavorites();
-	favoritesPresenter.getFavoritesFromFireBase();
+	mealList.clear();
+	
+	if (NetworkUtils.isNetworkAvailable(getContext())) {
+		favoritesPresenter.getFavoritesFromFireBase();
+		Log.i("DEBUG", "getFavoritesFromFireBase called"+mealList.size());
+		
+	}else{
+	favoritesPresenter.getFavorites();
+	}
+	
 }
 
 @Override
@@ -91,14 +102,11 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	super.onViewCreated(view, savedInstanceState);
 	this.view = view;
 	emptyFavTV =view.findViewById(R.id.emptyFavTV);
-	recyclerView = view.findViewById(R.id.recyclerViewFav);
-	mealAdapter = new MealAdapter(getContext(), mealList, this);
-	//recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
-	recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-	recyclerView.setAdapter(mealAdapter);
-	recyclerView.post(() -> {
-		Log.d("DEBUG", "RecyclerView child count: " + recyclerView.getChildCount());
-	});
+//	recyclerView = view.findViewById(R.id.recyclerViewFav);
+//	mealAdapter = new MealAdapter(getContext(), mealList, this);
+//	//recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
+//	recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//	recyclerView.setAdapter(mealAdapter);
 	checkEmptyList();
 
 }
@@ -112,31 +120,6 @@ private void checkEmptyList() {
 
 @Override
 public void showFavProducts(List<Meal> meals) {
-//	if(isAdded()) {
-//		Log.d("DEBUG", "Meals received: " + meals.size());
-//		Toast.makeText(getContext(), "Meals received: " + meals.size(), Toast.LENGTH_SHORT).show();
-//
-//		if (meals == null || meals.isEmpty()) {
-//			Toast.makeText(getContext(), "No meals received!", Toast.LENGTH_SHORT).show();
-//			return;
-//		}
-//
-//		mealList.clear();
-//		mealList.addAll(meals);
-//		mealAdapter.notifyDataSetChanged();
-//		checkEmptyList();
-//
-//		recyclerView.post(() -> {
-//			recyclerView.invalidate();
-//			recyclerView.requestLayout();
-//			Log.d("DEBUG", "RecyclerView forced to relayout");
-//		});
-//		Log.d("DEBUG", "RecyclerView is visible");
-//	}
-}
-
-@Override
-public void showFavProductsFireBase(List<Meal> meals) {
 	if (isAdded() && getContext() != null) {
 		Toast.makeText(getContext(), "Meals received: " + meals.size(), Toast.LENGTH_SHORT).show();
 	}
@@ -149,17 +132,117 @@ public void showFavProductsFireBase(List<Meal> meals) {
 		return;
 	}
 	
-	mealList.clear();
-	mealList.addAll(meals);
-	mealAdapter.notifyDataSetChanged();
-	Log.d("DEBUG", "Meal adapter updated!");
+	if (mealAdapter == null) {
+		mealAdapter = new MealAdapter(getContext(), meals, this);
+		recyclerView = view.findViewById(R.id.recyclerViewFav);
+		
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+		recyclerView.setAdapter(mealAdapter);
+		
+		mealList.clear();
+		mealList.addAll(meals);
+		mealAdapter.notifyDataSetChanged();
+		
+		new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+			@Override
+			public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+				return false;
+			}
+			
+			@Override
+			public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+				int position = viewHolder.getAdapterPosition();
+				if (meals.isEmpty()) {
+					Log.e("DEBUG", "Swipe ignored: Meals list is empty!");
+					mealAdapter.notifyDataSetChanged();
+					return;
+				}
+				if (position >= 0 && position < meals.size()) {
+					Meal meal = meals.get(position);
+					String mealId = meal.getIdMeal();
+					Log.d("DEBUG", "Removing meal: " + mealId);
+					favoritesPresenter.removeMealFromFavorites(meal);
+					
+					meals.remove(position);
+					mealAdapter.notifyItemRemoved(position);
+					
+					
+					favoritesPresenter.getFavorites();
+				} else {
+					Log.e("DEBUG", "Invalid swipe position: " + position + ", List size: " + meals.size());
+				}
+			}
+		}).attachToRecyclerView(recyclerView);
+	} else {
+		mealAdapter.updateMeals(meals);
+	}
 	
-	recyclerView.post(() -> {
-		recyclerView.invalidate();
-		recyclerView.requestLayout();
-		Log.d("DEBUG", "RecyclerView forced to relayout");
-	});
+	checkEmptyList();
 }
+
+@Override
+public void showFavProductsFireBase(List<Meal> meals) {
+	
+	favoritesPresenter.addAllMealsFromFireBase(meals);
+	Log.i("DEBUG", "getFavoritesFromFireBase called"+meals.size());
+	if (isAdded() && getContext() != null) {
+		Toast.makeText(getContext(), "Meals received: " + meals.size(), Toast.LENGTH_SHORT).show();
+	}
+
+	Log.d("DEBUG", "showFavProductsFireBase called with " + meals.size() + " meals");
+
+	if (meals == null || meals.isEmpty()) {
+		Log.e("DEBUG", "No meals received!");
+		Toast.makeText(getContext(), "No meals received!", Toast.LENGTH_SHORT).show();
+		return;
+	}
+
+	if (mealAdapter == null) {
+		mealAdapter = new MealAdapter(getContext(), meals, this);
+		recyclerView = view.findViewById(R.id.recyclerViewFav);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+		recyclerView.setAdapter(mealAdapter);
+
+		mealList.clear();
+		mealList.addAll(meals);
+		mealAdapter.notifyDataSetChanged();
+
+		new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+			@Override
+			public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+				return false;
+			}
+
+			@Override
+			public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+				int position = viewHolder.getAdapterPosition();
+				if (meals.isEmpty()) {
+					Log.e("DEBUG", "Swipe ignored: Meals list is empty!");
+					mealAdapter.notifyDataSetChanged();
+					return;
+				}
+				if (position >= 0 && position < meals.size()) {
+					Meal meal = meals.get(position);
+					String mealId = meal.getIdMeal();
+					Log.d("DEBUG", "Removing meal: " + mealId);
+					favoritesPresenter.deleteFavMealFireBase(meal);
+					meals.remove(position);
+					mealAdapter.notifyItemRemoved(position);
+
+
+					favoritesPresenter.getFavoritesFromFireBase();
+				} else {
+					Log.e("DEBUG", "Invalid swipe position: " + position + ", List size: " + meals.size());
+				}
+			}
+		}).attachToRecyclerView(recyclerView);
+	} else {
+		mealAdapter.updateMeals(meals);
+	}
+
+	checkEmptyList();
+}
+
 
 
 
@@ -188,13 +271,6 @@ public void onMealClick(Meal meal) {
 
 @Override
 public void onFavClick(Meal meal) {
-	if (isAdded()) {
-		Toast.makeText(getContext(), "Meal click ->" +meal.getStrMeal(), Toast.LENGTH_SHORT).show();
-		favoritesPresenter.removeMealFromFavorites(meal);
-		favoritesPresenter.deleteFavMealFireBase(meal);
-		mealAdapter.notifyDataSetChanged();
-		checkEmptyList();
-		//Navigation.findNavController(view).navigate(R.id.action_mealsList_to_favoritesPage);
-	}
+
 }
 }

@@ -6,7 +6,7 @@ import com.example.androidjava.Models.PlannedMeal;
 import java.util.List;
 
 public interface PlansView {
-	void showMeals(List<PlannedMeal> meals);
+	void showAllMealsFromRoom(List<PlannedMeal> meals);
 	void showMealsByDate(List<Meal> meals);
 	void showError(String message);
 	void showSuccessFireBase(String message);

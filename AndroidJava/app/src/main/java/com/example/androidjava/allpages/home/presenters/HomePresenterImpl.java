@@ -2,12 +2,15 @@ package com.example.androidjava.allpages.home.presenters;
 
 import com.example.androidjava.Models.CategoryResponse;
 import com.example.androidjava.Models.Meal;
+import com.example.androidjava.Models.PlannedMeal;
 import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.MealResponse;
 import com.example.androidjava.allpages.home.views.HomeView;
 import com.example.androidjava.network.NetworkCallback;
 import com.example.androidjava.network.RealTimeFireBaseCallBack;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.List;
 
 public class HomePresenterImpl implements HomePresenter, NetworkCallback {
 private HomeView homeView;
@@ -60,6 +63,11 @@ public void deleteMealFireBase(Meal meal) {
 		public void onFailure(Exception e) {
 			homeView.showError("Error: " + e.getMessage());
 		}
+		
+		@Override
+		public void onSuccess(List<PlannedMeal> meals) {
+		
+		}
 	});
 	
 }
@@ -76,8 +84,35 @@ public void addMealToFireBase(Meal meal) {
 		public void onFailure(Exception e) {
 			homeView.showError("Error: " + e.getMessage());
 		}
+		
+		@Override
+		public void onSuccess(List<PlannedMeal> meals) {
+		
+		}
 	});
 	
+	
+}
+
+
+@Override
+public void insertAllFavMeals(List<Meal> meals) {
+
+}
+
+@Override
+public void insertAllPlannedMeals(List<Meal> plannedMeals) {
+
+}
+
+@Override
+public void getAllFavMeals(List<Meal> meals) {
+
+}
+
+@Override
+public void getAllPlannedMeals(List<Meal> plannedMeals) {
+	//repository.(plannedMeals);
 	
 }
 

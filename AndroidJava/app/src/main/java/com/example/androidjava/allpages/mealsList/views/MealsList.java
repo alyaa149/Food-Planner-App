@@ -23,6 +23,7 @@ import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.mealsList.presenters.MealsListPresenter;
 import com.example.androidjava.allpages.mealsList.presenters.MealsListPresenterImpl;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -141,10 +142,14 @@ return;
 
 @Override
 public void onFavClick(Meal meal) {
+	
 	if (isAdded()) {
-		Toast.makeText(getContext(), "Meal click ->" +meal.getStrMeal(), Toast.LENGTH_SHORT).show();
+		Toast.makeText(getContext(), "Meal click ->" +meal.getStrMeal() + meal.getStrArea(), Toast.LENGTH_SHORT).show();
 
-		mealsListPresenter.addMealToFavorites(meal);
+
+		mealsListPresenter.addToFavFireBase(meal);
+	//	mealsListPresenter.removeFromFavFireBase(meal);
+		mealAdapter.notifyDataSetChanged();
 		//Navigation.findNavController(view).navigate(R.id.action_mealsList_to_favoritesPage);
 	}
 	
@@ -177,6 +182,12 @@ public void showMeals(List<Meal> meals) {
 
 @Override
 public void showError(String message) {
-Log.i("DEBUG", "Error message: " + message);
+Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+}
+
+@Override
+public void showSuccess(String message) {
+	Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+	
 }
 }

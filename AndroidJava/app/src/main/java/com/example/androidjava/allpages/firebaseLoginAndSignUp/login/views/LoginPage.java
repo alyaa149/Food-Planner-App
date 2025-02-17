@@ -1,6 +1,8 @@
 package com.example.androidjava.allpages.firebaseLoginAndSignUp.login.views;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -100,6 +102,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	emailTE = view.findViewById(R.id.emailTE);
 	loginBtn = view.findViewById(R.id.loginBtn);
 	loginBtn.setOnClickListener(v -> presenter.signIn(emailTE.getText().toString(), passET.getText().toString()));
+//	loginBtn.setOnClickListener(v -> presenter.signIn("2@g.com", "123456"));
 }
 
 
@@ -134,13 +137,21 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		}
 	}
 }
-
+private void saveUserLoginStatus(Context context, boolean isLoggedIn) {
+	SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+	SharedPreferences.Editor editor = sharedPreferences.edit();
+	editor.putBoolean("isLoggedIn", isLoggedIn);
+	editor.apply();
+	
+}
 
 @Override
 public void onAuthSuccess(String message) {
 	if (isAdded()) {
+		saveUserLoginStatus(getContext(), true);
 		Navigation.findNavController(requireView()).navigate(R.id.action_loginPage_to_home2);
 		Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+		
 	}
 }
 

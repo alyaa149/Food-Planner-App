@@ -1,6 +1,7 @@
 package com.example.androidjava.allpages.favorites.presenter;
 
 import com.example.androidjava.Models.Meal;
+import com.example.androidjava.Models.PlannedMeal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.allpages.favorites.view.FavoritesView;
 import com.example.androidjava.network.OnMealsLoadedListener;
@@ -38,12 +39,17 @@ public void deleteFavMealFireBase(Meal meal) {
 	mealsRepository.deleteDBUsersFavReference(meal, new RealTimeFireBaseCallBack() {
 		@Override
 		public void onSuccess() {
-			favoritesView.showFireBaseSuccess("Meal added successfully!");
+			favoritesView.showFireBaseSuccess("Meal removed successfully!");
 		}
 		
 		@Override
 		public void onFailure(Exception e) {
 			favoritesView.showError("Error: " + e.getMessage());
+		}
+		
+		@Override
+		public void onSuccess(List<PlannedMeal> meals) {
+		
 		}
 	});
 	
@@ -66,6 +72,11 @@ public void getFavoritesFromFireBase() {
 		
 	
 	});
+}
+
+@Override
+public void addAllMealsFromFireBase(List<Meal> meals) {
+mealsRepository.addMealsToFavorites(meals);
 }
 
 }

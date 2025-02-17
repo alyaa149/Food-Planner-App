@@ -12,6 +12,7 @@ public interface MealsLocalDataSource {
 void insert(Meal meal);
 void delete(Meal meal);
 Observable<List<Meal>> getAllMeals(String userId);
+void insertMeals(List<Meal> meals);
 void insertPlannedMeal(PlannedMeal meal);
 void deletePlannedMeal(String userId, String mealId, int day, int month, int year);
 Observable<List<PlannedMeal>> getAllPlannedMeals(String userId);

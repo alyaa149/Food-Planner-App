@@ -23,6 +23,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.androidjava.allpages.favorites.view.favoritesPage;
+import com.example.androidjava.allpages.firebaseLoginAndSignUp.login.views.LoginPage;
 import com.example.androidjava.allpages.home.views.Home;
 import com.example.androidjava.allpages.plan.view.plansFragment;
 import com.example.androidjava.allpages.search.view.SearchFragment;
@@ -34,9 +35,8 @@ LinearLayout navHome,navSearch,navFavorites,navPlans;
 @Override
 protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.activity_main); // Ensure layout is set first
-	
-	// Get NavController correctly
+	setContentView(R.layout.activity_main);
+
 	NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
 			                                                    .findFragmentById(R.id.nav_host_fragment_container);
 	
@@ -47,7 +47,13 @@ protected void onCreate(Bundle savedInstanceState) {
 	
 	NavController navController = navHostFragment.getNavController();
 	
-
+	Log.i("DEBUG", "isUserLoggedIn in main activity" + isUserLoggedIn());
+	if (isUserLoggedIn()) {
+		navController.navigate(R.id.home2);
+		
+	} else {
+	navController.navigate(R.id.splashScreen);
+	}
 	CardView bottomNav = findViewById(R.id.navigation_bar);
 	
 	
@@ -64,7 +70,10 @@ protected void onCreate(Bundle savedInstanceState) {
 	
 	setupNavigation(navController);
 }
-
+private boolean isUserLoggedIn() {
+	SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+	return sharedPreferences.getBoolean("isLoggedIn", false);
+}
 private void setupNavigation(NavController navController) {
 	findViewById(R.id.nav_home).setOnClickListener(v -> {
 		Log.d("Navigation", "Navigating to Home");

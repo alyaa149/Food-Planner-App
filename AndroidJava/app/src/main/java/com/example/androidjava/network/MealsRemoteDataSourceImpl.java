@@ -250,6 +250,24 @@ public void deleteDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listen
 			.addOnSuccessListener(aVoid -> listener.onSuccess())
 			.addOnFailureListener(listener::onFailure);
 }
+//public void getAllPlannedMealsToSpecificUserFirebase(String userId, new RealTimeFireBaseCallBack() {
+//	@Override
+//	public void onDataChange(@NonNull DataSnapshot snapshot) {
+//		List<PlannedMeal> meals = new ArrayList<>();
+//		for (DataSnapshot mealSnapshot : snapshot.getChildren()) {
+//			PlannedMeal meal = mealSnapshot.getValue(PlannedMeal.class);
+//			meals.add(meal);
+//		}
+//
+//	}
+//
+//	@Override
+//	public void onCancelled(@NonNull DatabaseError error) {
+//		Log.e("Firebase", "Error fetching meals: " + error.getMessage());
+//	}
+//});
+
+
 
 @Override
 public void getPlannedMealByDate(String userId, int day, int month, int year, AllMealsCallBackFirBase<List<PlannedMeal>> callback) {

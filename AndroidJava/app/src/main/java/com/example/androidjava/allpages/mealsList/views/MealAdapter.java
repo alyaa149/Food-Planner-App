@@ -23,7 +23,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
 private Context context;
 private List<Meal> meals;
 private OnMealClickListener listener;
-private int selectedPosition = -1; // No day selected initially
+
 
 
 
@@ -45,23 +45,17 @@ public void onBindViewHolder(@NonNull MealAdapter.ViewHolder holder, int positio
 	holder.title.setText(meal.getStrMeal());
 	
 
-	if (position == selectedPosition) {
-		holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.SoftPink)); // Selected
-	} else {
-		holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.white)); // Default
-	}
 	
-	holder.itemView.setOnClickListener(v -> {
-		selectedPosition = position;
-		notifyDataSetChanged();
-	});
+	
 	
 	holder.thumbnail.setOnClickListener(v -> listener.onMealClick(meal));
 	holder.heartImg.setOnClickListener(v -> {
-		listener.onFavClick(meal);
-		holder.isFav = !holder.isFav;
-		holder.heartImg.setImageResource(holder.isFav ? R.drawable.fav : R.drawable.notfav);
+
+			listener.onFavClick(meal);
+			
+		
 	});
+
 	
 	Glide.with(context)
 			.load(meal.getStrMealThumb())

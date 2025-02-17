@@ -8,4 +8,5 @@ public interface MealsListView {
 
 void showMeals(List<Meal> meals);
 void showError(String message);
+void showSuccess(String message);
 }

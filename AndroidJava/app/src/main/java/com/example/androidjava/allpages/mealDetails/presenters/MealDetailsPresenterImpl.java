@@ -10,6 +10,8 @@ import com.example.androidjava.network.NetworkCallback;
 import com.example.androidjava.network.RealTimeFireBaseCallBack;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.List;
+
 public class MealDetailsPresenterImpl implements MealDetailsPresenter, NetworkCallback {
 private Repository repository;
 private MealDetailsView mealDetailsView;
@@ -70,6 +72,11 @@ public void insertPlannedMealFireBase(int day ,int month, int year, Meal meal) {
 			mealDetailsView.showError(
 					"Failed to insert meal into fire Base: " + e.getMessage()
 			);
+		}
+		
+		@Override
+		public void onSuccess(List<PlannedMeal> meals) {
+		
 		}
 	});
 	

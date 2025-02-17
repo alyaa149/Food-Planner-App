@@ -13,6 +13,8 @@ import com.example.androidjava.alldata.localdata.PlanDAO;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -35,8 +37,18 @@ public static MealsLocalDataSourceImp getInstance(Context context) {
 	}
 	return localDataSource;
 }
-
 @Override
+public void insertMeals(List<Meal> meals) {
+	favDao.clearMeals();
+	 favDao.insertMeals(meals)
+			       .subscribeOn(Schedulers.io())
+			       .observeOn(AndroidSchedulers.mainThread())
+			 .subscribe(
+					 ()-> Log.d("DEBUG", "Meals Inserted"),
+					 error -> Log.e("DEBUG", "Insert Error", error)
+			 );
+}
+	@Override
 public void insert(Meal meal) {
 	Log.i("DEBUG", "insert id in local ds: " + meal.getIdMeal());
 	favDao.insertFavoriteMeal(meal).subscribeOn(Schedulers.io())
