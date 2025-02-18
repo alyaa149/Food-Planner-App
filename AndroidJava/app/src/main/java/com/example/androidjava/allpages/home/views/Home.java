@@ -233,9 +233,13 @@ public void onCategoryListener(Category category) {
 
 @Override
 public void onCountryClick(String country) {
-	Bundle bundle = new Bundle();
-	bundle.putString("country", country);
-	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList, bundle);
+	
+	if(isAdded()) {
+		Log.d("DEBUG", "Country clicked: " + country);
+		Bundle bundle = new Bundle();
+		bundle.putString("country", country);
+		Navigation.findNavController(view).navigate(R.id.action_home2_to_mealsList, bundle);
+	}
 }
 
 private boolean isUserLoggedIn(Context context) {

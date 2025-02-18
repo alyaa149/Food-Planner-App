@@ -119,9 +119,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	//recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 	recyclerView.setAdapter(mealAdapter);
-	recyclerView.post(() -> {
-		Log.d("DEBUG", "RecyclerView child count: " + recyclerView.getChildCount());
-	});
+
 	
 	searchInputLayout = view.findViewById(R.id.searchInputLayout);
 	filterCard = view.findViewById(R.id.filterCard);

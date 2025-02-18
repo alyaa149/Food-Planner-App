@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,21 +139,14 @@ private void showIngredients() {
 	
 	try {
 		for (int i = 1; i <= 20; i++) {
-			
 			Field ingredientField = Meal.class.getDeclaredField("strIngredient" + i);
 			ingredientField.setAccessible(true);
 			String ingredient = (String) ingredientField.get(meal);
-			
-			
 			String thumbnailUrl = "https://www.themealdb.com/images/ingredients/" + ingredient + ".png";
-			
-			
 			if (ingredient != null && !ingredient.isEmpty() && thumbnailUrl != null && !thumbnailUrl.isEmpty()) {
 				ingredientsDetails.put(ingredient, thumbnailUrl);
 			}
 		}
-		
-		
 		if (!ingredientsDetails.isEmpty()) {
 			ingrediantAdapter = new IngrediantAdapter(getContext(), ingredientsDetails);
 			recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
@@ -196,7 +190,6 @@ private void showPlanDaysDialog(Meal meal) {
 
 private void updateUI() {
 	if (meal != null) {
-		
 		mealName.setText(meal.getStrMeal());
 		mealArea.setText("." + meal.getStrArea());
 		steps.setText(meal.getStrInstructions());
@@ -207,13 +200,27 @@ private void updateUI() {
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webView.setWebViewClient(new WebViewClient());
-		String videoId = meal.getStrYoutube().split("v=")[1]; // Extract video ID
-		String embedUrl = "https://www.youtube.com/embed/" + videoId;
-		webView.loadUrl(embedUrl);
+		String url = meal.getStrYoutube();
+		String videoId = "";
 		
+		if (url != null && url.contains("v=")) {
+			String[] parts = url.split("v="); //ht   v=
+			if (parts.length > 1) {
+				videoId = parts[1].split("&")[0];
+			}
+		}
 		
+		if (!videoId.isEmpty()) {
+			String embedUrl = "https://www.youtube.com/embed/" + videoId;
+			webView.loadUrl(embedUrl);
+		} else {
+			Log.e("YouTubeEmbed", "Invalid YouTube URL: " + url);
+		}
 		
-		
+//		String videoId = meal.getStrYoutube().split("v=")[1];
+//		String embedUrl = "https://www.youtube.com/embed/" + videoId;
+//		webView.loadUrl(embedUrl);
+	
 	}
 }
 

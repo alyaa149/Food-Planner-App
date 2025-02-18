@@ -42,7 +42,7 @@ public void onBindViewHolder(@NonNull AreaAdapter.ViewHolder holder, int positio
 	holder.title.setText(meal.getStrArea());
 	holder.heartImg.setVisibility(View.GONE);
 	holder.thumbnail.setOnClickListener(v -> {
-			listener.onCountryClick(meal.getStrIngredient1());
+			listener.onCountryClick(meal.getStrArea());
 	});
 	
 	String flagUrl = getCountryFlagUrl(meal.getStrArea());

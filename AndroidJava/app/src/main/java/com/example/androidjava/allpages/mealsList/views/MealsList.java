@@ -85,29 +85,17 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 @Override
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 	super.onViewCreated(view, savedInstanceState);
-	FirebaseAuth auth = FirebaseAuth.getInstance();
-	FirebaseUser user = auth.getCurrentUser();
-	
-
 	
 	if (getArguments() == null) {
 		Toast.makeText(getContext(), "Arguments are null", Toast.LENGTH_SHORT).show();
 	} else {
 		category = getArguments().getString("category");
 		country = getArguments().getString("country");
-		
-//		Toast.makeText(getContext(), "Selected Category form mealslist: " + category, Toast.LENGTH_SHORT).show();
-//		Toast.makeText(getContext(), "Selected Country: from mealslist " + country, Toast.LENGTH_SHORT).show();
-//
-		
 		recyclerView = view.findViewById(R.id.recyclerView);
 		mealAdapter = new MealAdapter(getContext(), mealList, MealsList.this);
-		//recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		recyclerView.setAdapter(mealAdapter);
-		recyclerView.post(() -> {
-			Log.d("DEBUG", "RecyclerView child count: " + recyclerView.getChildCount());
-		});
+
 		
 		
 		
