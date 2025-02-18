@@ -14,6 +14,7 @@ public interface MealsRemoteDataSource {
 
 	void getCategories(NetworkCallback callback);
 	void getCountries(NetworkCallback callback);
+	void getIngredients(NetworkCallback callback);
 	void getRandomMeal(NetworkCallback callback);
 	void getMealById(int id, NetworkCallback callback);
 	void getMealByName(String name, NetworkCallback callback);

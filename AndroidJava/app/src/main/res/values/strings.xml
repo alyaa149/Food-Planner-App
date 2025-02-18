@@ -35,4 +35,13 @@
     <string name="favorites_meals">Favorites Meals</string>
     <string name="foodienator">Foodienator</string>
     <string name="your_favorite_meals_here">your favorite meals here!</string>
+    <string name="ingredientsChip">Ingredients</string>
+    <string name="register">Register</string>
+    <string name="sign_in">Sign in</string>
+    <string name="hungry_plan">Hungry Plan</string>
+    <string name="area2">.area2</string>
+    <string name="searchT">Search..</string>
+    <string name="hungry_planTxt">Hungry Plan</string>
+    <string name="ingredient_image">Ingredient Image</string>
+    <string name="ingredient_title">Ingredient Title</string>
 </resources>

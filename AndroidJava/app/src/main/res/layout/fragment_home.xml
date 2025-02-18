@@ -64,36 +64,42 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:elevation="5dp">
+        android:orientation="vertical">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/categoryChip"
-            android:layout_width="wrap_content"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkGreen"
-            android:elevation="4dp"
-            android:text="@string/categories"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:chipStrokeColor="@color/DarkGreen" />
+            app:singleSelection="true">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/countryChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkGreen"
-            android:elevation="4dp"
-            android:text="@string/countries"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:chipStrokeColor="@color/DarkGreen" />
-    </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/categoryChip"
+                style="@style/CustomChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:elevation="4dp"
+                android:text="@string/categories"
+                android:textStyle="bold"
+                app:checkedIconEnabled="false" />
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/countryChip"
+                style="@style/CustomChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:elevation="4dp"
+                android:text="@string/countries"
+                android:textStyle="bold"
+                app:checkedIconEnabled="false" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

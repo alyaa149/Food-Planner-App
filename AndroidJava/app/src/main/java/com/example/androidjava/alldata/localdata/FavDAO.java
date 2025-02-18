@@ -26,8 +26,8 @@ Completable deleteFavoriteMeal(Meal meal);
 @Query("SELECT * FROM favorite_meals WHERE userId = :userId")
 Observable<List<Meal>> getAllFavoriteMeals(String userId);
 
-@Query("SELECT * FROM favorite_meals WHERE idMeal = :mealId")
-Meal checkFavoriteMealById(int mealId);
+//@Query("SELECT * FROM favorite_meals WHERE idMeal = :mealId")
+//Meal checkFavoriteMealById(int mealId);
 @Insert(onConflict = OnConflictStrategy.REPLACE)
 Completable insertMeals(List<Meal> meals);
 }

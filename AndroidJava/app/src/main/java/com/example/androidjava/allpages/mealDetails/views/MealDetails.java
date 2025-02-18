@@ -114,9 +114,7 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 	super.onViewCreated(view, savedInstanceState);
 	getTheMealFromArguments();
-//	Toast.makeText(getContext(), "Meal ingredient0 : " + meal.getStrIngredient1(), Toast.LENGTH_SHORT).show();
 	init();
-//	Toast.makeText(getContext(), "Meal id : " + Integer.parseInt(mealId), Toast.LENGTH_SHORT).show();
 	mealDetailsPresenterImpl.getMealDetails(Integer.parseInt(mealId));
 	if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
 		planSaveImg.setOnClickListener(v -> showPlanDaysDialog(meal));
@@ -170,29 +168,22 @@ private void showPlanDaysDialog(Meal meal) {
 	Calendar calendar = Calendar.getInstance();
 	DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
 			R.style.RedDatePickerDialog,
-			(view, year, month, dayOfMonth) -> {
-				String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-				//saveMealToPlan(meal, selectedDate);
-			},
+			(view, year, month, dayOfMonth) -> {},
 			calendar.get(Calendar.YEAR),
 			calendar.get(Calendar.MONTH),
 			calendar.get(Calendar.DAY_OF_MONTH)
 	);
-//	datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.RED));
 	datePickerDialog.setOnShowListener(dialog -> {
 		Button positiveButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE);
 		Button negativeButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE);
 		
-		// ✅ Set colors
 		positiveButton.setTextColor(Color.RED);
 		negativeButton.setTextColor(Color.BLACK);
 		
-		// ✅ Set the click listener here
 		positiveButton.setOnClickListener(v -> {
 			dayPlan = datePickerDialog.getDatePicker().getDayOfMonth();
-			monthPlan = datePickerDialog.getDatePicker().getMonth() + 1; // Months are 0-based
+			monthPlan = datePickerDialog.getDatePicker().getMonth() + 1;
 			yearPlan = datePickerDialog.getDatePicker().getYear();
-			//mealDetailsPresenterImpl.insertPlannedMeal(meal, dayPlan, monthPlan, yearPlan);
 		    mealDetailsPresenterImpl.insertPlannedMealFireBase(dayPlan, monthPlan, yearPlan, meal);
 		});
 	});
@@ -216,7 +207,11 @@ private void updateUI() {
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webView.setWebViewClient(new WebViewClient());
-		webView.loadUrl(meal.getStrYoutube());
+		String videoId = meal.getStrYoutube().split("v=")[1]; // Extract video ID
+		String embedUrl = "https://www.youtube.com/embed/" + videoId;
+		webView.loadUrl(embedUrl);
+		
+		
 		
 		
 	}
@@ -253,9 +248,5 @@ public void showSuccess(String message) {
 	
 }
 
-//@Override
-//public void showSuccessInsertPlanMessage(String message) {
-//	Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
-//
-//}
+
 }

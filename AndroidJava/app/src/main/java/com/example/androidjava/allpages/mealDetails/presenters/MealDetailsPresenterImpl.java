@@ -20,12 +20,10 @@ public MealDetailsPresenterImpl(Repository repository, MealDetailsView mealDetai
 	this.repository = repository;
 	this.mealDetailsView = mealDetailsView;
 }
-
 @Override
 public void onSuccessMeal(MealResponse response) {
     mealDetailsView.showMealDetails(response.getMeals().get(0));
 }
-
 @Override
 public void onSuccess(CategoryResponse response) {
 
@@ -39,6 +37,11 @@ public void onSuccessCountry(MealResponse response) {
 @Override
 public void onFailure(String errorMessage) {
 mealDetailsView.showError(errorMessage);
+}
+
+@Override
+public void onSuccesIngredient(MealResponse response) {
+
 }
 
 @Override
@@ -56,7 +59,6 @@ public void insertPlannedMeal(Meal meal, int day ,int month, int year) {
 	String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 	PlannedMeal plannedMeal = new PlannedMeal(meal,Integer.parseInt(meal.getIdMeal()) ,userId,day,month,year);
 	repository.insertPlannedMeal(plannedMeal);
-	
 }
 
 @Override

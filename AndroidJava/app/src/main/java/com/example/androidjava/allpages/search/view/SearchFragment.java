@@ -24,10 +24,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.androidjava.Models.Category;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.Utils.NetworkUtils;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.home.presenters.HomePresenterImpl;
 import com.example.androidjava.allpages.mealsList.presenters.MealsListPresenter;
@@ -52,6 +54,7 @@ private static final String ARG_PARAM2 = "param2";
 private String mParam1;
 private String mParam2;
 RepositoryImpl repository;
+LottieAnimationView searchAnimation;
 SearchPresenterImpl searchPresenter;
 RecyclerView recyclerView;
 MealAdapter mealAdapter;
@@ -126,6 +129,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	searchByCategoryTV=view.findViewById(R.id.searchByCategoryTV);
 	searchByIngredientTV=view.findViewById(R.id.searchByCategoryIngredientTV);
 	searchEditText = searchInputLayout.getEditText();
+	 searchAnimation=view.findViewById(R.id.searchAnimation);
 	searchInputLayout.setEndIconOnClickListener(v -> {
 		if(visible){
 			filterCard.setVisibility(View.GONE);
@@ -134,6 +138,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 			filterCard.setVisibility(View.VISIBLE);
 			visible=true;
 		}
+		
 		
 	});
 	filterMeal();
@@ -144,7 +149,9 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 
 }
 private void searchInput(String type) {
+	searchAnimation.setVisibility(View.GONE);
 	searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+	
 		if (actionId == EditorInfo.IME_ACTION_SEARCH || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 			String query = searchEditText.getText().toString().trim();
 			Log.i("DEBUG", "Search triggered for: " + query);
@@ -173,10 +180,13 @@ private void searchInput(String type) {
 
 private void filterMeal() {
 	
+	
 	if (searchEditText != null) {
+		
 		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				searchAnimation.setVisibility(View.GONE);
 			}
 			
 			@Override
@@ -232,13 +242,10 @@ public void showMeals(List<Meal> meals) {
 		
 		mealList.clear();
 		mealList.addAll(meals);
-		mealAdapter.notifyDataSetChanged(); // Ensure adapter knows the data changed
+		mealAdapter.notifyDataSetChanged();
 		
-		recyclerView.post(() -> {
-			recyclerView.invalidate();
-			recyclerView.requestLayout();
-			Log.d("DEBUG", "RecyclerView forced to relayout");
-		});
+
+		
 		Log.d("DEBUG", "RecyclerView is visible");
 	}
 }

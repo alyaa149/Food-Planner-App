@@ -60,7 +60,17 @@ public void getCategories(NetworkCallback callback) {
 
 @Override
 public void getCountries(NetworkCallback callback) {
-	apiService.getAllAreas().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(response -> callback.onSuccessCountry(response), error -> callback.onFailure("Failed to fetch countries"));
+	apiService.getAllAreas()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(response -> callback.onSuccessCountry(response), error -> callback.onFailure("Failed to fetch countries"));
+}
+@Override
+public void getIngredients(NetworkCallback callback) {
+	apiService.getAllIngredients()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(response -> callback.onSuccesIngredient(response), error -> callback.onFailure("Failed to fetch ingredients"));
 }
 
 @Override
@@ -328,7 +338,7 @@ public void getPlannedMeals(String userId, BackUpCallBack callback) {
 			List<PlannedMeal> plannedMeals = new ArrayList<>();
 			
 			if (!snapshot.exists()) {
-				callback.onSuccess(plannedMeals);  // Return empty list if no plans
+				callback.onSuccess(plannedMeals);
 				return;
 			}
 			

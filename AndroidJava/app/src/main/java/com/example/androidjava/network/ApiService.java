@@ -16,6 +16,8 @@ Single<MealResponse> getRandomMeal();
 Single<MealResponse> getMealById(@Query("i") int mealId);
 @GET("list.php?a=list")
 Single<MealResponse> getAllAreas();
+@GET("list.php?i=list")
+Single<MealResponse> getAllIngredients();
 @GET("categories.php")
 Single<CategoryResponse> getAllCategories();
 @GET("filter.php")

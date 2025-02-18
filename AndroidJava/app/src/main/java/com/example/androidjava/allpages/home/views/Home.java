@@ -2,7 +2,6 @@ package com.example.androidjava.allpages.home.views;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,26 +13,22 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Category;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
-import com.example.androidjava.Utils.SharedStrings;
-import com.example.androidjava.alldata.localdata.AppDataBase;
-import com.example.androidjava.alldata.localdata.MealsLocalDataSource;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenter;
 import com.example.androidjava.allpages.firebaseLoginAndSignUp.AuthPresenterImpl;
@@ -42,18 +37,15 @@ import com.example.androidjava.allpages.home.presenters.HomePresenter;
 import com.example.androidjava.allpages.home.presenters.HomePresenterImpl;
 import com.example.androidjava.allpages.mealsList.views.OnMealClickListener;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 public class Home extends Fragment implements OnClickListener, HomeView, AuthView {
 
@@ -68,7 +60,7 @@ RecyclerView recyclerView;
 AreaAdapter areaAdapter;
 ImageView heartImg;
 CardView randomMealCard;
-Chip categotyChip;
+Chip categotyChip,ingredientChip;
 Chip countryChip;
 OnMealClickListener mealClickListener;
 Repository repository;
@@ -108,8 +100,6 @@ public void onCreate(Bundle savedInstanceState) {
 			repository = new RepositoryImpl(remoteDataSource, localDataSource);
 			homePresenter = new HomePresenterImpl(this, repository);
 			authPresenter = new AuthPresenterImpl(this, repository);
-
-		
 		if (getArguments() != null) {
 			mParam1 = getArguments().getString(ARG_PARAM1);
 			mParam2 = getArguments().getString(ARG_PARAM2);
@@ -142,18 +132,33 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	
 	super.onViewCreated(view, savedInstanceState);
 	recyclerView = view.findViewById(R.id.recyclerView);
+	ChipGroup chipGroup = view.findViewById(R.id.chipGroup);
 	categotyChip = view.findViewById(R.id.categoryChip);
 	countryChip = view.findViewById(R.id.countryChip);
 	randomMealCard = view.findViewById(R.id.includedMealCell);
 	signUpImg =view.findViewById(R.id.leaveImg);
+	
 	recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 	homePresenter.getDailyInspration();
 	homePresenter.showCategories();
+	categotyChip.setChecked(true);
 	
-	categotyChip.setOnClickListener(v -> {homePresenter.showCategories();
-		countryChip.setChipBackgroundColor(
-				ColorStateList.valueOf(getResources().getColor(R.color.nav_item_active_color)));});
-	countryChip.setOnClickListener(v -> {homePresenter.showCountries();});
+	countryChip.setOnClickListener(v -> {
+		homePresenter.showCountries();
+	});
+	categotyChip.setOnClickListener(v -> {
+		homePresenter.showCategories();
+	});
+
+	
+	chipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+		if (checkedId == R.id.categoryChip) {
+			categotyChip.setChecked(true);
+		} else if (checkedId == R.id.countryChip) {
+			countryChip.setChecked(true);
+		}
+	});
+	
 	signUpImg.setOnClickListener(v-> {authPresenter.signOut();});
 
 }
@@ -168,6 +173,8 @@ public void showCountries(List<Meal> countries) {
 	recyclerView.setAdapter(new AreaAdapter(getContext(), countries, this));
 }
 
+
+
 @Override
 public void showRandomMeal(Meal meal) {
 	if (isAdded()) {
@@ -176,15 +183,11 @@ public void showRandomMeal(Meal meal) {
 		TextView mealName = randomMealCard.findViewById(R.id.Title);
 		Glide.with(getContext()).load(meal.getStrMealThumb()).into(mealImage);
 		mealName.setText(meal.getStrMeal());
-		//TextView mealDesc = randomMealCard.findViewById(R.id.desc);
 		if(FirebaseAuth.getInstance().getCurrentUser()!=null){
 			String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-			//mealDesc.setText(meal.getStrArea());
 			heartImg.setOnClickListener(v -> {
 				meal.setUserId(userId);
-				//homePresenter.addMealToFavorites(meal);
 				homePresenter.addMealToFireBase(meal);
-//			sendData(meal);
 				Snackbar.make(view, "Meal added to favorites", Snackbar.LENGTH_SHORT)
 						.show();
 				
@@ -198,12 +201,9 @@ public void showRandomMeal(Meal meal) {
 				Toast.makeText(getContext(), "Meal data is missing", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			
 			bundle.putString("name", meal.getIdMeal());
 			NavController navController = NavHostFragment.findNavController(this);
 			navController.navigate(R.id.action_home2_to_mealDetails, bundle);
-			//	Navigation.findNavController(view).navigate(R.id.action_home2_to_mealDetails, bundle);
-			
 		});
 	}
 }
@@ -216,7 +216,10 @@ public void showError(String message) {
 
 @Override
 public void showFireBaseSuccess(String message) {
-	Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+	if (isAdded()){
+		Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+
+}
 }
 
 @Override

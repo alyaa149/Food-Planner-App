@@ -29,7 +29,7 @@
         android:layout_weight=".1"
         android:fontFamily="monospace"
         android:gravity="center"
-        android:text="Hungry Plan"
+        android:text="@string/hungry_plan"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -63,7 +63,7 @@
             android:layout_weight="1"
 
             android:backgroundTint="@color/SoftPink"
-            android:text="Sign in"
+            android:text="@string/sign_in"
             android:textColor="@color/white"
 
             app:cornerRadius="0dp"
@@ -77,7 +77,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/Green"
 
-            android:text="Register"
+            android:text="@string/register"
             android:textColorLink="#DADADA"
             app:cornerRadius="0dp"
             app:strokeColor="@color/DarkGreen"

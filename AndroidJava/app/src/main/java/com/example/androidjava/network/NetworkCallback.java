@@ -8,4 +8,5 @@ void onSuccessMeal(MealResponse response);
 void onSuccess(CategoryResponse response);
 void onSuccessCountry(MealResponse response);
 void onFailure(String errorMessage);
+void onSuccesIngredient(MealResponse response);
 }

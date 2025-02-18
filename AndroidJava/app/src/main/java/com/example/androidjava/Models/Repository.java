@@ -14,6 +14,7 @@ import io.reactivex.rxjava3.core.Observable;
 public interface Repository {
 public void getAllCategories(NetworkCallback callback);
 public void getAllCountries(NetworkCallback callback) ;
+void getAllIngredients(NetworkCallback callback);
 public void getRandomMeal(NetworkCallback callback);
 public void getMealsByIngredient(String ingredient, NetworkCallback callback);
 public void getMealsByName(String name, NetworkCallback callback);
@@ -46,6 +47,7 @@ void deleteDBUsersFavReference(Meal meal, RealTimeFireBaseCallBack listener);
 void getPlannedMealsByDate(String userId, int day, int month, int year, AllMealsCallBackFirBase<List<PlannedMeal>> callback);
 void getAllFavoriteMeals(String userId, OnMealsLoadedListener listener);
 void getPlannedMeals(String userId, BackUpCallBack callback);
+
 
 
 

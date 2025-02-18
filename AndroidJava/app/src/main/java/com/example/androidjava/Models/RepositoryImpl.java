@@ -38,6 +38,11 @@ public void getAllCountries(NetworkCallback callback) {
 	remoteDataSource.getCountries(callback);
 }
 
+@Override
+public void getAllIngredients(NetworkCallback callback) {
+	remoteDataSource.getIngredients(callback);
+}
+
 
 @Override
 public void getRandomMeal(NetworkCallback callback) {

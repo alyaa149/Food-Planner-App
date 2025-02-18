@@ -21,7 +21,7 @@
         android:layout_marginBottom="161dp"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
-        android:text="Hungry Plan"
+        android:text="@string/hungry_planTxt"
         android:textColor="@color/white"
         android:textSize="34sp"
         android:textStyle="bold" />

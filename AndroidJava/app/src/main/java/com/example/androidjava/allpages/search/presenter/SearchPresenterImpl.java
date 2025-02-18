@@ -50,6 +50,11 @@ public void onFailure(String errorMessage) {
 }
 
 @Override
+public void onSuccesIngredient(MealResponse response) {
+
+}
+
+@Override
 public void searchMeals(String query) {
   repository.getMealsByName(query, this);
 }

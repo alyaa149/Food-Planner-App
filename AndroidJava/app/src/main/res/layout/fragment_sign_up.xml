@@ -64,7 +64,8 @@
                     android:id="@+id/emailTE"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/SoftPink" />
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/white" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,6 +84,7 @@
                     android:id="@+id/passET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:textColorLink="#3F51B5" />
 
             </com.google.android.material.textfield.TextInputLayout>

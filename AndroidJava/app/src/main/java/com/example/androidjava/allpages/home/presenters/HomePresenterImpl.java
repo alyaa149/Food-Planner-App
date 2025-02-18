@@ -41,6 +41,12 @@ public void showCountries() {
 }
 
 @Override
+public void showIngredients() {
+	repository.getAllIngredients(this);
+	
+}
+
+@Override
 public void addMealToFavorites(Meal meal) {
 	meal.setUserId(SharedStrings.userId);
 	repository.addToFavorites(meal);
@@ -141,5 +147,10 @@ public void onSuccessCountry(MealResponse response) {
 public void onFailure(String errorMessage) {
 	homeView.showError(errorMessage);
 	
+}
+
+@Override
+public void onSuccesIngredient(MealResponse response) {
+	///homeView.showIngredients(response.getMeals());
 }
 }

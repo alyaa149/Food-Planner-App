@@ -14,7 +14,9 @@ import com.bumptech.glide.Glide;
 import com.example.androidjava.Models.Meal;
 import com.example.androidjava.R;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AreaAdapter extends RecyclerView.Adapter<AreaAdapter.ViewHolder>  {
 
@@ -39,18 +41,53 @@ public void onBindViewHolder(@NonNull AreaAdapter.ViewHolder holder, int positio
 	Meal meal = meals.get(position);
 	holder.title.setText(meal.getStrArea());
 	holder.heartImg.setVisibility(View.GONE);
-	///holder.description.setText(meal.ge);
 	holder.thumbnail.setOnClickListener(v -> {
-	//	if (listener != null) {
-			listener.onCountryClick(meal.getStrArea());
-		//}
+			listener.onCountryClick(meal.getStrIngredient1());
 	});
 	
-	//holder.heartImg.setOnClickListener(v -> listener.onFavClick(meal));
+	String flagUrl = getCountryFlagUrl(meal.getStrArea());
+	
 	Glide.with(context)
-			.load(meal.getStrMealThumb())
+			.load(flagUrl)
 			.into(holder.thumbnail);
 	
+}
+private String getCountryFlagUrl(String countryName) {
+	Map<String, String> countryCodes = new HashMap<>();
+	
+	countryCodes.put("American", "us");
+	countryCodes.put("British", "gb");
+	countryCodes.put("Canadian", "ca");
+	countryCodes.put("Chinese", "cn");
+	countryCodes.put("Croatian", "hr");
+	countryCodes.put("Dutch", "nl");
+	countryCodes.put("Egyptian", "eg");
+	countryCodes.put("Filipino", "ph");
+	countryCodes.put("French", "fr");
+	countryCodes.put("Greek", "gr");
+	countryCodes.put("Indian", "in");
+	countryCodes.put("Irish", "ie");
+	countryCodes.put("Italian", "it");
+	countryCodes.put("Jamaican", "jm");
+	countryCodes.put("Japanese", "jp");
+	countryCodes.put("Kenyan", "ke");
+	countryCodes.put("Malaysian", "my");
+	countryCodes.put("Mexican", "mx");
+	countryCodes.put("Moroccan", "ma");
+	countryCodes.put("Norwegian", "no");
+	countryCodes.put("Polish", "pl");
+	countryCodes.put("Portuguese", "pt");
+	countryCodes.put("Russian", "ru");
+	countryCodes.put("Spanish", "es");
+	countryCodes.put("Thai", "th");
+	countryCodes.put("Tunisian", "tn");
+	countryCodes.put("Turkish", "tr");
+	countryCodes.put("Ukrainian", "ua");
+	countryCodes.put("Uruguayan", "uy");
+	countryCodes.put("Vietnamese", "vn");
+	
+	String countryCode = countryCodes.getOrDefault(countryName, "xx");
+	return "https://flagcdn.com/w320/" + countryCode + ".png";
 }
 
 @Override
@@ -64,10 +101,7 @@ public static class ViewHolder extends RecyclerView.ViewHolder{
 		super(itemView);
 		thumbnail = itemView.findViewById(R.id.itemImg);
 		title = itemView.findViewById(R.id.Title);
-		//description = itemView.findViewById(R.id.desc);
 		heartImg=itemView.findViewById(R.id.heartImg);
-	
-		
 	}
 }
 

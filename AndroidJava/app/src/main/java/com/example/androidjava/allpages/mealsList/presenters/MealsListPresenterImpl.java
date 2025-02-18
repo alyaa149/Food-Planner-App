@@ -113,4 +113,9 @@ public void onSuccessCountry(MealResponse response) {
 public void onFailure(String errorMessage) {
 mealsListView.showError(errorMessage);
 }
+
+@Override
+public void onSuccesIngredient(MealResponse response) {
+
+}
 }

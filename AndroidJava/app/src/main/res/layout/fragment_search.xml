@@ -70,12 +70,16 @@
         android:layout_height="wrap_content"
         android:layout_margin="50dp"
         android:layout_marginBottom="50dp"
-        android:hint="@string/search_by_meal"
-        app:boxStrokeColor="@color/black"
+        android:hint="@string/searchT"
+        app:boxCornerRadiusBottomEnd="50dp"
+        app:boxCornerRadiusBottomStart="50dp"
+        app:boxCornerRadiusTopEnd="50dp"
+        app:boxCornerRadiusTopStart="50dp"
+        app:boxStrokeColor="@color/SoftPink"
         app:boxStrokeWidth="1dp"
         app:endIconDrawable="@drawable/filter"
         app:endIconMode="custom"
-        app:endIconTint="@color/black"
+        app:endIconTint="@color/SoftPink"
         app:layout_constraintBottom_toTopOf="@+id/searchrecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,12 +89,24 @@
             android:id="@+id/searchET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/SoftPink"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/searchAnimation"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/search" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchrecyclerView"

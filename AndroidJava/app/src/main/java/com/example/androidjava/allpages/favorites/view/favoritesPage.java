@@ -226,6 +226,7 @@ public void showFavProductsFireBase(List<Meal> meals) {
 					String mealId = meal.getIdMeal();
 					Log.d("DEBUG", "Removing meal: " + mealId);
 					favoritesPresenter.deleteFavMealFireBase(meal);
+					favoritesPresenter.removeMealFromFavorites(meal);
 					meals.remove(position);
 					mealAdapter.notifyItemRemoved(position);
 
