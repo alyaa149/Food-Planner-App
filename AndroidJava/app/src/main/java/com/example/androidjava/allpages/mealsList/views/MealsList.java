@@ -88,11 +88,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	FirebaseAuth auth = FirebaseAuth.getInstance();
 	FirebaseUser user = auth.getCurrentUser();
 	
-	if (user == null) {
-		Toast.makeText(getContext(), "User is not logged in!", Toast.LENGTH_SHORT).show();
-	} else {
-		Log.d("DEBUG", "User is logged in: " + user.getEmail());
-	}
+
 	
 	if (getArguments() == null) {
 		Toast.makeText(getContext(), "Arguments are null", Toast.LENGTH_SHORT).show();

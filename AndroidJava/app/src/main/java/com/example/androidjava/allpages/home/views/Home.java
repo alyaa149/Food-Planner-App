@@ -31,6 +31,7 @@ import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.R;
+import com.example.androidjava.Utils.SharedStrings;
 import com.example.androidjava.alldata.localdata.AppDataBase;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSource;
 import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
@@ -100,15 +101,21 @@ public void onCreate(Bundle savedInstanceState) {
 //	Executors.newSingleThreadExecutor().execute(() -> {
 //		database.clearAllTables(); // Deletes all data from all tables
 //	});
-	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
-	
-	MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
-	repository = new RepositoryImpl(remoteDataSource, localDataSource);
-	homePresenter = new HomePresenterImpl(this, repository);
-	authPresenter = new AuthPresenterImpl(this, repository);
-	if (getArguments() != null) {
-		mParam1 = getArguments().getString(ARG_PARAM1);
-		mParam2 = getArguments().getString(ARG_PARAM2);
+	try {
+		
+			MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
+			MealsLocalDataSourceImp localDataSource = MealsLocalDataSourceImp.getInstance(getContext());
+			repository = new RepositoryImpl(remoteDataSource, localDataSource);
+			homePresenter = new HomePresenterImpl(this, repository);
+			authPresenter = new AuthPresenterImpl(this, repository);
+
+		
+		if (getArguments() != null) {
+			mParam1 = getArguments().getString(ARG_PARAM1);
+			mParam2 = getArguments().getString(ARG_PARAM2);
+		}
+	} catch (Exception e) {
+		Log.e("HomeFragment", "Initialization Error", e);
 	}
 	
 }
@@ -117,9 +124,10 @@ public void onCreate(Bundle savedInstanceState) {
 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	view = inflater.inflate(R.layout.fragment_home, container, false);
 	Log.i("DEBUG", "isUserLoggedIn in Home Fragment" + isUserLoggedIn(getContext()));
+	if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 	if (!isUserLoggedIn(getContext())) {
 	Navigation.findNavController(view).navigate(R.id.action_home2_to_loginPage);
-	}
+	}}
 	return view;
 }
 public void clearUserLoginStatus(Context context) {
@@ -166,21 +174,22 @@ public void showRandomMeal(Meal meal) {
 		heartImg = randomMealCard.findViewById(R.id.heartImg);
 		ImageView mealImage = randomMealCard.findViewById(R.id.itemImg);
 		TextView mealName = randomMealCard.findViewById(R.id.Title);
-		//TextView mealDesc = randomMealCard.findViewById(R.id.desc);
-		String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-		
 		Glide.with(getContext()).load(meal.getStrMealThumb()).into(mealImage);
 		mealName.setText(meal.getStrMeal());
-		//mealDesc.setText(meal.getStrArea());
-		heartImg.setOnClickListener(v -> {
-			meal.setUserId(userId);
-			//homePresenter.addMealToFavorites(meal);
-			homePresenter.addMealToFireBase(meal);
+		//TextView mealDesc = randomMealCard.findViewById(R.id.desc);
+		if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+			String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+			//mealDesc.setText(meal.getStrArea());
+			heartImg.setOnClickListener(v -> {
+				meal.setUserId(userId);
+				//homePresenter.addMealToFavorites(meal);
+				homePresenter.addMealToFireBase(meal);
 //			sendData(meal);
-			Snackbar.make(view, "Meal added to favorites", Snackbar.LENGTH_SHORT)
-					.show();
-		
-		});
+				Snackbar.make(view, "Meal added to favorites", Snackbar.LENGTH_SHORT)
+						.show();
+				
+			});
+		}
 		
 		
 		randomMealCard.setOnClickListener(v -> {

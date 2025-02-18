@@ -33,6 +33,7 @@ import com.example.androidjava.alldata.localdata.MealsLocalDataSourceImp;
 import com.example.androidjava.allpages.mealDetails.presenters.MealDetailsPresenterImpl;
 import com.example.androidjava.network.MealsRemoteDataSourceImpl;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -117,8 +118,9 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	init();
 //	Toast.makeText(getContext(), "Meal id : " + Integer.parseInt(mealId), Toast.LENGTH_SHORT).show();
 	mealDetailsPresenterImpl.getMealDetails(Integer.parseInt(mealId));
-	planSaveImg.setOnClickListener(v -> showPlanDaysDialog(meal));
-	
+	if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+		planSaveImg.setOnClickListener(v -> showPlanDaysDialog(meal));
+	}
 }
 
 public void init() {

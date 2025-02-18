@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.androidjava.Models.RepositoryImpl;
@@ -42,6 +43,7 @@ Button signUpBtn;
 RepositoryImpl repository;
 LinearLayout logInTV,registerWithGoogleET;
 FirebaseAuth auth;
+TextView skipTV;
 private static final String ARG_PARAM1 = "param1";
 private static final String ARG_PARAM2 = "param2";
 private String mParam1;
@@ -85,6 +87,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 	logInTV = view.findViewById(R.id.loginTV);
 	emailTE = view.findViewById(R.id.emailTE);
 	signUpBtn = view.findViewById(R.id.loginBtn);
+	skipTV=view.findViewById(R.id.skipTV);
 	registerWithGoogleET = view.findViewById(R.id.loginWithGoogleET);
 	auth = FirebaseAuth.getInstance();
 	MealsRemoteDataSourceImpl remoteDataSource = new MealsRemoteDataSourceImpl();
@@ -100,7 +103,9 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
 		
 	}
 	
+	
 	);
+	skipTV.setOnClickListener(v-> Navigation.findNavController(requireView()).navigate(R.id.action_signUp2_to_home2));
 	signUpBtn.setOnClickListener(v -> {
 		 email = emailTE.getText().toString();
 		 password = passET.getText().toString();

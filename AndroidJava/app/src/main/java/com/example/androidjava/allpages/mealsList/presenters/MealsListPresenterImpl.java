@@ -5,6 +5,7 @@ import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.PlannedMeal;
 import com.example.androidjava.Models.RepositoryImpl;
 import com.example.androidjava.Models.MealResponse;
+import com.example.androidjava.Utils.SharedStrings;
 import com.example.androidjava.allpages.mealsList.views.MealsListView;
 import com.example.androidjava.network.NetworkCallback;
 import com.example.androidjava.network.RealTimeFireBaseCallBack;
@@ -15,7 +16,7 @@ import java.util.List;
 public class MealsListPresenterImpl implements MealsListPresenter , NetworkCallback {
 private MealsListView mealsListView;
 private RepositoryImpl mealsRepository;
-private String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
 
 public MealsListPresenterImpl(MealsListView mealsListView, RepositoryImpl mealsRepository) {
 	this.mealsListView = mealsListView;
@@ -34,14 +35,14 @@ mealsRepository.getMealsByCountry(country, this);
 
 @Override
 public void addMealToFavorites(Meal meal) {
-	meal.setUserId(userId);
+	meal.setUserId(SharedStrings.userId);
 	mealsRepository.addToFavorites(meal);
 	
 }
 
 @Override
 public void removeMealFromFavorites(Meal meal) {
-	meal.setUserId(userId);
+	meal.setUserId(SharedStrings.userId);
 	mealsRepository.delete(meal);
 }
 

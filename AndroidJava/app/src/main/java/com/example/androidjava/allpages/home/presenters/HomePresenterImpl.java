@@ -5,6 +5,7 @@ import com.example.androidjava.Models.Meal;
 import com.example.androidjava.Models.PlannedMeal;
 import com.example.androidjava.Models.Repository;
 import com.example.androidjava.Models.MealResponse;
+import com.example.androidjava.Utils.SharedStrings;
 import com.example.androidjava.allpages.home.views.HomeView;
 import com.example.androidjava.network.NetworkCallback;
 import com.example.androidjava.network.RealTimeFireBaseCallBack;
@@ -15,7 +16,8 @@ import java.util.List;
 public class HomePresenterImpl implements HomePresenter, NetworkCallback {
 private HomeView homeView;
 private Repository repository;
-private String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+	// String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 public HomePresenterImpl(HomeView homeView, Repository repository) {
 	this.homeView = homeView;
@@ -40,14 +42,14 @@ public void showCountries() {
 
 @Override
 public void addMealToFavorites(Meal meal) {
-	meal.setUserId(userId);
+	meal.setUserId(SharedStrings.userId);
 	repository.addToFavorites(meal);
 	
 }
 
 @Override
 public void removeMealFromFavorites(Meal meal) {
-	meal.setUserId(userId);
+	meal.setUserId(SharedStrings.userId);
 	repository.delete(meal);
 }
 

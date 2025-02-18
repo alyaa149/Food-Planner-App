@@ -180,4 +180,16 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent=".8" />
 
+    <TextView
+        android:id="@+id/skipTV"
+        style="@style/bigTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:text="Skip"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

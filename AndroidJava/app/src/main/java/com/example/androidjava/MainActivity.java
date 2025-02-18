@@ -27,6 +27,8 @@ import com.example.androidjava.allpages.firebaseLoginAndSignUp.login.views.Login
 import com.example.androidjava.allpages.home.views.Home;
 import com.example.androidjava.allpages.plan.view.plansFragment;
 import com.example.androidjava.allpages.search.view.SearchFragment;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 LinearLayout navHome,navSearch,navFavorites,navPlans;
@@ -81,18 +83,26 @@ private void setupNavigation(NavController navController) {
 	});
 	
 	findViewById(R.id.nav_favorites).setOnClickListener(v -> {
-		Log.d("Navigation", "Navigating to Favorites");
-		navController.navigate(R.id.favoritesPage);
+
+		if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+			navController.navigate(R.id.favoritesPage);
+		}else {
+			Snackbar.make(findViewById(R.id.nav_favorites), "Please login first", Snackbar.LENGTH_SHORT).show();
+		}
 	});
 	
 	findViewById(R.id.nav_search).setOnClickListener(v -> {
-		Log.d("Navigation", "Navigating to Search");
+	;
 		navController.navigate(R.id.searchFragment);
 	});
 	
 	findViewById(R.id.nav_plans).setOnClickListener(v -> {
-		Log.d("Navigation", "Navigating to Plans");
-		navController.navigate(R.id.plansFragment);
+		if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+			navController.navigate(R.id.plansFragment);
+		}else{
+			Snackbar.make(findViewById(R.id.nav_favorites), "Please login first", Snackbar.LENGTH_SHORT).show();
+			
+		}
 	});
 }
 private void setActiveItem(ImageView icon, TextView text) {
